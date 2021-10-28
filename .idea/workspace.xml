@@ -3,13 +3,29 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/css/Login-Form-Clean.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/php/DBConfig.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/registration.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/loginForm.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/device.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/php/DBConfig.php" beforeDir="false" afterPath="$PROJECT_DIR$/assets/php/DBConfig.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,58 +46,46 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP" />
+  <component name="PhpDebugGeneral" listening_started="true" />
+  <component name="PhpWebServerValidation" path_to_validation_script="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard" selected_validation_type="LOCAL" web_path_to_validation_script="http://localhost/" />
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="AMPPS" />
   <component name="ProjectId" id="1zm0ho9MVMzz49R9yuo94VzSZ6d" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../xampp/htdocs/index.php" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
+    <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php.debug" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets\css" />
       <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard" />
+      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets\css" />
       <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets" />
       <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets\layout" />
       <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets\js" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard" />
+    </key>
   </component>
-  <component name="RunManager" selected="PHP Built-in Web Server.Builtin">
-    <configuration name="Builtin" type="PhpBuiltInWebServerConfigurationType" factoryName="PHP Built-in Web Server" document_root="$PROJECT_DIR$">
+  <component name="RunManager">
+    <configuration name="localhost" type="PhpBuiltInWebServerConfigurationType" factoryName="PHP Built-in Web Server" document_root="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
-    <configuration name="index.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/index.php">
-      <CommandLine>
-        <PhpTestInterpreterSettings>
-          <option name="interpreterName" value="PHP" />
-        </PhpTestInterpreterSettings>
-      </CommandLine>
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="PHP Built-in Web Server.Builtin" />
-      <item itemvalue="PHP Script.index.php" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="PHP Script.index.php" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -94,6 +98,11 @@
       <workItem from="1634738079247" duration="1696000" />
       <workItem from="1635331584852" duration="3284000" />
       <workItem from="1635410673210" duration="3374000" />
+      <workItem from="1635414317969" duration="372000" />
+      <workItem from="1635415230670" duration="305000" />
+      <workItem from="1635415622081" duration="8087000" />
+      <workItem from="1635436587650" duration="879000" />
+      <workItem from="1635437591323" duration="1355000" />
     </task>
     <servers />
   </component>
@@ -111,5 +120,98 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="349" y="62" key="#CLI_Interpreters" timestamp="1635436528070">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="349" y="62" key="#CLI_Interpreters/0.0.1536.816@0.0.1536.816" timestamp="1635436528070" />
+    <state x="475" y="51" key="#PHP" timestamp="1635414482260">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="475" y="51" key="#PHP/0.0.1536.816@0.0.1536.816" timestamp="1635414482260" />
+    <state x="194" y="249" key="#SQL_Dialects" timestamp="1635424591283">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="194" y="249" key="#SQL_Dialects/0.0.1536.816@0.0.1536.816" timestamp="1635424591283" />
+    <state x="476" y="144" key="#Servers" timestamp="1635415666573">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="476" y="144" key="#Servers/0.0.1536.816@0.0.1536.816" timestamp="1635415666573" />
+    <state x="361" y="66" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1635441336022">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="361" y="66" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.816@0.0.1536.816" timestamp="1635441336022" />
+    <state x="466" y="233" key="#com.jetbrains.php.debug.validation.PhpWebServerValidationDialog#" timestamp="1635441402319">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="466" y="233" key="#com.jetbrains.php.debug.validation.PhpWebServerValidationDialog#/0.0.1536.816@0.0.1536.816" timestamp="1635441402319" />
+    <state x="550" y="162" key="FileChooserDialogImpl" timestamp="1635441487312">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="550" y="162" key="FileChooserDialogImpl/0.0.1536.816@0.0.1536.816" timestamp="1635441487312" />
+    <state width="1478" height="206" key="GridCell.Tab.0.bottom" timestamp="1635441243221">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1478" height="206" key="GridCell.Tab.0.bottom/0.0.1536.816@0.0.1536.816" timestamp="1635441243221" />
+    <state width="1478" height="206" key="GridCell.Tab.0.center" timestamp="1635441243221">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1478" height="206" key="GridCell.Tab.0.center/0.0.1536.816@0.0.1536.816" timestamp="1635441243221" />
+    <state width="1478" height="206" key="GridCell.Tab.0.left" timestamp="1635441243220">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1478" height="206" key="GridCell.Tab.0.left/0.0.1536.816@0.0.1536.816" timestamp="1635441243220" />
+    <state width="1478" height="206" key="GridCell.Tab.0.right" timestamp="1635441243221">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1478" height="206" key="GridCell.Tab.0.right/0.0.1536.816@0.0.1536.816" timestamp="1635441243221" />
+    <state width="1478" height="257" key="GridCell.Tab.1.bottom" timestamp="1635437474322">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1478" height="257" key="GridCell.Tab.1.bottom/0.0.1536.816@0.0.1536.816" timestamp="1635437474322" />
+    <state width="1478" height="257" key="GridCell.Tab.1.center" timestamp="1635437474322">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1478" height="257" key="GridCell.Tab.1.center/0.0.1536.816@0.0.1536.816" timestamp="1635437474322" />
+    <state width="1478" height="257" key="GridCell.Tab.1.left" timestamp="1635437474321">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1478" height="257" key="GridCell.Tab.1.left/0.0.1536.816@0.0.1536.816" timestamp="1635437474321" />
+    <state width="1478" height="257" key="GridCell.Tab.1.right" timestamp="1635437474322">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state width="1478" height="257" key="GridCell.Tab.1.right/0.0.1536.816@0.0.1536.816" timestamp="1635437474322" />
+    <state x="604" y="331" key="NewPhpFileDialog" timestamp="1635424518667">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="604" y="331" key="NewPhpFileDialog/0.0.1536.816@0.0.1536.816" timestamp="1635424518667" />
+    <state x="484" y="97" key="SettingsEditor" timestamp="1635441409081">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="484" y="97" key="SettingsEditor/0.0.1536.816@0.0.1536.816" timestamp="1635441409081" />
+    <state x="625" y="41" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1635424651657">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="625" y="41" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1536.816@0.0.1536.816" timestamp="1635424651657" />
+    <state x="0" y="0" key="com.jetbrains.php.config.phpInfo.PhpInfo.PhpInfoDialog" timestamp="1635425366885">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="0" y="0" key="com.jetbrains.php.config.phpInfo.PhpInfo.PhpInfoDialog/0.0.1536.816@0.0.1536.816" timestamp="1635425366885" />
+    <state x="431" y="137" width="672" height="678" key="search.everywhere.popup" timestamp="1635441364752">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="431" y="137" width="672" height="678" key="search.everywhere.popup/0.0.1536.816@0.0.1536.816" timestamp="1635441364752" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/registration.php</url>
+          <line>6</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

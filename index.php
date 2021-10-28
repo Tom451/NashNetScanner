@@ -1,12 +1,18 @@
 <?php
 session_start();
-include('assets/php/DBConfig.php');
+require 'assets\php\DBConfig.php';
+
+$connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
+
 if (isset($_POST['login'])) {
+
     $username = $_POST['username'];
     $password = $_POST['password'];
-    //$query = $connection->prepare("SELECT * FROM users WHERE username=:username");
+
+    $query = $connection->prepare("SELECT * FROM userCredentials WHERE username=:username");
     $query->bindParam("username", $username, PDO::PARAM_STR);
     $query->execute();
+
     $result = $query->fetch(PDO::FETCH_ASSOC);
     if (!$result) {
         echo '<p class="error">Username password combination is wrong!</p>';
