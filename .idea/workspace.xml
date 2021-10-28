@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/css/loginForm.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/device.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/css/Login-Form-Clean.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/php/DBConfig.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/loginForm.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/device.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,12 +53,24 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets\css" />
+      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard" />
+      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets" />
+      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets\layout" />
+      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets\js" />
+    </key>
   </component>
-  <component name="RunManager" selected="PHP Script.index.php">
+  <component name="RunManager" selected="PHP Built-in Web Server.Builtin">
     <configuration name="Builtin" type="PhpBuiltInWebServerConfigurationType" factoryName="PHP Built-in Web Server" document_root="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
     <configuration name="index.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/index.php">
+      <CommandLine>
+        <PhpTestInterpreterSettings>
+          <option name="interpreterName" value="PHP" />
+        </PhpTestInterpreterSettings>
+      </CommandLine>
       <method v="2" />
     </configuration>
     <list>
@@ -78,7 +92,8 @@
       <option name="presentableId" value="Default" />
       <updated>1634738077921</updated>
       <workItem from="1634738079247" duration="1696000" />
-      <workItem from="1635331584852" duration="2409000" />
+      <workItem from="1635331584852" duration="3284000" />
+      <workItem from="1635410673210" duration="3374000" />
     </task>
     <servers />
   </component>
