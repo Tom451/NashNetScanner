@@ -23,9 +23,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/homePage.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/php/DBConfig.php" beforeDir="false" afterPath="$PROJECT_DIR$/assets/php/DBConfig.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/bootstrap/NashNetworkScanner.bsdesign" beforeDir="false" afterPath="$PROJECT_DIR$/assets/bootstrap/NashNetworkScanner.bsdesign" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/Login-Form-Clean.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/Login-Form-Clean.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/loginAndRegistrationJS.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/loginAndRegistrationJS.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/registration.php" beforeDir="false" afterPath="$PROJECT_DIR$/registration.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +62,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/index.php" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../BDesign Output/register.html" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -122,7 +126,7 @@
       <workItem from="1635415622081" duration="8087000" />
       <workItem from="1635436587650" duration="879000" />
       <workItem from="1635437591323" duration="1355000" />
-      <workItem from="1635441863733" duration="6816000" />
+      <workItem from="1635441863733" duration="11861000" />
     </task>
     <servers />
   </component>
@@ -170,10 +174,10 @@
       <screen x="0" y="0" width="1536" height="816" />
     </state>
     <state x="567" y="213" width="604" height="555" key="#com.jetbrains.php.debug.validation.PhpWebServerValidationDialog#/0.0.1536.816@0.0.1536.816" timestamp="1635446216995" />
-    <state x="550" y="162" key="FileChooserDialogImpl" timestamp="1635445477074">
+    <state x="550" y="162" key="FileChooserDialogImpl" timestamp="1635511410894">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state x="550" y="162" key="FileChooserDialogImpl/0.0.1536.816@0.0.1536.816" timestamp="1635445477074" />
+    <state x="550" y="162" key="FileChooserDialogImpl/0.0.1536.816@0.0.1536.816" timestamp="1635511410894" />
     <state width="1478" height="254" key="GridCell.Tab.0.bottom" timestamp="1635502409674">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
@@ -222,10 +226,10 @@
       <screen x="0" y="0" width="1536" height="816" />
     </state>
     <state width="1478" height="254" key="GridCell.Tab.2.right/0.0.1536.816@0.0.1536.816" timestamp="1635502409674" />
-    <state x="604" y="331" key="NewPhpFileDialog" timestamp="1635424518667">
+    <state x="604" y="331" key="NewPhpFileDialog" timestamp="1635512710353">
       <screen x="0" y="0" width="1536" height="816" />
     </state>
-    <state x="604" y="331" key="NewPhpFileDialog/0.0.1536.816@0.0.1536.816" timestamp="1635424518667" />
+    <state x="604" y="331" key="NewPhpFileDialog/0.0.1536.816@0.0.1536.816" timestamp="1635512710353" />
     <state x="484" y="97" key="SettingsEditor" timestamp="1635446322989">
       <screen x="0" y="0" width="1536" height="816" />
     </state>

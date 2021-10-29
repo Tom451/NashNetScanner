@@ -1,10 +1,20 @@
+<script src="assets/js/loginAndRegistrationJS.js"></script>
+
 <?php
 session_start();
+if(isset($_SESSION['user_id'])){
+    header('Location: homepage.php');
+    exit;
+} else {
+
+}
+
 require 'assets\php\DBConfig.php';
 
-$connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
 if (isset($_POST['login'])) {
+
+    $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -15,13 +25,13 @@ if (isset($_POST['login'])) {
 
     $result = $query->fetch(PDO::FETCH_ASSOC);
     if (!$result) {
-        echo '<p class="error">Username password combination is wrong!</p>';
+        echo '<script>IncorrectCredentials()</script>';
     } else {
         if (password_verify($password, $result['password'])) {
-            $_SESSION['user_id'] = $result['id'];
-            echo '<p class="success">Congratulations, you are logged in!</p>';
+            $_SESSION['user_id'] = $result['loginID'];
+            header('Location: homepage.php');
         } else {
-            echo '<p class="error">Username password combination is wrong!</p>';
+            echo '<script>IncorrectCredentials()</script>';
         }
     }
 }
@@ -55,15 +65,16 @@ if (isset($_POST['login'])) {
         </div>
     </nav>
 
-    <section class="login-clean">
+    <section class="login-clean" style="width: auto;height: auto;">
         <form method="post">
             <h2 class="sr-only">Login Form</h2>
-            <div class="illustration"><i class="icon ion-ios-navigate"></i></div>
-            <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email"></div>
+            <div class="illustration"><img src="assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>
+            <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
             <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
-            <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Log In</button></div><a class="forgot" href="#">Forgot your email or password?</a>
+            <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background: var(--blue);" value="login" name="login">Login</button></div><a class="forgot" href="#"></a>
         </form>
     </section>
+
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>

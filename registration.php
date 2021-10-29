@@ -1,3 +1,5 @@
+<script src="assets/js/loginAndRegistrationJS.js"></script>
+
 <?php
 session_start();
 include('assets/php/DBConfig.php');
@@ -5,26 +7,32 @@ include('assets/php/DBConfig.php');
 $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
 if (isset($_POST['register'])) {
+
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
+
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
+
     $query = $connection->prepare("SELECT * FROM usercredentials WHERE userName=:username");
+
     $query->bindParam("username", $username, PDO::PARAM_STR);
     $query->execute();
+
     if ($query->rowCount() > 0) {
-        echo '<p class="error">The email address is already registered!</p>';
+        echo '<script>usernameInUse()</script>';;
     }
     if ($query->rowCount() == 0) {
-        $query = $connection->prepare("INSERT INTO usercredentials(username,password) VALUES (:username,:password_hash)");
+        $query = $connection->prepare("INSERT INTO usercredentials(username,email,password) VALUES (:username,:email,:password_hash)");
         $query->bindParam("username", $username, PDO::PARAM_STR);
         $query->bindParam("password_hash", $password_hash, PDO::PARAM_STR);
-        $query->bindParam("username", $username, PDO::PARAM_STR);
+        $query->bindParam("email", $email, PDO::PARAM_STR);
         $result = $query->execute();
+
         if ($result) {
-            echo '<p class="success">Your registration was successful!</p>';
+            echo '<script></script>';;
         } else {
-            echo '<p class="error">Something went wrong!</p>';
+            echo '<script>ErrorWithForm()</script>';;
         }
     }
 }
@@ -53,22 +61,25 @@ if (isset($_POST['register'])) {
                 <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Dropdown </a>
                     <div class="dropdown-menu"><a class="dropdown-item" href="#">First Item</a><a class="dropdown-item" href="#">Second Item</a><a class="dropdown-item" href="#">Third Item</a></div>
                 </li>
-            </ul><span class="navbar-text actions"> <a class="login" href="#">Log In</a><a class="btn btn-light action-button" role="button" href="#">Sign Up</a></span>
+            </ul><span class="navbar-text actions"> <a class="login" href="#">Log In</a></span>
         </div>
     </div>
 </nav>
 
-<section class="login-clean">
-    <form method="post">
+<section class="login-clean" style="width: auto;height: auto;">
+    <form  method="post">
         <h2 class="sr-only">Login Form</h2>
-        <div class="illustration"><i class="icon ion-ios-navigate"></i></div>
-        <div class="form-group"><input class="form-control" type="text" name="username" placeholder="userName"></div>
+        <div class="illustration"><img src="assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>
+        <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
+        <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email"></div>
         <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
-        <div class="form-group"><button class="btn btn-primary btn-block" type="submit" name="register" value="register">Register</button></div><a class="forgot" href="#">Forgot your email or password?</a>
+        <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background: var(--blue);" name="register">Register</button></div><a class="forgot" href="#"></a>
     </form>
 </section>
+
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>
