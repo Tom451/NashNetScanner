@@ -1,7 +1,4 @@
-<script src="assets/js/loginAndRegistrationJS.js"></script>
-
 <?php
-//start the session for the user
 session_start();
 include('assets/php/DBConfig.php');
 
@@ -9,15 +6,14 @@ $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
 if (isset($_POST['register'])) {
     $username = $_POST['username'];
-    //$email = $_POST['email'];sFunction()
+    $email = $_POST['email'];
     $password = $_POST['password'];
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
     $query = $connection->prepare("SELECT * FROM usercredentials WHERE userName=:username");
     $query->bindParam("username", $username, PDO::PARAM_STR);
     $query->execute();
-
     if ($query->rowCount() > 0) {
-        echo '<script type="text/javascript">usernameInUse()</script>';
+        echo '<p class="error">The email address is already registered!</p>';
     }
     if ($query->rowCount() == 0) {
         $query = $connection->prepare("INSERT INTO usercredentials(username,password) VALUES (:username,:password_hash)");
@@ -64,7 +60,7 @@ if (isset($_POST['register'])) {
 
 <section class="login-clean">
     <form method="post">
-        <h2 class="sr-only" id="Login Area">Login Form</h2>
+        <h2 class="sr-only">Login Form</h2>
         <div class="illustration"><i class="icon ion-ios-navigate"></i></div>
         <div class="form-group"><input class="form-control" type="text" name="username" placeholder="userName"></div>
         <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
@@ -73,7 +69,6 @@ if (isset($_POST['register'])) {
 </section>
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-
 </body>
 
 </html>
