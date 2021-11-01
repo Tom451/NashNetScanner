@@ -1,27 +1,41 @@
+<script src="assets/js/loginAndRegistrationJS.js"></script>
+
 <?php
 session_start();
+if(isset($_SESSION['user_id'])){
+    header('Location: homepage.php');
+    exit;
+} else {
+
+}
+
 require 'assets\php\DBConfig.php';
 
-$connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
 if (isset($_POST['login'])) {
+
+    $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $query = $connection->prepare("SELECT * FROM userCredentials WHERE username=:username");
+    $query = $connection->prepare("SELECT * FROM usercredentials WHERE userName=:username");
     $query->bindParam("username", $username, PDO::PARAM_STR);
     $query->execute();
 
     $result = $query->fetch(PDO::FETCH_ASSOC);
+
+    echo $result;
+
     if (!$result) {
-        echo '<p class="error">Username password combination is wrong!</p>';
+        echo '<script>IncorrectCredentials()</script>';
     } else {
+        //get password
         if (password_verify($password, $result['password'])) {
-            $_SESSION['user_id'] = $result['id'];
-            echo '<p class="success">Congratulations, you are logged in!</p>';
+            $_SESSION['user_id'] = $result['userName'];
+            header('Location: homepage.php');
         } else {
-            echo '<p class="error">Username password combination is wrong!</p>';
+            echo '<script>IncorrectCredentials()</script>';
         }
     }
 }
@@ -50,20 +64,21 @@ if (isset($_POST['login'])) {
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Dropdown </a>
                         <div class="dropdown-menu"><a class="dropdown-item" href="#">First Item</a><a class="dropdown-item" href="#">Second Item</a><a class="dropdown-item" href="#">Third Item</a></div>
                     </li>
-                </ul><span class="navbar-text actions"> <a class="login" href="#">Log In</a><a class="btn btn-light action-button" role="button" href="#">Sign Up</a></span>
+                </ul><span class="navbar-text actions"> <a class="login" href="#">Log In</a><a class="btn btn-light action-button" role="button" href="registration.php">Sign Up</a></span>
             </div>
         </div>
     </nav>
 
-    <section class="login-clean">
+    <section class="login-clean" style="width: auto;height: auto;">
         <form method="post">
             <h2 class="sr-only">Login Form</h2>
-            <div class="illustration"><i class="icon ion-ios-navigate"></i></div>
-            <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email"></div>
+            <div class="illustration"><img src="assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>
+            <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
             <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
-            <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Log In</button></div><a class="forgot" href="#">Forgot your email or password?</a>
+            <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background: var(--blue);" value="login" name="login">Login</button></div><a class="forgot" href="#"></a>
         </form>
     </section>
+
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>

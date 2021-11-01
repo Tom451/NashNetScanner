@@ -23,23 +23,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/62008958-0cf0-4d09-9d51-1b531d9e5b3a.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/62008958-0cf0-4d09-9d51-1b531d9e5b3a.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/.vs/AgentDownload/v17/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/.vs/AgentDownload/v17/.suo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.dll" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.exe" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.runtimeconfig.dev.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.runtimeconfig.dev.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/AgentDownload.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/AgentDownload.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.dll" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.genruntimeconfig.cache" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.genruntimeconfig.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/apphost.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/project.nuget.cache" afterDir="false" />
+
+      <change afterPath="$PROJECT_DIR$/assets/php/getUserPasswordHash.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/Navigation-with-Button.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/Navigation-with-Button.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/registration.php" beforeDir="false" afterPath="$PROJECT_DIR$/registration.php" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,14 +45,27 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PhpDebugGeneral" listening_started="true" />
-  <component name="PhpWebServerValidation" path_to_validation_script="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard" selected_validation_type="LOCAL" web_path_to_validation_script="http://localhost/" />
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="PhpServers">
+    <servers>
+      <server host="localhost" id="9448e0d9-841d-4ded-aae4-35a03809657f" name="localhost" />
+    </servers>
+  </component>
+  <component name="PhpWebServerValidation" path_to_validation_script="C:\xampp\htdocs\NashNetworkDashboard" selected_validation_type="LOCAL" web_path_to_validation_script="http://localhost/NashNetworkDashboard" />
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="Xamps" />
   <component name="ProjectId" id="1zm0ho9MVMzz49R9yuo94VzSZ6d" />
   <component name="ProjectViewState">
@@ -72,7 +77,8 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../BDesign Output/index.html" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -116,7 +122,12 @@
       <workItem from="1635415622081" duration="8087000" />
       <workItem from="1635436587650" duration="879000" />
       <workItem from="1635437591323" duration="1355000" />
-      <workItem from="1635763513645" duration="205000" />
+
+      <workItem from="1635441863733" duration="12726000" />
+      <workItem from="1635515574715" duration="127000" />
+      <workItem from="1635515824970" duration="618000" />
+      <workItem from="1635760077600" duration="56000" />
+      <workItem from="1635760374307" duration="58000" />
     </task>
     <servers />
   </component>
@@ -135,6 +146,7 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -146,4 +158,5 @@
       </breakpoints>
     </breakpoint-manager>
   </component>
+
 </project>
