@@ -26,7 +26,7 @@ namespace AgentDownload.DBFolder
         private void Initialize()
         {
             server = "localhost";
-            database = "comp3000";
+            database = "nashnetworkdashboard";
             uid = "root";
             password = "Z5H&Qc^z!Fz9";
             string connectionString;
@@ -268,6 +268,55 @@ namespace AgentDownload.DBFolder
 
             //return the temp data
             return temp;
+
+        }
+
+        public ScanModel getScanInfo(string SessionID)
+        {
+            ScanModel scanModel = new ScanModel();
+
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+                
+
+                //Create a data tabel for the data that is coming in 
+                DataTable tempDataTabe = new DataTable();
+
+                //Set up the command that will select all the data
+                MySqlCommand cmd = new MySqlCommand("getScan", connection);
+
+                //Set the type of command as a stored procedure 
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                //Insert the above query
+
+                MySqlParameter sessionID = new MySqlParameter("inSessionID", SessionID);
+
+
+                //Execute command
+                cmd.Parameters.Add(sessionID);
+                cmd.ExecuteNonQuery();
+
+                //create a dataAdapter for data
+                MySqlDataAdapter tempDataAdapter = new MySqlDataAdapter(cmd);
+
+                //fill the table with the data
+                tempDataAdapter.Fill(tempDataTabe);
+
+                foreach (DataRow dr in tempDataTabe.Rows)
+                {
+
+                    scanModel.scanInfo = dr["ScanInfo"].ToString();
+                    scanModel.userName = dr["userName"].ToString();
+                    scanModel.sessionID = dr["sessionID"].ToString();
+                    scanModel.scanType = dr["scanType"].ToString();
+
+                }
+                
+            }
+
+            return scanModel;
 
         }
 

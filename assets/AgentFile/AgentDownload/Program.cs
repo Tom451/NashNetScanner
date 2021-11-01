@@ -25,13 +25,13 @@ namespace AgentDownload
 
             
             Program NMAP = new Program();
-            NMAP.NMapScan();
+            NMAP.NMapScan(scanID);
             
         }
 
         List<ComputerModel> devices = new List<ComputerModel>();
 
-        public bool NMapScan()
+        public bool NMapScan(string scanID)
         {
             //Start the Scan
             System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -43,46 +43,36 @@ namespace AgentDownload
             string gateway = getNetworkGateway();
             string[] gatewayArray = gateway.Split('.');
 
-            // Pass the variables in 
 
-            startInfo.Arguments = String.Format("/C nmap -sn -oX C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml {0}.{1}.{2}.*/24 --no-stylesheet ", gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
+            //connect to database 
+            MyDBConnection DB = new MyDBConnection();
+            DB.DBConnect();
+
+            ScanModel ScanInfo = DB.getScanInfo(scanID);
+
+
+            // Pass the variables in 
+            startInfo.Arguments = String.Format("/C {0} {1}.{2}.{3}.*/24 --no-stylesheet ", ScanInfo.scanInfo, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
             process.StartInfo = startInfo;
             process.Start();
 
             // Read the output stream first and then wait.
             process.WaitForExit();
 
-            //parse the scan data 
-            parseScanData();
-
-            //connect to database 
-            MyDBConnection DB = new MyDBConnection();
-            DB.DBConnect();
-
-
-
-            // for each device add it to the database 
-            foreach (var device in devices)
+            if (ScanInfo.scanType == "NetDisc")
             {
-                //Insert the above query
-                MySqlParameter[] deviceSQLParameters = new MySqlParameter[]
-                {
-                new MySqlParameter("indeviceIp", device.ipAddress),
-                new MySqlParameter("inRTT", device.RTT),
-                new MySqlParameter("inMacAddress",device.macAddress),
-                new MySqlParameter("inName", device.name),
-                //new MySqlParameter("networkMacAddress", gatewayMac)
+                //parse the scan data 
+            parseNetworkDiscoveryData();
+            }
+            
 
-                };
 
-                DB.RunSP("addDevice", deviceSQLParameters);
 
-            };
-            return true;
+            
 
         }
 
-        public void parseScanData()
+        public void parseNetworkDiscoveryData()
         {
             //read in data from the created XML File
             XmlDocument NMapXMLScan = new XmlDocument();
