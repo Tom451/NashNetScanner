@@ -23,6 +23,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="">
+
       <change afterPath="$PROJECT_DIR$/assets/php/getUserPasswordHash.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
@@ -30,6 +31,7 @@
       <change beforePath="$PROJECT_DIR$/assets/css/Navigation-with-Button.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/Navigation-with-Button.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/registration.php" beforeDir="false" afterPath="$PROJECT_DIR$/registration.php" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +77,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../BDesign Output/index.html" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
@@ -119,6 +122,7 @@
       <workItem from="1635415622081" duration="8087000" />
       <workItem from="1635436587650" duration="879000" />
       <workItem from="1635437591323" duration="1355000" />
+
       <workItem from="1635441863733" duration="12726000" />
       <workItem from="1635515574715" duration="127000" />
       <workItem from="1635515824970" duration="618000" />
@@ -142,4 +146,17 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/registration.php</url>
+          <line>6</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+
 </project>
