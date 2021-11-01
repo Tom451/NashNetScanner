@@ -92,7 +92,7 @@
 }
 
 .navigation-clean-button .navbar-text .action-button, .navigation-clean-button .navbar-text .action-button:active, .navigation-clean-button .navbar-text .action-button:hover {
-  background: #56c6c6;
+  background: #2c9aff;
   border-radius: 20px;
   font-size: inherit;
   color: #fff;
@@ -105,6 +105,6 @@
 }
 
 .navigation-clean-button .navbar-text .action-button:hover {
-  background: #66d7d7;
+  background: #2c74ff;
 }
 

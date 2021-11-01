@@ -8,14 +8,18 @@ $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
 if (isset($_POST['register'])) {
 
+    //get all the details
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $firstName =$_POST['firstName'];
+    $lastName =$_POST['lastName'];
 
+    //get the password hash
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
+    //check if username already exsits
     $query = $connection->prepare("SELECT * FROM usercredentials WHERE userName=:username");
-
     $query->bindParam("username", $username, PDO::PARAM_STR);
     $query->execute();
 
@@ -23,10 +27,25 @@ if (isset($_POST['register'])) {
         echo '<script>usernameInUse()</script>';;
     }
     if ($query->rowCount() == 0) {
-        $query = $connection->prepare("INSERT INTO usercredentials(username,email,password) VALUES (:username,:email,:password_hash)");
+
+        //start with adding the user
+        $query = $connection->prepare("INSERT INTO user(firstName,lastName,email) VALUES (:firstName,:lastName,:email)");
+        $query->bindParam("firstName", $firstName, PDO::PARAM_STR);
+        $query->bindParam("lastName", $lastName, PDO::PARAM_STR);
+        $query->bindParam("email", $email, PDO::PARAM_STR);
+        $result = $query->execute();
+
+        //get the userID of new user to be added.
+        $query = $connection->prepare("SELECT userID FROM user WHERE email=:email");
+        $query->bindParam("email", $email, PDO::PARAM_STR);
+        $query->execute();
+        $userIDResult = $query->fetchColumn();
+
+        //then add the credentials
+        $query = $connection->prepare("INSERT INTO usercredentials(userName,password,UserID) VALUES (:username,:password_hash,:userID)");
         $query->bindParam("username", $username, PDO::PARAM_STR);
         $query->bindParam("password_hash", $password_hash, PDO::PARAM_STR);
-        $query->bindParam("email", $email, PDO::PARAM_STR);
+        $query->bindParam("userID", $userIDResult, PDO::PARAM_STR);
         $result = $query->execute();
 
         if ($result) {
@@ -70,6 +89,8 @@ if (isset($_POST['register'])) {
     <form  method="post">
         <h2 class="sr-only">Login Form</h2>
         <div class="illustration"><img src="assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>
+        <div class="form-group"><input class="form-control" type="text" name="firstName" placeholder="First Name"></div>
+        <div class="form-group"><input class="form-control" type="text" name="lastName" placeholder="Last Name"></div>
         <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
         <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email"></div>
         <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>

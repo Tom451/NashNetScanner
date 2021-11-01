@@ -19,16 +19,20 @@ if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $query = $connection->prepare("SELECT * FROM userCredentials WHERE username=:username");
+    $query = $connection->prepare("SELECT * FROM usercredentials WHERE userName=:username");
     $query->bindParam("username", $username, PDO::PARAM_STR);
     $query->execute();
 
     $result = $query->fetch(PDO::FETCH_ASSOC);
+
+    echo $result;
+
     if (!$result) {
         echo '<script>IncorrectCredentials()</script>';
     } else {
+        //get password
         if (password_verify($password, $result['password'])) {
-            $_SESSION['user_id'] = $result['loginID'];
+            $_SESSION['user_id'] = $result['userName'];
             header('Location: homepage.php');
         } else {
             echo '<script>IncorrectCredentials()</script>';
@@ -60,7 +64,7 @@ if (isset($_POST['login'])) {
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Dropdown </a>
                         <div class="dropdown-menu"><a class="dropdown-item" href="#">First Item</a><a class="dropdown-item" href="#">Second Item</a><a class="dropdown-item" href="#">Third Item</a></div>
                     </li>
-                </ul><span class="navbar-text actions"> <a class="login" href="#">Log In</a><a class="btn btn-light action-button" role="button" href="#">Sign Up</a></span>
+                </ul><span class="navbar-text actions"> <a class="login" href="#">Log In</a><a class="btn btn-light action-button" role="button" href="registration.php">Sign Up</a></span>
             </div>
         </div>
     </nav>
