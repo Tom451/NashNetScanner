@@ -76,25 +76,6 @@ namespace AgentDownload.DBFolder
             }
         }
 
-        //Insert statement
-        public void Insert(string query)
-        {
-
-
-            //open connection
-            if (this.OpenConnection() == true)
-            {
-                //create command and assign the query and connection from the constructor
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-
-                //Execute command
-                cmd.ExecuteNonQuery();
-
-                //close connection
-                this.CloseConnection();
-            }
-        }
-
         //run statement
         public void RunSP(string storedProcedure, MySqlParameter[] mysqlparam)
         {
@@ -108,7 +89,6 @@ namespace AgentDownload.DBFolder
                 foreach (var sqlParam in mysqlparam)
                 {
                     cmd.Parameters.Add(sqlParam);
-
 
                 }
 
@@ -130,28 +110,7 @@ namespace AgentDownload.DBFolder
             }
         }
 
-        //Update statement
-        public void Update(string query)
-        {
-            query = "UPDATE tableinfo SET name='Joe', age='22' WHERE name='John Smith'";
 
-            //Open connection
-            if (this.OpenConnection() == true)
-            {
-                //create mysql command
-                MySqlCommand cmd = new MySqlCommand();
-                //Assign the query using CommandText
-                cmd.CommandText = query;
-                //Assign the connection using Connection
-                cmd.Connection = connection;
-
-                //Execute query
-                cmd.ExecuteNonQuery();
-
-                //close connection
-                this.CloseConnection();
-            }
-        }
 
         //Delete statement
         public void Delete()
@@ -232,7 +191,7 @@ namespace AgentDownload.DBFolder
                 DataTable tempDataTabe = new DataTable();
 
                 //Set up the command that will select all the data
-                MySqlCommand cmd = new MySqlCommand("selectDevice", connection);
+                MySqlCommand cmd = new MySqlCommand("getDevice", connection);
 
                 //Set the type of command as a stored procedure 
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -255,6 +214,7 @@ namespace AgentDownload.DBFolder
                 DataRow data = tempDataTabe.Rows[0];
 
                 // input the data
+                temp.ID = int.Parse(data["deviceID"].ToString());
                 temp.ipAddress = data["ipAddress"].ToString();
                 temp.macAddress = data["macAddress"].ToString();
                 temp.name = data["friendlyName"].ToString();
@@ -278,7 +238,7 @@ namespace AgentDownload.DBFolder
             //open connection
             if (this.OpenConnection() == true)
             {
-                
+
 
                 //Create a data tabel for the data that is coming in 
                 DataTable tempDataTabe = new DataTable();
@@ -308,32 +268,108 @@ namespace AgentDownload.DBFolder
                 {
 
                     scanModel.scanInfo = dr["ScanInfo"].ToString();
-                    scanModel.userName = dr["userName"].ToString();
+                    scanModel.userName = dr["userID"].ToString();
                     scanModel.sessionID = dr["sessionID"].ToString();
                     scanModel.scanType = dr["scanType"].ToString();
 
                 }
-                
+
             }
 
             return scanModel;
 
         }
 
-        //Count statement
-        public int Count()
+        public string addDevice(MySqlParameter[] inputParams, MySqlParameter outputParam)
         {
-            return 0;
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+                //create command and assign the query and connection from the constructor
+                MySqlCommand cmd = new MySqlCommand("addDevice", connection);
+
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                //add the input parameters
+                foreach (var sqlParam in inputParams)
+                {
+                    cmd.Parameters.Add(sqlParam);
+
+                }
+                cmd.Parameters.Add(outputParam);
+
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    string value = cmd.Parameters["outDeviceID"].Value.ToString();
+                    connection.Close();
+
+                    return value;
+                    //close connection
+
+                }
+                catch
+                {
+
+                    connection.Close();
+                }
+
+
+                return null;
+
+
+            }
+            return null;
+
         }
 
-        //Backup
-        public void Backup()
+        public void addLink(int inDeviceID, int inUserID)
         {
-        }
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+                //create command and assign the query and connection from the constructor
+                MySqlCommand cmd = new MySqlCommand("addLink", connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-        //Restore
-        public void Restore()
-        {
+                //Insert the above query
+                MySqlParameter[] inSQLParameters = new MySqlParameter[]
+                {
+                new MySqlParameter("inDeviceID", inDeviceID),
+                new MySqlParameter("inUserID", inUserID),
+
+                //new MySqlParameter("networkMacAddress", gatewayMac)
+
+                };
+
+                foreach (var sqlParam in inSQLParameters)
+                {
+                    cmd.Parameters.Add(sqlParam);
+                }
+                
+
+
+
+                //Execute command
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+
+                }
+
+
+                //close connection
+                this.CloseConnection();
+            }
+
+
+
+
         }
     }
 }

@@ -32,7 +32,7 @@ if (isset($_POST['login'])) {
     } else {
         //get password
         if (password_verify($password, $result['password'])) {
-            $_SESSION['user_id'] = $result['userName'];
+            $_SESSION['user_id'] = $result['UserID'];
             header('Location: homepage.php');
         } else {
             echo '<script>IncorrectCredentials()</script>';

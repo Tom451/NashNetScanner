@@ -3,6 +3,7 @@ using AgentDownload.Items;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Xml;
@@ -62,23 +63,23 @@ namespace AgentDownload
             if (ScanInfo.scanType == "NetDisc")
             {
                 //parse the scan data 
-            parseNetworkDiscoveryData();
+            parseNetworkDiscoveryData(ScanInfo);
             }
-            
 
 
 
+            return true;
             
 
         }
 
-        public void parseNetworkDiscoveryData()
+        public void parseNetworkDiscoveryData(ScanModel ScanInfo)
         {
             //read in data from the created XML File
             XmlDocument NMapXMLScan = new XmlDocument();
 
             //load the data after written
-            NMapXMLScan.Load("NMap/data.xml");
+            NMapXMLScan.Load("C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml");
 
             //select all the hosts in the document 
             XmlNodeList hosts = NMapXMLScan.SelectNodes("nmaprun/host");
@@ -129,6 +130,35 @@ namespace AgentDownload
                 devices.Add(tempDevice);
 
             }
+
+
+            //connect to database 
+            MyDBConnection DB = new MyDBConnection();
+            DB.DBConnect();
+
+            // for each device add it to the database 
+            foreach (var device in devices)
+            {
+                //Insert the above query
+                MySqlParameter[] inSQLParameters = new MySqlParameter[]
+                {
+                new MySqlParameter("indeviceIp", device.ipAddress),
+                new MySqlParameter("inRTT", device.RTT),
+                new MySqlParameter("inMacAddress",device.macAddress),
+                new MySqlParameter("inName", device.name),
+                //new MySqlParameter("networkMacAddress", gatewayMac)
+
+                };
+
+                MySqlParameter outDeviceID = new MySqlParameter("outDeviceID", MySqlDbType.VarChar);
+                outDeviceID.Direction = ParameterDirection.Output;
+
+                string deviceID = DB.addDevice(inSQLParameters, outDeviceID);
+
+                DB.addLink(int.Parse(deviceID), int.Parse(ScanInfo.userName));
+
+            };
+
         }
 
         public string getNetworkGateway()
@@ -166,6 +196,8 @@ namespace AgentDownload
             
 
         }
+
+
 
 
 

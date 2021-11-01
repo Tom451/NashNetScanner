@@ -20,9 +20,9 @@ if (isset($_POST['pingScan'])) {
     $scanInfo = "nmap -sP -oX C:\Users\Public\Documents\NMAPNetworkScan.xml";
     $scanType = "NetDisc";
 
-    $query = $connection->prepare("INSERT INTO scaninfo(UserName,SessionID,ScanInfo,scanType) 
-    VALUES (:username,:SessionID,:scanInfo,:scanType)");
-    $query->bindParam("username", $username, PDO::PARAM_STR);
+    $query = $connection->prepare("INSERT INTO scaninfo(userID,SessionID,ScanInfo,scanType) 
+    VALUES (:userID,:SessionID,:scanInfo,:scanType)");
+    $query->bindParam("userID", $username, PDO::PARAM_STR);
     $query->bindParam("SessionID", $SessionID, PDO::PARAM_STR);
     $query->bindParam("scanInfo", $scanInfo, PDO::PARAM_STR);
     $query->bindParam("scanType", $scanType, PDO::PARAM_STR);
