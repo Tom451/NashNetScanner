@@ -7,8 +7,7 @@ include('assets/php/DBConfig.php');
 $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
 if (isset($_POST['register'])) {
-
-    require('assets/php/generateKeys.php');
+    
     //get all the details
     $username = $_POST['username'];
     $email = $_POST['email'];

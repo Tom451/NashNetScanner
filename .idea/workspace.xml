@@ -23,16 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/.vs/AgentDownload/DesignTimeBuild/.dtbcache.v2" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/.vs/AgentDownload/DesignTimeBuild/.dtbcache.v2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/.vs/AgentDownload/v17/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/.vs/AgentDownload/v17/.suo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/php/deriveKeyPassword.php" beforeDir="false" afterPath="$PROJECT_DIR$/assets/php/deriveKeyPassword.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/php/encryptData.php" beforeDir="false" afterPath="$PROJECT_DIR$/assets/php/encryptData.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/php/generateKeys.php" beforeDir="false" afterPath="$PROJECT_DIR$/assets/old/generateKeys.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/php/getUserPasswordHash.php" beforeDir="false" afterPath="$PROJECT_DIR$/assets/old/getUserPasswordHash.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/php/randomSessionCreator.php" beforeDir="false" afterPath="$PROJECT_DIR$/assets/php/randomSessionCreator.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.dll" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/bin/Debug/netcoreapp3.1/AgentDownload.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.dll" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/AgentDownload/obj/Debug/netcoreapp3.1/AgentDownload.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/registration.php" beforeDir="false" afterPath="$PROJECT_DIR$/registration.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -132,7 +128,7 @@
       <workItem from="1635863063114" duration="669000" />
       <workItem from="1635934842450" duration="11305000" />
       <workItem from="1636111587527" duration="5230000" />
-      <workItem from="1636129126407" duration="548000" />
+      <workItem from="1636129126407" duration="1261000" />
     </task>
     <servers />
   </component>
@@ -156,12 +152,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/registration.php</url>
-          <line>6</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/registration.php</url>
-          <line>53</line>
+          <line>52</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>

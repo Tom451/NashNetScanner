@@ -20,10 +20,10 @@ namespace AgentDownload
     {
         // Encryption Variables and sign in Information
         byte[] iv = new byte[16] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
-        byte[] key = new byte[16];
+        byte[] encryptionKey = new byte[16];
 
         //Login Info
-        string password, scanID, userName;
+        string passwordKey, scanID, userName;
 
 
         List<ComputerModel> devices = new List<ComputerModel>();
@@ -43,10 +43,17 @@ namespace AgentDownload
             Console.WriteLine("Please enter your password:");
             string tempPassword = Console.ReadLine();
 
+            //get the derived key from the user's password
+            //temp salt, will be used in database 
             byte[] salt = Encoding.UTF8.GetBytes("testSalt");
             var pbkdf2 = new Rfc2898DeriveBytes(tempPassword, salt, 10, HashAlgorithmName.SHA256);
-            byte[] finish = pbkdf2.GetBytes(20);
-            NMAP.password = Convert.ToBase64String(finish);
+
+            //get the 20 charater random key from the password used for encryption 
+            byte[] bytesKey = pbkdf2.GetBytes(20);
+
+            //set that as the password held by the program 
+            NMAP.passwordKey = Convert.ToBase64String(bytesKey);
+            tempPassword = null; //clear the password 
 
             //get the users scanID
             Console.WriteLine("Please enter your ScanID provided by the webpage:");
@@ -54,7 +61,7 @@ namespace AgentDownload
 
             // Create sha256 hash and key prom the users password
             SHA256 mySHA256 = SHA256Managed.Create();
-            NMAP.key = mySHA256.ComputeHash(Encoding.ASCII.GetBytes(NMAP.password));
+            NMAP.encryptionKey = mySHA256.ComputeHash(Encoding.ASCII.GetBytes(NMAP.passwordKey));
 
             //start the scan 
             NMAP.NMapScan(NMAP.scanID);
@@ -65,8 +72,8 @@ namespace AgentDownload
         public bool NMapScan(string scanID)
         {
             //Start the Scan
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            Process process = new System.Diagnostics.Process();
+            ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
             startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             startInfo.FileName = "cmd.exe";
 
@@ -79,21 +86,22 @@ namespace AgentDownload
             MyDBConnection DB = new MyDBConnection();
             DB.DBConnect();
 
+            //get the encrypted scan info
             ScanModel ScanInfo = DB.getScanInfo(scanID);
 
             //decrypt scan data 
-            string DecScan = DecryptString(ScanInfo.scanInfo);
-
+            string DecScanInfo = DecryptString(ScanInfo.scanInfo);
+            string DecScanType = DecryptString(ScanInfo.scanType);
 
             // Pass the variables in 
-            startInfo.Arguments = String.Format("/C {0} {1}.{2}.{3}.*/24 --no-stylesheet ", DecScan, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
+            startInfo.Arguments = String.Format("/C {0} {1}.{2}.{3}.*/24 --no-stylesheet ", DecScanInfo, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
             process.StartInfo = startInfo;
             process.Start();
 
             // Read the output stream first and then wait.
             process.WaitForExit();
 
-            if (ScanInfo.scanType == "NetDisc")
+            if (DecScanType == "NetDisc")
             {
                 //parse the scan data 
                 parseNetworkDiscoveryData(ScanInfo);
@@ -180,7 +188,6 @@ namespace AgentDownload
                 new MySqlParameter("inRTT", device.RTT),
                 new MySqlParameter("inMacAddress",device.macAddress),
                 new MySqlParameter("inName", device.name),
-                //new MySqlParameter("networkMacAddress", gatewayMac)
 
                 };
 
@@ -189,6 +196,7 @@ namespace AgentDownload
 
                 string deviceID = DB.AddDeviceToScan(inSQLParameters, outDeviceID);
 
+                //add the link between the device and the scans
                 DB.addLink(int.Parse(deviceID), ScanInfo.scanID);
 
             };
@@ -234,7 +242,6 @@ namespace AgentDownload
 
 
         //Encryption Aspects 
-
         public string EncryptString(string plainText)
         {
             // Instantiate a new Aes object to perform string symmetric encryption
@@ -246,7 +253,7 @@ namespace AgentDownload
             //encryptor.Padding = PaddingMode.Zeros;
 
             // Set key and IV
-            encryptor.Key = key;
+            encryptor.Key = encryptionKey;
             encryptor.IV = iv;
 
             // Instantiate a new MemoryStream object to contain the encrypted bytes
@@ -293,7 +300,7 @@ namespace AgentDownload
             //encryptor.Padding = PaddingMode.Zeros;
 
             // Set key and IV
-            encryptor.Key = key;
+            encryptor.Key = encryptionKey;
             encryptor.IV = iv;
 
             // Instantiate a new MemoryStream object to contain the encrypted bytes
@@ -332,6 +339,7 @@ namespace AgentDownload
                 memoryStream.Close();
                 cryptoStream.Close();
             }
+            
 
             // Return the decrypted data as a string
             return plainText;
