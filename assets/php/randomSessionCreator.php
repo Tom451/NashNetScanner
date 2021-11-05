@@ -1,5 +1,7 @@
 <?php
 function generateRandom(){
+
+    //the session ID the user enters will be 20 characters long
     $n=20;
 
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -10,6 +12,7 @@ function generateRandom(){
         $randomString .= $characters[$index];
     }
 
+    //return the random sessionID
     return $randomString;
 
 
