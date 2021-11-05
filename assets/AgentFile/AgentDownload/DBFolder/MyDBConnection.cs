@@ -27,8 +27,8 @@ namespace AgentDownload.DBFolder
         {
             server = "localhost";
             database = "nashnetworkdashboard";
-            uid = "root";
-            password = "Z5H&Qc^z!Fz9";
+            uid = "Agent";
+            password = "Password123";
             string connectionString;
             connectionString = "SERVER=" + server + ";" + "DATABASE=" +
             database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -271,6 +271,7 @@ namespace AgentDownload.DBFolder
                     scanModel.userName = dr["userID"].ToString();
                     scanModel.sessionID = dr["sessionID"].ToString();
                     scanModel.scanType = dr["scanType"].ToString();
+                    scanModel.scanID = int.Parse(dr["scanID"].ToString());
 
                 }
 
@@ -280,7 +281,7 @@ namespace AgentDownload.DBFolder
 
         }
 
-        public string addDevice(MySqlParameter[] inputParams, MySqlParameter outputParam)
+        public string AddDeviceToScan(MySqlParameter[] inputParams, MySqlParameter outputParam)
         {
             //open connection
             if (this.OpenConnection() == true)
@@ -324,7 +325,7 @@ namespace AgentDownload.DBFolder
 
         }
 
-        public void addLink(int inDeviceID, int inUserID)
+        public void addLink(int inDeviceID, int inScanID)
         {
             //open connection
             if (this.OpenConnection() == true)
@@ -337,7 +338,7 @@ namespace AgentDownload.DBFolder
                 MySqlParameter[] inSQLParameters = new MySqlParameter[]
                 {
                 new MySqlParameter("inDeviceID", inDeviceID),
-                new MySqlParameter("inUserID", inUserID),
+                new MySqlParameter("inScanID", inScanID),
 
                 //new MySqlParameter("networkMacAddress", gatewayMac)
 
@@ -348,6 +349,53 @@ namespace AgentDownload.DBFolder
                     cmd.Parameters.Add(sqlParam);
                 }
                 
+
+
+
+                //Execute command
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+
+                }
+
+
+                //close connection
+                this.CloseConnection();
+            }
+
+
+
+
+        }
+
+        public void setScanStatus(string inStatus)
+        {
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+                //create command and assign the query and connection from the constructor
+                MySqlCommand cmd = new MySqlCommand("addLink", connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                //Insert the above query
+                MySqlParameter[] inSQLParameters = new MySqlParameter[]
+                {
+                new MySqlParameter("inStatus", inStatus)
+
+                //new MySqlParameter("networkMacAddress", gatewayMac)
+
+                };
+
+                foreach (var sqlParam in inSQLParameters)
+                {
+                    cmd.Parameters.Add(sqlParam);
+                }
+
 
 
 

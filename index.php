@@ -32,6 +32,9 @@ if (isset($_POST['login'])) {
     } else {
         //get password
         if (password_verify($password, $result['password'])) {
+            require "assets/php/deriveKeyPassword.php";
+            $password = getKeyPassword($password, "testSalt");
+            $_SESSION['key'] = $password;
             $_SESSION['user_id'] = $result['UserID'];
             header('Location: homepage.php');
         } else {

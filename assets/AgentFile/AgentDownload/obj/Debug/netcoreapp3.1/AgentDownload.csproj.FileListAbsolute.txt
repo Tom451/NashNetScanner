@@ -67,3 +67,8 @@ C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\Agen
 C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\AgentDownload\obj\Debug\netcoreapp3.1\AgentDownload.dll
 C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\AgentDownload\obj\Debug\netcoreapp3.1\AgentDownload.pdb
 C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\AgentDownload\obj\Debug\netcoreapp3.1\AgentDownload.genruntimeconfig.cache
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\AgentDownload\bin\Debug\netcoreapp3.1\BCrypt.Net-Next.dll
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\AgentDownload\bin\Debug\netcoreapp3.1\CryptSharp.dll
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\AgentDownload\bin\Debug\netcoreapp3.1\System.Formats.Asn1.dll
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\AgentDownload\bin\Debug\netcoreapp3.1\System.Security.Cryptography.OpenSsl.dll
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\AgentDownload\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Security.Cryptography.OpenSsl.dll

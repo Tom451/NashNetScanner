@@ -8,6 +8,7 @@ $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
 if (isset($_POST['register'])) {
 
+    require ('assets/php/generateKeys.php');
     //get all the details
     $username = $_POST['username'];
     $email = $_POST['email'];
@@ -28,6 +29,7 @@ if (isset($_POST['register'])) {
     }
     if ($query->rowCount() == 0) {
 
+
         //start with adding the user
         $query = $connection->prepare("INSERT INTO user(firstName,lastName,email) VALUES (:firstName,:lastName,:email)");
         $query->bindParam("firstName", $firstName, PDO::PARAM_STR);
@@ -42,10 +44,13 @@ if (isset($_POST['register'])) {
         $userIDResult = $query->fetchColumn();
 
         //then add the credentials
-        $query = $connection->prepare("INSERT INTO usercredentials(userName,password,UserID) VALUES (:username,:password_hash,:userID)");
+        $query = $connection->prepare("INSERT INTO usercredentials(userName,password,UserID,EncryptionSalt) VALUES (:username,:password_hash,:userID,:EncryptionSalt)");
         $query->bindParam("username", $username, PDO::PARAM_STR);
         $query->bindParam("password_hash", $password_hash, PDO::PARAM_STR);
         $query->bindParam("userID", $userIDResult, PDO::PARAM_STR);
+        $query->bindParam("EncryptionSalt", $username, PDO::PARAM_STR);
+
+
         $result = $query->execute();
 
         if ($result) {
