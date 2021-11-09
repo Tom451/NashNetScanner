@@ -7,7 +7,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Xml;
-using CryptSharp;
 using BCrypt;
 using System.Security.Cryptography;
 using System.IO;
@@ -19,7 +18,7 @@ namespace AgentDownload
     class Program
     {
         // Encryption Variables and sign in Information
-        byte[] iv = new byte[16] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        readonly byte[] iv = new byte[16] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
         byte[] encryptionKey = new byte[16];
 
         //Login Info
@@ -72,10 +71,12 @@ namespace AgentDownload
         public bool NMapScan(string scanID)
         {
             //Start the Scan
-            Process process = new System.Diagnostics.Process();
-            ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = "cmd.exe";
+            Process process = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                WindowStyle = ProcessWindowStyle.Hidden,
+                FileName = "cmd.exe"
+            };
 
             //get gateway IP and Mac Address for scan 
             string gateway = getNetworkGateway();
@@ -191,8 +192,10 @@ namespace AgentDownload
 
                 };
 
-                MySqlParameter outDeviceID = new MySqlParameter("outDeviceID", MySqlDbType.VarChar);
-                outDeviceID.Direction = ParameterDirection.Output;
+                MySqlParameter outDeviceID = new MySqlParameter("outDeviceID", MySqlDbType.VarChar)
+                {
+                    Direction = ParameterDirection.Output
+                };
 
                 string deviceID = DB.AddDeviceToScan(inSQLParameters, outDeviceID);
 

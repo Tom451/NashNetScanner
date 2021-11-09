@@ -83,8 +83,11 @@ namespace AgentDownload.DBFolder
             if (this.OpenConnection() == true)
             {
                 //create command and assign the query and connection from the constructor
-                MySqlCommand cmd = new MySqlCommand(storedProcedure, connection);
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                MySqlCommand cmd = new MySqlCommand(storedProcedure, connection)
+                {
+                    CommandType = System.Data.CommandType.StoredProcedure
+
+                };
 
                 foreach (var sqlParam in mysqlparam)
                 {
@@ -139,10 +142,12 @@ namespace AgentDownload.DBFolder
                 DataTable tempDataTabe = new DataTable();
 
                 //Set up the command that will select all the data
-                MySqlCommand cmd = new MySqlCommand("selectAll", connection);
+                MySqlCommand cmd = new MySqlCommand("selectAll", connection)
+                {
 
-                //Set the type of command as a stored procedure 
-                cmd.CommandType = CommandType.StoredProcedure;
+                    //Set the type of command as a stored procedure 
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 //Execute command
                 cmd.ExecuteNonQuery();
@@ -155,13 +160,15 @@ namespace AgentDownload.DBFolder
                 foreach (DataRow dr in tempDataTabe.Rows)
                 {
                     //create a temp model object
-                    ComputerModel obj = new ComputerModel();
+                    ComputerModel obj = new ComputerModel
+                    {
 
-                    //input the data
-                    obj.ipAddress = dr["ipAddress"].ToString();
-                    obj.macAddress = dr["macAddress"].ToString();
-                    obj.name = dr["friendlyName"].ToString();
-                    obj.lastSeen = dr["lastSeen"].ToString();
+                        //input the data
+                        ipAddress = dr["ipAddress"].ToString(),
+                        macAddress = dr["macAddress"].ToString(),
+                        name = dr["friendlyName"].ToString(),
+                        lastSeen = dr["lastSeen"].ToString()
+                    };
 
                     //add to the temp list
                     temp.Add(obj);
@@ -191,10 +198,12 @@ namespace AgentDownload.DBFolder
                 DataTable tempDataTabe = new DataTable();
 
                 //Set up the command that will select all the data
-                MySqlCommand cmd = new MySqlCommand("getDevice", connection);
+                MySqlCommand cmd = new MySqlCommand("getDevice", connection)
+                {
 
-                //Set the type of command as a stored procedure 
-                cmd.CommandType = CommandType.StoredProcedure;
+                    //Set the type of command as a stored procedure 
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 //Insert the above query
 
@@ -244,10 +253,12 @@ namespace AgentDownload.DBFolder
                 DataTable tempDataTabe = new DataTable();
 
                 //Set up the command that will select all the data
-                MySqlCommand cmd = new MySqlCommand("getScan", connection);
+                MySqlCommand cmd = new MySqlCommand("getScan", connection)
+                {
 
-                //Set the type of command as a stored procedure 
-                cmd.CommandType = CommandType.StoredProcedure;
+                    //Set the type of command as a stored procedure 
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 //Insert the above query
 
@@ -287,9 +298,10 @@ namespace AgentDownload.DBFolder
             if (this.OpenConnection() == true)
             {
                 //create command and assign the query and connection from the constructor
-                MySqlCommand cmd = new MySqlCommand("addDevice", connection);
-
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                MySqlCommand cmd = new MySqlCommand("addDevice", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 //add the input parameters
                 foreach (var sqlParam in inputParams)
@@ -331,8 +343,10 @@ namespace AgentDownload.DBFolder
             if (this.OpenConnection() == true)
             {
                 //create command and assign the query and connection from the constructor
-                MySqlCommand cmd = new MySqlCommand("addLink", connection);
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                MySqlCommand cmd = new MySqlCommand("addLink", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 //Insert the above query
                 MySqlParameter[] inSQLParameters = new MySqlParameter[]
@@ -379,8 +393,10 @@ namespace AgentDownload.DBFolder
             if (this.OpenConnection() == true)
             {
                 //create command and assign the query and connection from the constructor
-                MySqlCommand cmd = new MySqlCommand("addLink", connection);
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                MySqlCommand cmd = new MySqlCommand("addLink", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 //Insert the above query
                 MySqlParameter[] inSQLParameters = new MySqlParameter[]

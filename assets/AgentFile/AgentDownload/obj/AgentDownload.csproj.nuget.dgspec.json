@@ -48,14 +48,6 @@
               "target": "Package",
               "version": "[4.0.2, )"
             },
-            "BouncyCastle": {
-              "target": "Package",
-              "version": "[1.8.9, )"
-            },
-            "CryptSharpOfficial": {
-              "target": "Package",
-              "version": "[2.1.0, )"
-            },
             "MySql.Data": {
               "target": "Package",
               "version": "[8.0.27, )"

@@ -1,13 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "TcFxZTvzAr0xD0nFrgmHQtlD11SPZakh1gS8K1HunAduw1mKCYZBtJ5OlsZWm2cjGsyehUIVb8HCnb7FIRcSbQ==",
+  "dgSpecHash": "uhh7SkFlA0UPeEepFPeKJKsZBx/VbPXLpo7D7bZX0+dk9rCMQY/99xv36xosfnIQE+kzZXBAf3MdB0FE0VvWJw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Tom\\Documents\\Uni Work\\COMP3000Project\\NashNetworkDashboard\\assets\\AgentFile\\AgentDownload\\AgentDownload.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tom\\.nuget\\packages\\bcrypt.net-next\\4.0.2\\bcrypt.net-next.4.0.2.nupkg.sha512",
-    "C:\\Users\\Tom\\.nuget\\packages\\bouncycastle\\1.8.9\\bouncycastle.1.8.9.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\bouncycastle.netcore\\1.8.5\\bouncycastle.netcore.1.8.5.nupkg.sha512",
-    "C:\\Users\\Tom\\.nuget\\packages\\cryptsharpofficial\\2.1.0\\cryptsharpofficial.2.1.0.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\google.protobuf\\3.14.0\\google.protobuf.3.14.0.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\k4os.compression.lz4\\1.2.6\\k4os.compression.lz4.1.2.6.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\k4os.compression.lz4.streams\\1.2.6\\k4os.compression.lz4.streams.1.2.6.nupkg.sha512",
@@ -29,26 +27,5 @@
     "C:\\Users\\Tom\\.nuget\\packages\\system.text.encoding.codepages\\4.4.0\\system.text.encoding.codepages.4.4.0.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'BouncyCastle 1.8.9' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "BouncyCastle",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'CryptSharpOfficial 2.1.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "CryptSharpOfficial",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  "logs": []
 }

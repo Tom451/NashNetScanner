@@ -11,15 +11,6 @@
           "lib/netcoreapp3.1/BCrypt.Net-Next.dll": {}
         }
       },
-      "BouncyCastle/1.8.9": {
-        "type": "package",
-        "compile": {
-          "lib/BouncyCastle.Crypto.dll": {}
-        },
-        "runtime": {
-          "lib/BouncyCastle.Crypto.dll": {}
-        }
-      },
       "BouncyCastle.NetCore/1.8.5": {
         "type": "package",
         "compile": {
@@ -27,15 +18,6 @@
         },
         "runtime": {
           "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
-        }
-      },
-      "CryptSharpOfficial/2.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/CryptSharp.dll": {}
-        },
-        "runtime": {
-          "lib/CryptSharp.dll": {}
         }
       },
       "Google.Protobuf/3.14.0": {
@@ -365,19 +347,6 @@
         "lib/netstandard2.1/BCrypt.Net-Next.xml"
       ]
     },
-    "BouncyCastle/1.8.9": {
-      "sha512": "axnBgvdD5n+FnEG6efk/tfKuMFru7R/EoISH9zjh319yb3HD24TEHSAbNN/lTRT2ulOGRxDgOsCjkuk08iwWPg==",
-      "type": "package",
-      "path": "bouncycastle/1.8.9",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "README.md",
-        "bouncycastle.1.8.9.nupkg.sha512",
-        "bouncycastle.nuspec",
-        "lib/BouncyCastle.Crypto.dll"
-      ]
-    },
     "BouncyCastle.NetCore/1.8.5": {
       "sha512": "6uxsQw2UXrt82VQAWC2td3oBSJjUZ3P4u4DliagB8wf67KsU53V8sW9xwdF+IwZOOZFR0TCZuv/YKZ2BlrfAag==",
       "type": "package",
@@ -401,21 +370,6 @@
         "lib/netstandard2.0/BouncyCastle.Crypto.xml",
         "lib/xamarinios/BouncyCastle.Crypto.dll",
         "lib/xamarinios/BouncyCastle.Crypto.xml"
-      ]
-    },
-    "CryptSharpOfficial/2.1.0": {
-      "sha512": "t90jvDpTXoP4LTTHh/+HnBsOxQwOmlhS0hlqgocLKN0T5udAG8QuVtwcpGsjwK2Sl6YfRgflCGiSgeVWwF6+jw==",
-      "type": "package",
-      "path": "cryptsharpofficial/2.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "cryptsharpofficial.2.1.0.nupkg.sha512",
-        "cryptsharpofficial.nuspec",
-        "lib/CryptSharp.XML",
-        "lib/CryptSharp.chm",
-        "lib/CryptSharp.dll",
-        "lib/CryptSharp.pdb"
       ]
     },
     "Google.Protobuf/3.14.0": {
@@ -1021,8 +975,6 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "BCrypt.Net-Next >= 4.0.2",
-      "BouncyCastle >= 1.8.9",
-      "CryptSharpOfficial >= 2.1.0",
       "MySql.Data >= 8.0.27",
       "System.Security.Cryptography.OpenSsl >= 5.0.0"
     ]
@@ -1075,14 +1027,6 @@
             "target": "Package",
             "version": "[4.0.2, )"
           },
-          "BouncyCastle": {
-            "target": "Package",
-            "version": "[1.8.9, )"
-          },
-          "CryptSharpOfficial": {
-            "target": "Package",
-            "version": "[2.1.0, )"
-          },
           "MySql.Data": {
             "target": "Package",
             "version": "[8.0.27, )"
@@ -1110,27 +1054,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-rc.2.21505.57\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'BouncyCastle 1.8.9' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "BouncyCastle",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'CryptSharpOfficial 2.1.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "CryptSharpOfficial",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  }
 }
