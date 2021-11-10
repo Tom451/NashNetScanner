@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "feum2iMbLe6D56512PepEmU9VSL+w+mffoDxiQThmPLuWDoCAFjnW0OKrZbBrPPgEcU5SHEVQKXaYqzcyk4xvw==",
+  "dgSpecHash": "uhh7SkFlA0UPeEepFPeKJKsZBx/VbPXLpo7D7bZX0+dk9rCMQY/99xv36xosfnIQE+kzZXBAf3MdB0FE0VvWJw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Tom\\Documents\\Uni Work\\COMP3000Project\\NashNetworkDashboard\\assets\\AgentFile\\AgentDownload\\AgentDownload.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Tom\\.nuget\\packages\\bcrypt.net-next\\4.0.2\\bcrypt.net-next.4.0.2.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\bouncycastle.netcore\\1.8.5\\bouncycastle.netcore.1.8.5.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\google.protobuf\\3.14.0\\google.protobuf.3.14.0.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\k4os.compression.lz4\\1.2.6\\k4os.compression.lz4.1.2.6.nupkg.sha512",
@@ -15,9 +16,11 @@
     "C:\\Users\\Tom\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\system.configuration.configurationmanager\\4.4.1\\system.configuration.configurationmanager.4.4.1.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "C:\\Users\\Tom\\.nuget\\packages\\system.formats.asn1\\5.0.0\\system.formats.asn1.5.0.0.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
+    "C:\\Users\\Tom\\.nuget\\packages\\system.security.cryptography.openssl\\5.0.0\\system.security.cryptography.openssl.5.0.0.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\system.security.cryptography.protecteddata\\4.4.0\\system.security.cryptography.protecteddata.4.4.0.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\system.security.permissions\\4.7.0\\system.security.permissions.4.7.0.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",

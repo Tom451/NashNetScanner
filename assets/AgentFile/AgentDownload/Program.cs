@@ -3,92 +3,129 @@ using AgentDownload.Items;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Xml;
+using BCrypt;
+using System.Security.Cryptography;
+using System.IO;
+using System.Text;
+using System.Security;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace AgentDownload
 {
     class Program
     {
+        // Encryption Variables and sign in Information
+        readonly byte[] iv = new byte[16] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        byte[] encryptionKey = new byte[16];
 
-       
+        //Login Info
+        string passwordKey, scanID, userName;
 
+
+        List<ComputerModel> devices = new List<ComputerModel>();
         public static void Main(string[] args)
         {
+            //start the program 
+            Program NMAP = new Program();
+
             //Welcome the user to the program
             Console.WriteLine("Welcome to NashNetworkDashboard Agent Program");
+
+            //get the users username
+            Console.WriteLine("Please enter your UserName:");
+            NMAP.userName = Console.ReadLine();
+
+            //get the users password
+            Console.WriteLine("Please enter your password:");
+            string tempPassword = Console.ReadLine();
+
+            //get the derived key from the user's password
+            //temp salt, will be used in database 
+            byte[] salt = Encoding.UTF8.GetBytes("testSalt");
+            var pbkdf2 = new Rfc2898DeriveBytes(tempPassword, salt, 10, HashAlgorithmName.SHA256);
+
+            //get the 20 charater random key from the password used for encryption 
+            byte[] bytesKey = pbkdf2.GetBytes(20);
+
+            //set that as the password held by the program 
+            NMAP.passwordKey = Convert.ToBase64String(bytesKey);
+            tempPassword = null; //clear the password 
+
+            //get the users scanID
             Console.WriteLine("Please enter your ScanID provided by the webpage:");
+            NMAP.scanID = Console.ReadLine();
 
-            
-            string scanID = Console.ReadLine();
+            // Create sha256 hash and key prom the users password
+            SHA256 mySHA256 = SHA256Managed.Create();
+            NMAP.encryptionKey = mySHA256.ComputeHash(Encoding.ASCII.GetBytes(NMAP.passwordKey));
 
-            
-            Program NMAP = new Program();
-            NMAP.NMapScan();
+            //start the scan 
+            NMAP.NMapScan(NMAP.scanID);
             
         }
 
-        List<ComputerModel> devices = new List<ComputerModel>();
 
-        public bool NMapScan()
+        public bool NMapScan(string scanID)
         {
             //Start the Scan
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = "cmd.exe";
+            Process process = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                WindowStyle = ProcessWindowStyle.Hidden,
+                FileName = "cmd.exe"
+            };
 
             //get gateway IP and Mac Address for scan 
             string gateway = getNetworkGateway();
             string[] gatewayArray = gateway.Split('.');
 
-            // Pass the variables in 
 
-            startInfo.Arguments = String.Format("/C nmap -sn -oX C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml {0}.{1}.{2}.*/24 --no-stylesheet ", gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
+            //connect to database 
+            MyDBConnection DB = new MyDBConnection();
+            DB.DBConnect();
+
+            //get the encrypted scan info
+            ScanModel ScanInfo = DB.getScanInfo(scanID);
+
+            //decrypt scan data 
+            string DecScanInfo = DecryptString(ScanInfo.scanInfo);
+            string DecScanType = DecryptString(ScanInfo.scanType);
+            string ScanSaveLocation = "C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml";
+
+            // Pass the variables in 
+            startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", DecScanInfo, ScanSaveLocation, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
             process.StartInfo = startInfo;
             process.Start();
 
             // Read the output stream first and then wait.
             process.WaitForExit();
 
-            //parse the scan data 
-            parseScanData();
-
-            //connect to database 
-            MyDBConnection DB = new MyDBConnection();
-            DB.DBConnect();
-
-
-
-            // for each device add it to the database 
-            foreach (var device in devices)
+            if (DecScanType == "NetDisc")
             {
-                //Insert the above query
-                MySqlParameter[] deviceSQLParameters = new MySqlParameter[]
-                {
-                new MySqlParameter("indeviceIp", device.ipAddress),
-                new MySqlParameter("inRTT", device.RTT),
-                new MySqlParameter("inMacAddress",device.macAddress),
-                new MySqlParameter("inName", device.name),
-                //new MySqlParameter("networkMacAddress", gatewayMac)
+                //parse the scan data 
+                parseNetworkDiscoveryData(ScanInfo);
 
-                };
+            }
 
-                DB.RunSP("addDevice", deviceSQLParameters);
 
-            };
+
             return true;
+            
 
         }
 
-        public void parseScanData()
+        public void parseNetworkDiscoveryData(ScanModel ScanInfo)
         {
             //read in data from the created XML File
             XmlDocument NMapXMLScan = new XmlDocument();
 
             //load the data after written
-            NMapXMLScan.Load("NMap/data.xml");
+            NMapXMLScan.Load("C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml");
 
             //select all the hosts in the document 
             XmlNodeList hosts = NMapXMLScan.SelectNodes("nmaprun/host");
@@ -132,14 +169,46 @@ namespace AgentDownload
                 //Set all the values 
                 tempDevice.ID = i;
                 tempDevice.RTT = hostRTT;
-                tempDevice.ipAddress = hostipaddress;
-                tempDevice.macAddress = mac;
-                tempDevice.name = hostActualName;
+                tempDevice.ipAddress = EncryptString(hostipaddress);
+                tempDevice.macAddress = EncryptString(mac);
+                tempDevice.name = EncryptString(hostActualName);
 
                 devices.Add(tempDevice);
 
             }
+
+
+            //connect to database 
+            MyDBConnection DB = new MyDBConnection();
+            DB.DBConnect();
+
+            // for each device add it to the database 
+            foreach (var device in devices)
+            {
+                //Insert the above query
+                MySqlParameter[] inSQLParameters = new MySqlParameter[]
+                {
+                new MySqlParameter("indeviceIp", device.ipAddress),
+                new MySqlParameter("inRTT", device.RTT),
+                new MySqlParameter("inMacAddress",device.macAddress),
+                new MySqlParameter("inName", device.name),
+
+                };
+
+                MySqlParameter outDeviceID = new MySqlParameter("outDeviceID", MySqlDbType.VarChar)
+                {
+                    Direction = ParameterDirection.Output
+                };
+
+                string deviceID = DB.AddDeviceToScan(inSQLParameters, outDeviceID);
+
+                //add the link between the device and the scans
+                DB.addLink(int.Parse(deviceID), ScanInfo.scanID);
+
+            };
+
         }
+
 
         public string getNetworkGateway()
         {
@@ -167,7 +236,7 @@ namespace AgentDownload
             return ip;
         }
 
-        public void getData()
+        public void populateDevices()
         {
             MyDBConnection DB = new MyDBConnection();
             DB.DBConnect();
@@ -178,8 +247,111 @@ namespace AgentDownload
         }
 
 
+        //Encryption Aspects 
+        public string EncryptString(string plainText)
+        {
+            // Instantiate a new Aes object to perform string symmetric encryption
+            Aes encryptor = Aes.Create();
+
+            encryptor.Mode = CipherMode.CBC;
+            //encryptor.KeySize = 256;
+            //encryptor.BlockSize = 128;
+            //encryptor.Padding = PaddingMode.Zeros;
+
+            // Set key and IV
+            encryptor.Key = encryptionKey;
+            encryptor.IV = iv;
+
+            // Instantiate a new MemoryStream object to contain the encrypted bytes
+            MemoryStream memoryStream = new MemoryStream();
+
+            // Instantiate a new encryptor from our Aes object
+            ICryptoTransform aesEncryptor = encryptor.CreateEncryptor();
+
+            // Instantiate a new CryptoStream object to process the data and write it to the 
+            // memory stream
+            CryptoStream cryptoStream = new CryptoStream(memoryStream, aesEncryptor, CryptoStreamMode.Write);
+
+            // Convert the plainText string into a byte array
+            byte[] plainBytes = Encoding.ASCII.GetBytes(plainText);
+
+            // Encrypt the input plaintext string
+            cryptoStream.Write(plainBytes, 0, plainBytes.Length);
+
+            // Complete the encryption process
+            cryptoStream.FlushFinalBlock();
+
+            // Convert the encrypted data from a MemoryStream to a byte array
+            byte[] cipherBytes = memoryStream.ToArray();
+
+            // Close both the MemoryStream and the CryptoStream
+            memoryStream.Close();
+            cryptoStream.Close();
+
+            // Convert the encrypted byte array to a base64 encoded string
+            string cipherText = Convert.ToBase64String(cipherBytes, 0, cipherBytes.Length);
+
+            // Return the encrypted data as a string
+            return cipherText;
+        }
+
+        public string DecryptString(string cipherText)
+        {
+            // Instantiate a new Aes object to perform string symmetric encryption
+            Aes encryptor = Aes.Create();
+
+            encryptor.Mode = CipherMode.CBC;
+            //encryptor.KeySize = 256;
+            //encryptor.BlockSize = 128;
+            //encryptor.Padding = PaddingMode.Zeros;
+
+            // Set key and IV
+            encryptor.Key = encryptionKey;
+            encryptor.IV = iv;
+
+            // Instantiate a new MemoryStream object to contain the encrypted bytes
+            MemoryStream memoryStream = new MemoryStream();
+
+            // Instantiate a new encryptor from our Aes object
+            ICryptoTransform aesDecryptor = encryptor.CreateDecryptor();
+
+            // Instantiate a new CryptoStream object to process the data and write it to the 
+            // memory stream
+            CryptoStream cryptoStream = new CryptoStream(memoryStream, aesDecryptor, CryptoStreamMode.Write);
+
+            // Will contain decrypted plaintext
+            string plainText = String.Empty;
+
+            try
+            {
+                // Convert the ciphertext string into a byte array
+                byte[] cipherBytes = Convert.FromBase64String(cipherText);
+
+                // Decrypt the input ciphertext string
+                cryptoStream.Write(cipherBytes, 0, cipherBytes.Length);
+
+                // Complete the decryption process
+                cryptoStream.FlushFinalBlock();
+
+                // Convert the decrypted data from a MemoryStream to a byte array
+                byte[] plainBytes = memoryStream.ToArray();
+
+                // Convert the decrypted byte array to string
+                plainText = Encoding.ASCII.GetString(plainBytes, 0, plainBytes.Length);
+            }
+            finally
+            {
+                // Close both the MemoryStream and the CryptoStream
+                memoryStream.Close();
+                cryptoStream.Close();
+            }
+            
+
+            // Return the decrypted data as a string
+            return plainText;
+        }
 
 
-    
-}
+
+    }
 }

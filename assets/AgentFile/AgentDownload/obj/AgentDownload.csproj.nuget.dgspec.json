@@ -44,9 +44,17 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.2, )"
+            },
             "MySql.Data": {
               "target": "Package",
               "version": "[8.0.27, )"
+            },
+            "System.Security.Cryptography.OpenSsl": {
+              "target": "Package",
+              "version": "[5.0.0, )"
             }
           },
           "imports": [

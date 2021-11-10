@@ -26,9 +26,9 @@ namespace AgentDownload.DBFolder
         private void Initialize()
         {
             server = "localhost";
-            database = "comp3000";
-            uid = "root";
-            password = "Z5H&Qc^z!Fz9";
+            database = "nashnetworkdashboard";
+            uid = "Agent";
+            password = "Password123";
             string connectionString;
             connectionString = "SERVER=" + server + ";" + "DATABASE=" +
             database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
@@ -76,25 +76,6 @@ namespace AgentDownload.DBFolder
             }
         }
 
-        //Insert statement
-        public void Insert(string query)
-        {
-
-
-            //open connection
-            if (this.OpenConnection() == true)
-            {
-                //create command and assign the query and connection from the constructor
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-
-                //Execute command
-                cmd.ExecuteNonQuery();
-
-                //close connection
-                this.CloseConnection();
-            }
-        }
-
         //run statement
         public void RunSP(string storedProcedure, MySqlParameter[] mysqlparam)
         {
@@ -102,13 +83,15 @@ namespace AgentDownload.DBFolder
             if (this.OpenConnection() == true)
             {
                 //create command and assign the query and connection from the constructor
-                MySqlCommand cmd = new MySqlCommand(storedProcedure, connection);
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                MySqlCommand cmd = new MySqlCommand(storedProcedure, connection)
+                {
+                    CommandType = System.Data.CommandType.StoredProcedure
+
+                };
 
                 foreach (var sqlParam in mysqlparam)
                 {
                     cmd.Parameters.Add(sqlParam);
-
 
                 }
 
@@ -130,28 +113,7 @@ namespace AgentDownload.DBFolder
             }
         }
 
-        //Update statement
-        public void Update(string query)
-        {
-            query = "UPDATE tableinfo SET name='Joe', age='22' WHERE name='John Smith'";
 
-            //Open connection
-            if (this.OpenConnection() == true)
-            {
-                //create mysql command
-                MySqlCommand cmd = new MySqlCommand();
-                //Assign the query using CommandText
-                cmd.CommandText = query;
-                //Assign the connection using Connection
-                cmd.Connection = connection;
-
-                //Execute query
-                cmd.ExecuteNonQuery();
-
-                //close connection
-                this.CloseConnection();
-            }
-        }
 
         //Delete statement
         public void Delete()
@@ -180,10 +142,12 @@ namespace AgentDownload.DBFolder
                 DataTable tempDataTabe = new DataTable();
 
                 //Set up the command that will select all the data
-                MySqlCommand cmd = new MySqlCommand("selectAll", connection);
+                MySqlCommand cmd = new MySqlCommand("selectAll", connection)
+                {
 
-                //Set the type of command as a stored procedure 
-                cmd.CommandType = CommandType.StoredProcedure;
+                    //Set the type of command as a stored procedure 
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 //Execute command
                 cmd.ExecuteNonQuery();
@@ -196,13 +160,15 @@ namespace AgentDownload.DBFolder
                 foreach (DataRow dr in tempDataTabe.Rows)
                 {
                     //create a temp model object
-                    ComputerModel obj = new ComputerModel();
+                    ComputerModel obj = new ComputerModel
+                    {
 
-                    //input the data
-                    obj.ipAddress = dr["ipAddress"].ToString();
-                    obj.macAddress = dr["macAddress"].ToString();
-                    obj.name = dr["friendlyName"].ToString();
-                    obj.lastSeen = dr["lastSeen"].ToString();
+                        //input the data
+                        ipAddress = dr["ipAddress"].ToString(),
+                        macAddress = dr["macAddress"].ToString(),
+                        name = dr["friendlyName"].ToString(),
+                        lastSeen = dr["lastSeen"].ToString()
+                    };
 
                     //add to the temp list
                     temp.Add(obj);
@@ -232,10 +198,12 @@ namespace AgentDownload.DBFolder
                 DataTable tempDataTabe = new DataTable();
 
                 //Set up the command that will select all the data
-                MySqlCommand cmd = new MySqlCommand("selectDevice", connection);
+                MySqlCommand cmd = new MySqlCommand("getDevice", connection)
+                {
 
-                //Set the type of command as a stored procedure 
-                cmd.CommandType = CommandType.StoredProcedure;
+                    //Set the type of command as a stored procedure 
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 //Insert the above query
 
@@ -255,6 +223,7 @@ namespace AgentDownload.DBFolder
                 DataRow data = tempDataTabe.Rows[0];
 
                 // input the data
+                temp.ID = int.Parse(data["deviceID"].ToString());
                 temp.ipAddress = data["ipAddress"].ToString();
                 temp.macAddress = data["macAddress"].ToString();
                 temp.name = data["friendlyName"].ToString();
@@ -271,20 +240,200 @@ namespace AgentDownload.DBFolder
 
         }
 
-        //Count statement
-        public int Count()
+        public ScanModel getScanInfo(string SessionID)
         {
-            return 0;
+            ScanModel scanModel = new ScanModel();
+
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+
+
+                //Create a data tabel for the data that is coming in 
+                DataTable tempDataTabe = new DataTable();
+
+                //Set up the command that will select all the data
+                MySqlCommand cmd = new MySqlCommand("getScan", connection)
+                {
+
+                    //Set the type of command as a stored procedure 
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                //Insert the above query
+
+                MySqlParameter sessionID = new MySqlParameter("inSessionID", SessionID);
+
+
+                //Execute command
+                cmd.Parameters.Add(sessionID);
+                cmd.ExecuteNonQuery();
+
+                //create a dataAdapter for data
+                MySqlDataAdapter tempDataAdapter = new MySqlDataAdapter(cmd);
+
+                //fill the table with the data
+                tempDataAdapter.Fill(tempDataTabe);
+
+                foreach (DataRow dr in tempDataTabe.Rows)
+                {
+
+                    scanModel.scanInfo = dr["ScanInfo"].ToString();
+                    scanModel.userName = dr["userID"].ToString();
+                    scanModel.sessionID = dr["sessionID"].ToString();
+                    scanModel.scanType = dr["scanType"].ToString();
+                    scanModel.scanID = int.Parse(dr["scanID"].ToString());
+
+                }
+
+            }
+
+            return scanModel;
+
         }
 
-        //Backup
-        public void Backup()
+        public string AddDeviceToScan(MySqlParameter[] inputParams, MySqlParameter outputParam)
         {
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+                //create command and assign the query and connection from the constructor
+                MySqlCommand cmd = new MySqlCommand("addDevice", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                //add the input parameters
+                foreach (var sqlParam in inputParams)
+                {
+                    cmd.Parameters.Add(sqlParam);
+
+                }
+                cmd.Parameters.Add(outputParam);
+
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    string value = cmd.Parameters["outDeviceID"].Value.ToString();
+                    connection.Close();
+
+                    return value;
+                    //close connection
+
+                }
+                catch
+                {
+
+                    connection.Close();
+                }
+
+
+                return null;
+
+
+            }
+            return null;
+
         }
 
-        //Restore
-        public void Restore()
+        public void addLink(int inDeviceID, int inScanID)
         {
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+                //create command and assign the query and connection from the constructor
+                MySqlCommand cmd = new MySqlCommand("addLink", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                //Insert the above query
+                MySqlParameter[] inSQLParameters = new MySqlParameter[]
+                {
+                new MySqlParameter("inDeviceID", inDeviceID),
+                new MySqlParameter("inScanID", inScanID),
+
+                //new MySqlParameter("networkMacAddress", gatewayMac)
+
+                };
+
+                foreach (var sqlParam in inSQLParameters)
+                {
+                    cmd.Parameters.Add(sqlParam);
+                }
+                
+
+
+
+                //Execute command
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+
+                }
+
+
+                //close connection
+                this.CloseConnection();
+            }
+
+
+
+
+        }
+
+        public void setScanStatus(string inStatus)
+        {
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+                //create command and assign the query and connection from the constructor
+                MySqlCommand cmd = new MySqlCommand("addLink", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                //Insert the above query
+                MySqlParameter[] inSQLParameters = new MySqlParameter[]
+                {
+                new MySqlParameter("inStatus", inStatus)
+
+                //new MySqlParameter("networkMacAddress", gatewayMac)
+
+                };
+
+                foreach (var sqlParam in inSQLParameters)
+                {
+                    cmd.Parameters.Add(sqlParam);
+                }
+
+
+
+
+                //Execute command
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+
+                }
+
+
+                //close connection
+                this.CloseConnection();
+            }
+
+
+
+
         }
     }
 }

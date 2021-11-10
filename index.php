@@ -14,27 +14,38 @@ require 'assets\php\DBConfig.php';
 
 if (isset($_POST['login'])) {
 
+    //Get PDO connection string
     $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
+    //get the inputted username and the password
     $username = $_POST['username'];
     $password = $_POST['password'];
 
+    //select all the users with the given username
     $query = $connection->prepare("SELECT * FROM usercredentials WHERE userName=:username");
     $query->bindParam("username", $username, PDO::PARAM_STR);
     $query->execute();
 
+    //get the result
     $result = $query->fetch(PDO::FETCH_ASSOC);
 
-    echo $result;
-
+    //if there is no results then show incorrect credentials
     if (!$result) {
         echo '<script>IncorrectCredentials()</script>';
     } else {
-        //get password
+        //comapare the password inputted to the password hash
         if (password_verify($password, $result['password'])) {
-            $_SESSION['user_id'] = $result['userName'];
+
+            //if the given password is correct then, get the derived key from the
+            // password and store that in the session variable for later encryption use
+            require "assets/php/deriveKeyPassword.php";
+            $password = getKeyPassword($password, "testSalt");
+            $_SESSION['key'] = $password;
+            $_SESSION['user_id'] = $result['UserID'];
+            // send the user to the home page
             header('Location: homepage.php');
         } else {
+            // if the password was not correct then don't let the user sign in
             echo '<script>IncorrectCredentials()</script>';
         }
     }
