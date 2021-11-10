@@ -12,6 +12,8 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Text;
 using System.Security;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace AgentDownload
 {
@@ -93,9 +95,10 @@ namespace AgentDownload
             //decrypt scan data 
             string DecScanInfo = DecryptString(ScanInfo.scanInfo);
             string DecScanType = DecryptString(ScanInfo.scanType);
+            string ScanSaveLocation = "C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml";
 
             // Pass the variables in 
-            startInfo.Arguments = String.Format("/C {0} {1}.{2}.{3}.*/24 --no-stylesheet ", DecScanInfo, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
+            startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", DecScanInfo, ScanSaveLocation, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
             process.StartInfo = startInfo;
             process.Start();
 

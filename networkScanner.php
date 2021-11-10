@@ -13,13 +13,11 @@ if (isset($_POST['pingScan'])) {
     require 'assets\php\randomSessionCreator.php';
 
     $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
-    echo $_SESSION['key'];
-    echo "#######";
     //get the logged in user
     require "assets/php/encryptData.php";
     $username = $_SESSION['user_id'];
     $SessionID = generateRandom();
-    $scanInfo = encryptData("nmap -sP -oX C:\Users\Public\Documents\NMAPNetworkScan.xml", $_SESSION['key']);
+    $scanInfo = encryptData("nmap -sP -oX", $_SESSION['key']);
     $scanType = encryptData("NetDisc", $_SESSION['key']);
     $scanStatus = encryptData("Pending", $_SESSION['key']);
 
