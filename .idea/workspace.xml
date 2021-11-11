@@ -22,7 +22,23 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="" />
+    <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/php/DBUploadConn.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/.vs/slnx.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/.vs/NND Agent/v17/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/.vs/NND Agent/v17/.suo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/NND Agent.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/NND Agent.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.exe" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.csproj.GenerateResource.cache" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.csproj.GenerateResource.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.exe" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.pdb" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -122,6 +138,7 @@
       <workItem from="1636111587527" duration="5230000" />
       <workItem from="1636129126407" duration="2298000" />
       <workItem from="1636453872292" duration="4644000" />
+      <workItem from="1636620195215" duration="2997000" />
     </task>
     <servers />
   </component>

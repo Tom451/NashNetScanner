@@ -9,3 +9,17 @@ C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND Agent.csproj.CoreCompileInputs
 C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND Agent.exe
 C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND Agent.pdb
 C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND_Agent.NNDAgent.resources
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\bin\Debug\NND Agent.exe.config
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\bin\Debug\NND Agent.exe
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\bin\Debug\NND Agent.pdb
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\obj\Debug\NND Agent.csproj.AssemblyReference.cache
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\obj\Debug\NND Agent.csproj.SuggestedBindingRedirects.cache
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\obj\Debug\NND_Agent.NNDAgent.resources
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\obj\Debug\NND_Agent.Properties.Resources.resources
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\obj\Debug\NND Agent.csproj.GenerateResource.cache
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\obj\Debug\NND Agent.csproj.CoreCompileInputs.cache
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\obj\Debug\NND Agent.exe
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\obj\Debug\NND Agent.pdb
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\AgentFile\NND Agent\NND Agent\obj\Debug\NND Agent.csproj.CopyComplete
