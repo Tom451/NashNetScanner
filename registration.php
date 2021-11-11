@@ -4,7 +4,7 @@
 session_start();
 include('assets/php/DBConfig.php');
 
-$connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
+$connection = getConnection();
 
 if (isset($_POST['register'])) {
 

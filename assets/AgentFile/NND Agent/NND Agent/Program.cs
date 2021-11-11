@@ -1,6 +1,7 @@
 ﻿using NND_Agent.Items;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -16,29 +17,14 @@ namespace NND_Agent
         [STAThread]
         static void Main()
         {
-
-            String deviceToken = HttpUtility.UrlEncode("YourDeviceToken");
-            String passphrase = HttpUtility.UrlEncode("YourPassphrase");
-
-            ComputerModel Computer = new ComputerModel();
-            Computer.name = "Name";
-            Computer.ID = 1;
-            Computer.macAddress = "NewMacAddress";
-
-            
-
-            string NewJson = DataUpload.ToJSON(Computer);
-
-            DataUpload upload = new DataUpload();
-            upload.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("JSON={0}", NewJson));
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new NNDAgent());
 
-            
+        
 
         }
+        
 
 
     }

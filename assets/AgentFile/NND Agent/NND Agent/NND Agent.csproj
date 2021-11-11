@@ -51,8 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataUpload.cs" />
+    <Compile Include="Data\DataUpload.cs" />
+    <Compile Include="Data\DataClass.cs" />
     <Compile Include="Items\ComputerModel.cs" />
+    <Compile Include="Items\ScanModel.cs" />
     <Compile Include="NNDAgent.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NND_Agent.Data;
+using NND_Agent.Items;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +14,7 @@ namespace NND_Agent
 {
     public partial class NNDAgent : Form
     {
+        public string userNONCE = "14";
         public NNDAgent()
         {
             InitializeComponent();
@@ -48,7 +51,18 @@ namespace NND_Agent
 
         private void runScanToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            DataUpload Connection = new DataUpload();
+            DataClass Data = new DataClass();
+            ScanModel scan = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
 
+            List<ComputerModel> upload = Data.NMapScan(scan);
+
+            
+            string NewJson = Connection.ToJSON(upload);
+
+            
+            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("JSON={0}", NewJson));
+            
         }
     }
 }

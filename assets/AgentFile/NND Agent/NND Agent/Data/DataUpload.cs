@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NND_Agent.Items;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,6 @@ namespace NND_Agent
         public string SendPost(string url, string postData)
         {
             string webpageContent = string.Empty;
-
-            
 
             try
             {
@@ -50,10 +49,58 @@ namespace NND_Agent
             return webpageContent;
         }
 
-        public static string ToJSON(object obj)
+        //method used to get the scan data using the NONCE 
+        public ScanModel SendGet(string url)
+        {
+            string webpageContent = string.Empty;
+
+            try
+            {
+
+                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
+                webRequest.Method = "GET";
+
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        webpageContent = reader.ReadToEnd();
+                        
+                                               
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //throw or return an appropriate response/exception
+            }
+
+            return FromJSON(webpageContent);
+        }
+
+        //json converter for 
+        public string ToJSON(object obj)
         {
             string stringjson = JsonConvert.SerializeObject(obj);
             return stringjson;
+        }
+        public ScanModel FromJSON(string input)
+        {
+            //create the JSON object 
+            JObject jObject = JObject.Parse(input);
+
+            //create the scan object
+            JToken jScan = jObject["scan"];
+
+            //create a model 
+            ScanModel tempModel = new ScanModel();
+
+            tempModel.scanID = (int)jScan["scanID"];
+            tempModel.scanInfo = (string)jScan["ScanInfo"];
+            tempModel.scanType = (string)jScan["ScanType"];
+            tempModel.userName = (string)jScan["userID"];
+            return tempModel;
+
         }
 
     }
