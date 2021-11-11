@@ -1,0 +1,11 @@
+C:\Users\Tom\source\repos\NND Agent\bin\Debug\NND Agent.exe.config
+C:\Users\Tom\source\repos\NND Agent\bin\Debug\NND Agent.exe
+C:\Users\Tom\source\repos\NND Agent\bin\Debug\NND Agent.pdb
+C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND Agent.csproj.AssemblyReference.cache
+C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND Agent.csproj.SuggestedBindingRedirects.cache
+C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND_Agent.Properties.Resources.resources
+C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND Agent.csproj.GenerateResource.cache
+C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND Agent.csproj.CoreCompileInputs.cache
+C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND Agent.exe
+C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND Agent.pdb
+C:\Users\Tom\source\repos\NND Agent\obj\Debug\NND_Agent.NNDAgent.resources

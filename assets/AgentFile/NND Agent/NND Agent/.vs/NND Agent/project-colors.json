@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "370d052e-4fc8-4023-89e2-eeec200e63b2": {
+      "ProjectGuid": "370d052e-4fc8-4023-89e2-eeec200e63b2",
+      "DisplayName": "NND Agent",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
