@@ -24,18 +24,15 @@ namespace NND_Agent.Data
 
             List<ComputerModel> upload = NMapScan(scan);
 
-            //get ready for item upload
-            string uploadDeviceJSON = string.Empty;
-            string uploadScanJSON = string.Empty;
-
             //convert the device objects to JSON
             try
             {
-                uploadDeviceJSON = Connection.ToJSON(upload);
+                //get ready for item upload
+                string uploadDeviceJSON = Connection.ToJSON(upload);
 
                 //Convert the scan to JSON
                 scan.ScanStatus = "Finished";
-                uploadScanJSON = Connection.ToJSON(scan);
+                string uploadScanJSON = Connection.ToJSON(scan);
 
                 //upload the devices
                 Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("JSON={0}", uploadDeviceJSON));

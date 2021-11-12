@@ -44,6 +44,7 @@ namespace NND_Agent
             catch (Exception ex)
             {
                 //throw or return an appropriate response/exception
+                
             }
 
             return webpageContent;
@@ -91,14 +92,15 @@ namespace NND_Agent
             JToken jScan = jObject["scan"];
 
             //create a model 
-            ScanModel tempModel = new ScanModel();
+            ScanModel tempModel = new ScanModel
+            {
+                scanID = (int)jScan["scanID"],
+                scanInfo = (string)jScan["ScanInfo"],
+                scanType = (string)jScan["ScanType"],
+                userName = (string)jScan["userID"],
+                ScanStatus = (string)jScan["ScanStatus"]
+            };
 
-            tempModel.scanID = (int)jScan["scanID"];
-            tempModel.scanInfo = (string)jScan["ScanInfo"];
-            tempModel.scanType = (string)jScan["ScanType"];
-            tempModel.userName = (string)jScan["userID"];
-            tempModel.ScanStatus = (string)jScan["ScanStatus"];
-            
             return tempModel;
 
         }

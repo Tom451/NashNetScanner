@@ -30,9 +30,9 @@ if(!isset($_SESSION['user_id'])){
         <div class="collapse navbar-collapse" id="navcol-1">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item"><a class="nav-link active" href="selectScan.php">Network Scanner</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">View Data</a></li>
-                <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Dropdown </a>
-                    <div class="dropdown-menu"><a class="dropdown-item" href="#">First Item</a><a class="dropdown-item" href="#">Second Item</a><a class="dropdown-item" href="#">Third Item</a></div>
+                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Items: </a>
+                    <div class="dropdown-menu"><a class="dropdown-item" href="selectScan.php">Scan Selector</a><a class="dropdown-item" href="#">Second Item</a><a class="dropdown-item" href="#">Third Item</a></div>
                 </li>
             </ul><span class="navbar-text actions"> <a class="btn btn-light action-button" role="button" href="logOut.php">Log Out</a></span>
         </div>
