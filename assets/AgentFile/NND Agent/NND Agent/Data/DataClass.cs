@@ -106,6 +106,7 @@ namespace NND_Agent.Data
                 tempDevice.ipAddress = hostipaddress;
                 tempDevice.macAddress = mac;
                 tempDevice.name = hostActualName;
+                tempDevice.ScanID = scan.scanID;
 
                 devices.Add(tempDevice);
 

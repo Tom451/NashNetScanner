@@ -1,12 +1,56 @@
 <?php
-
-// Put your device token here (without spaces):
+//If the post Value is JSON for the upload start the upload of the devices
 if (isset($_POST['JSON'])){
-    $JSON = $_POST['JSON'];
 
-    $string = $JSON;
+    require 'DBConfig.php';
 
-    print_r(json_decode($string));
+    //Get PDO connection string
+    $connection = getConnection();
+    $storedProcedure = 'CALL addDevice(:indeviceIP, :inRTT, :inMacAddress, :inName, :inScanID)';
+
+    $device = json_decode($_POST['JSON']);
+
+    foreach($device as $mydata){
+
+
+
+        $deviceIP = $mydata->ipAddress;
+        $deviceMac = $mydata->macAddress;
+        $deviceName = $mydata->name;
+        $RTT = $mydata->RTT;
+        $ScanID = $mydata->ScanID;
+
+
+        $statement = $connection->prepare($storedProcedure);
+
+        $statement->bindParam(':indeviceIP', $deviceIP, PDO::PARAM_STR);
+        $statement->bindParam(':inMacAddress', $deviceMac, PDO::PARAM_STR);
+        $statement->bindParam(':inName', $deviceName, PDO::PARAM_STR);
+        $statement->bindParam(':inRTT', $deviceName, PDO::PARAM_STR);
+        $statement->bindParam(':inScanID', $ScanID, PDO::PARAM_STR);
+        $statement->execute();
+
+        //get the userID of new user to be added.
+        $query = $connection->prepare("SELECT deviceID FROM device WHERE deviceMacAddress=:deviceMacAddress AND deviceIP = :deviceIP");
+        $query->bindParam("deviceMacAddress", $deviceMac, PDO::PARAM_STR);
+        $query->bindParam("deviceIP", $deviceIP, PDO::PARAM_STR);
+        $query->execute();
+
+        $deviceIDResult = $query->fetchColumn();
+
+        print_r($deviceIDResult);
+
+    }
+
+
+
+
+
+
+
+
+    $publishers = [];
+
 
     return "Successful!";
 }
