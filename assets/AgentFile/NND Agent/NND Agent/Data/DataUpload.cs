@@ -97,6 +97,7 @@ namespace NND_Agent
             tempModel.scanInfo = (string)jScan["ScanInfo"];
             tempModel.scanType = (string)jScan["ScanType"];
             tempModel.userName = (string)jScan["userID"];
+            tempModel.ScanStatus = (string)jScan["ScanStatus"];
             
             return tempModel;
 

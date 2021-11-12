@@ -13,6 +13,7 @@ namespace NND_Agent.Items
         public string scanInfo { get; set; }
         public string scanType { get; set; }
 
+        public string ScanStatus { get; set; }
         public int scanID { get; set; }
     }
 }

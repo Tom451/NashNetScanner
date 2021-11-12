@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +15,38 @@ namespace NND_Agent
 {
     public partial class NNDAgent : Form
     {
-        public long userNONCE = 637421763829778810;
+
+        public long userNONCE = 0;
         public NNDAgent()
         {
             InitializeComponent();
-            base.SetVisibleCore(false);
+
+            //read the current user from nonce
+            try
+            {
+                //try find the user file 
+                string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string sFile = System.IO.Path.Combine(sCurrentDirectory, @"UserNONCE.txt");
+                string sFilePath = Path.GetFullPath(sFile);
+                userNONCE = long.Parse(System.IO.File.ReadAllText(sFilePath));
+
+                //if found then greet user
+                NNDToolBarIcon.BalloonTipTitle = "Welcome";
+                NNDToolBarIcon.BalloonTipText = "Please right click the icon to run a scan!";
+                NNDToolBarIcon.Visible = true;
+                NNDToolBarIcon.ShowBalloonTip(100);
+            }
+            catch
+            {
+                //show the user the error 
+                
+                NNDToolBarIcon.BalloonTipTitle = "File Error";
+                NNDToolBarIcon.BalloonTipText = "Unable to find user ID file. Please try to re download agent";
+                NNDToolBarIcon.Visible = true;
+                NNDToolBarIcon.ShowBalloonTip(100);
+            }
         }
+
         private void NNDAgent_Resize(object sender, EventArgs e)
         {
             //if the form is minimized  
@@ -31,8 +58,6 @@ namespace NND_Agent
                 NNDToolBarIcon.Visible = true;
             }
         }
-
-
         private void NNDToolBarIcon_MouseDoubleClick_1(object sender, MouseEventArgs e)
         {
             Show();
@@ -49,20 +74,13 @@ namespace NND_Agent
             NNDToolBarIcon.Visible = true;
         }
 
-        private void runScanToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RunScanToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DataUpload Connection = new DataUpload();
-            DataClass Data = new DataClass();
-            ScanModel scan = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
-
-            List<ComputerModel> upload = Data.NMapScan(scan);
-
-            
-            string NewJson = Connection.ToJSON(upload);
-
-            
-            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("JSON={0}", NewJson));
+            DataClass Scan = new DataClass();
+            Scan.StartScan(userNONCE);
             
         }
+
+ 
     }
 }

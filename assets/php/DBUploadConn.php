@@ -1,8 +1,7 @@
 <?php
+require 'DBConfig.php';
 //If the post Value is JSON for the upload start the upload of the devices
 if (isset($_POST['JSON'])){
-
-    require 'DBConfig.php';
 
     //Get PDO connection string
     $connection = getConnection();
@@ -11,8 +10,6 @@ if (isset($_POST['JSON'])){
     $device = json_decode($_POST['JSON']);
 
     foreach($device as $mydata){
-
-
 
         $deviceIP = $mydata->ipAddress;
         $deviceMac = $mydata->macAddress;
@@ -40,20 +37,10 @@ if (isset($_POST['JSON'])){
 
     }
 
-
-
-
-
-
-
-
-    $publishers = [];
-
-
     return "Successful!";
 }
 elseif (isset($_GET['USERID'])) {
-    require 'DBConfig.php';
+
 
     //Get PDO connection string
     $connection = getConnection();
@@ -79,7 +66,7 @@ elseif (isset($_GET['USERID'])) {
 
     //if there is no results then show incorrect credentials
     if (!$result) {
-        echo "Either No Scans are Avalable or User does not exsist";
+        echo "False";
     } else {
 
         $post_data = array(
@@ -94,6 +81,29 @@ elseif (isset($_GET['USERID'])) {
 
         echo json_encode($post_data);
 
+    }
+}
+elseif (isset($_POST['SCANUPDATE'])){
+
+    $scan = json_decode($_POST['SCANUPDATE']);
+
+    $ScanStatus = $scan->ScanStatus;
+    $ScanID = $scan->scanID;
+
+
+    $sql = 'UPDATE scan SET ScanStatus = :NewStatus WHERE ScanID = :ScanID';
+    $connection = getConnection();
+
+    // prepare statement
+    $statement = $connection->prepare($sql);
+
+// bind params
+    $statement->bindParam(':NewStatus', $ScanStatus, PDO::PARAM_STR);
+    $statement->bindParam(':ScanID', $ScanID);
+
+// execute the UPDATE statment
+    if ($statement->execute()) {
+        echo 'The publisher has been updated successfully!';
     }
 }
 

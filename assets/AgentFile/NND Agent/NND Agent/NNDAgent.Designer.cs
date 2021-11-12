@@ -58,7 +58,7 @@
             this.runSacnToolStripMenuItem.Name = "runSacnToolStripMenuItem";
             this.runSacnToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.runSacnToolStripMenuItem.Text = "Run Scan";
-            this.runSacnToolStripMenuItem.Click += new System.EventHandler(this.runScanToolStripMenuItem_Click);
+            this.runSacnToolStripMenuItem.Click += new System.EventHandler(this.RunScanToolStripMenuItem_Click);
             // 
             // NNDAgent
             // 

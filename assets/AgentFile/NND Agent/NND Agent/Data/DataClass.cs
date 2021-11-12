@@ -13,6 +13,43 @@ namespace NND_Agent.Data
     internal class DataClass
     {
         List<ComputerModel> devices = new List<ComputerModel>();
+        public void StartScan(long userNONCE)
+        {
+            //initalise the classes
+            DataUpload Connection = new DataUpload();
+ 
+
+            //get the scan
+            ScanModel scan = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
+
+            List<ComputerModel> upload = NMapScan(scan);
+
+            //get ready for item upload
+            string uploadDeviceJSON = string.Empty;
+            string uploadScanJSON = string.Empty;
+
+            //convert the device objects to JSON
+            try
+            {
+                uploadDeviceJSON = Connection.ToJSON(upload);
+
+                //Convert the scan to JSON
+                scan.ScanStatus = "Finished";
+                uploadScanJSON = Connection.ToJSON(scan);
+
+                //upload the devices
+                Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("JSON={0}", uploadDeviceJSON));
+
+                //upload the scan
+                Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("SCANUPDATE={0}", uploadScanJSON));
+            }
+            catch (Exception)
+            {
+                scan.ScanStatus = "Failed";
+
+            }
+        }
+
         public List<ComputerModel> NMapScan(ScanModel scan)
         {
             //Start the Scan
@@ -24,7 +61,7 @@ namespace NND_Agent.Data
             };
 
             //get gateway IP and Mac Address for scan 
-            string gateway = getNetworkGateway();
+            string gateway = GetNetworkGateway();
             string[] gatewayArray = gateway.Split('.');
 
             string ScanSaveLocation = "C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml";
@@ -40,7 +77,7 @@ namespace NND_Agent.Data
             if (scan.scanType == "NetDisc")
             {
                 //parse the scan data 
-                parseNetworkDiscoveryData(scan);
+                ParseNetworkDiscoveryData(scan);
 
             }
 
@@ -51,9 +88,7 @@ namespace NND_Agent.Data
 
         }
 
-
-
-        public void parseNetworkDiscoveryData(ScanModel scan)
+        public void ParseNetworkDiscoveryData(ScanModel scan)
         {
             //read in data from the created XML File
             XmlDocument NMapXMLScan = new XmlDocument();
@@ -115,9 +150,7 @@ namespace NND_Agent.Data
 
 
         }
-
-
-        public string getNetworkGateway()
+        public string GetNetworkGateway()
         {
             //start with a blank IP
             string ip = null;
