@@ -64,9 +64,7 @@ namespace NND_Agent
                 {
                     using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        webpageContent = reader.ReadToEnd();
-                        
-                                               
+                        webpageContent = reader.ReadToEnd();                     
                     }
                 }
             }

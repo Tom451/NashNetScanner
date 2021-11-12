@@ -50,6 +50,10 @@ if (isset($_POST['login'])) {
         }
     }
 }
+
+elseif (isset($_GET['USERID'])) {
+
+}
 ?>
 
 <!DOCTYPE html>

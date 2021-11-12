@@ -38,8 +38,6 @@ if (isset($_POST['JSON'])){
 
         $deviceIDResult = $query->fetchColumn();
 
-        print_r($deviceIDResult);
-
     }
 
 
@@ -61,11 +59,19 @@ elseif (isset($_GET['USERID'])) {
     $connection = getConnection();
 
     //get the inputted username and the password
-    $USERID = $_GET['USERID'];
+    $USERNONCE = $_GET['USERID'];
+
+    //select all the users with the given username
+    $query = $connection->prepare("SELECT UserID FROM usercredentials WHERE userNonce=:userNonce");
+    $query->bindParam("userNonce", $USERNONCE, PDO::PARAM_STR);
+    $query->execute();
+
+    //get the userID result
+    $result = $query->fetch(PDO::FETCH_ASSOC);
 
     //select all the users with the given username
     $query = $connection->prepare("SELECT * FROM scan WHERE userID=:userid AND ScanStatus='Pending'");
-    $query->bindParam("userid", $USERID, PDO::PARAM_STR);
+    $query->bindParam("userid", $result['UserID'], PDO::PARAM_STR);
     $query->execute();
 
     //get the result
@@ -73,7 +79,7 @@ elseif (isset($_GET['USERID'])) {
 
     //if there is no results then show incorrect credentials
     if (!$result) {
-        echo '<script>IncorrectCredentials()</script>';
+        echo "Either No Scans are Avalable or User does not exsist";
     } else {
 
         $post_data = array(

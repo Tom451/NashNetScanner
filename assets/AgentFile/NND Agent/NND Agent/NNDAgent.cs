@@ -14,7 +14,7 @@ namespace NND_Agent
 {
     public partial class NNDAgent : Form
     {
-        public string userNONCE = "14";
+        public long userNONCE = 637421763829778810;
         public NNDAgent()
         {
             InitializeComponent();
