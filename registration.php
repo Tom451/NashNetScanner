@@ -4,7 +4,7 @@
 session_start();
 include('assets/php/DBConfig.php');
 
-$connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
+$connection = getConnection();
 
 if (isset($_POST['register'])) {
 
@@ -14,6 +14,8 @@ if (isset($_POST['register'])) {
     $password = $_POST['password'];
     $firstName =$_POST['firstName'];
     $lastName =$_POST['lastName'];
+    $lastSeen = date("Y-m-d H:i:s");
+    $LoginNONCE = random_int(0, PHP_INT_MAX);
 
     //get the password hash
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
@@ -43,11 +45,12 @@ if (isset($_POST['register'])) {
         $userIDResult = $query->fetchColumn();
 
         //then add the credentials
-        $query = $connection->prepare("INSERT INTO usercredentials(userName,password,UserID,EncryptionSalt) VALUES (:username,:password_hash,:userID,:EncryptionSalt)");
+        $query = $connection->prepare("INSERT INTO usercredentials(userName,password,UserID,lastSeen,userNonce) VALUES (:username,:password_hash,:userID,:lastSeen,:LoginNonce)");
         $query->bindParam("username", $username, PDO::PARAM_STR);
         $query->bindParam("password_hash", $password_hash, PDO::PARAM_STR);
         $query->bindParam("userID", $userIDResult, PDO::PARAM_STR);
-        $query->bindParam("EncryptionSalt", $username, PDO::PARAM_STR);
+        $query->bindParam("lastSeen", $lastSeen, PDO::PARAM_STR);
+        $query->bindParam("LoginNonce", $LoginNONCE, PDO::PARAM_STR);
 
 
         $result = $query->execute();

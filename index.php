@@ -15,7 +15,7 @@ require 'assets\php\DBConfig.php';
 if (isset($_POST['login'])) {
 
     //Get PDO connection string
-    $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
+    $connection = getConnection();
 
     //get the inputted username and the password
     $username = $_POST['username'];
@@ -49,6 +49,10 @@ if (isset($_POST['login'])) {
             echo '<script>IncorrectCredentials()</script>';
         }
     }
+}
+
+elseif (isset($_GET['USERID'])) {
+
 }
 ?>
 
