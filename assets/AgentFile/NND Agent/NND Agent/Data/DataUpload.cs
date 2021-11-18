@@ -74,7 +74,17 @@ namespace NND_Agent
                 //throw or return an appropriate response/exception
             }
 
-            return FromJSON(webpageContent);
+            if(webpageContent == "False")
+            {
+                ScanModel nullModel = null;
+                return nullModel;
+            }
+            else
+            {
+                return FromJSON(webpageContent);
+            }
+
+            
         }
 
         //json converter for 

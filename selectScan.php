@@ -88,7 +88,7 @@ VALUES (:userID,:SessionID,:scanInfo,:scanType,:scanStatus)");
             </div>
         </div>
     </nav>
-    <section class="features-boxed">
+    <section class="features-clean">
         <div class="container">
             <div class="intro">
                 <h2 class="text-center">Please select what you would like to do</h2>
@@ -122,3 +122,4 @@ VALUES (:userID,:SessionID,:scanInfo,:scanType,:scanStatus)");
 </body>
 
 </html>
+

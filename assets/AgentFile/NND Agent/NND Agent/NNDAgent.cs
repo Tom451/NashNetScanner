@@ -15,6 +15,7 @@ namespace NND_Agent
 {
     public partial class NNDAgent : Form
     {
+        public static NNDAgent NNDForm = null;
 
         public long userNONCE = 0;
         public NNDAgent()
@@ -45,6 +46,8 @@ namespace NND_Agent
                 NNDToolBarIcon.Visible = true;
                 NNDToolBarIcon.ShowBalloonTip(100);
             }
+
+            NNDForm = this;
         }
 
         private void NNDAgent_Resize(object sender, EventArgs e)
@@ -79,6 +82,14 @@ namespace NND_Agent
             DataClass Scan = new DataClass();
             Scan.StartScan(userNONCE);
             
+        }
+
+        public void popUp(string error, string errorText)
+        {
+            NNDToolBarIcon.BalloonTipTitle = error;
+            NNDToolBarIcon.BalloonTipText = errorText;
+            NNDToolBarIcon.Visible = true;
+            NNDToolBarIcon.ShowBalloonTip(100);
         }
 
  

@@ -42,6 +42,7 @@ if (isset($_POST['login'])) {
             $password = getKeyPassword($password, "testSalt");
             $_SESSION['key'] = $password;
             $_SESSION['user_id'] = $result['UserID'];
+            $_SESSION['userName'] = $username;
             // send the user to the home page
             header('Location: homepage.php');
         } else {

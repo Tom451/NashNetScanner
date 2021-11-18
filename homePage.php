@@ -2,6 +2,7 @@
 session_start();
 if(!isset($_SESSION['user_id'])){
     header('Location: index.php');
+
     exit;
 } else {
 
@@ -11,6 +12,9 @@ if(!isset($_SESSION['user_id'])){
 
 <!DOCTYPE html>
 <html lang="en">
+
+
+
 
 <head>
     <meta charset="utf-8">
@@ -41,7 +45,7 @@ if(!isset($_SESSION['user_id'])){
 <section class="features-clean">
     <div class="container">
         <div class="intro">
-            <h2 class="text-center">Welcome UserName,&nbsp;</h2>
+            <h2 class="text-center" id="NameHolder">Welcome UserName,&nbsp;</h2>
             <p class="text-center">Welcome to the NashNetworkDashboard, the first step in simplifying home network security.&nbsp;</p>
         </div>
         <div class="row features">
@@ -65,3 +69,8 @@ if(!isset($_SESSION['user_id'])){
 </body>
 
 </html>
+<script type="text/javascript">
+        var userName = "<?php echo $_SESSION['userName'];?>"
+        var doc = document.getElementById("NameHolder")
+        doc.innerText ="Welcome, " + userName;
+</script>

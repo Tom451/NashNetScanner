@@ -22,6 +22,13 @@ namespace NND_Agent.Data
             //get the scan
             ScanModel scan = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
 
+            if (scan == null)
+            {
+                NNDAgent.NNDForm.popUp("Error with fetching scan", "No scan avalable please start a scan from the web interface");
+                return;
+
+            }
+
             List<ComputerModel> upload = NMapScan(scan);
 
             //convert the device objects to JSON
