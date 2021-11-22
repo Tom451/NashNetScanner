@@ -8,26 +8,16 @@ if(!isset($_SESSION['user_id'])){
 
 }
 
-if (isset($_POST['scanSelected'])) {
 
-    $scanID = $_POST['scanSelected'];
-
-}
-else {
-    header('Location: previousScans.php');
-}
 
 require 'assets\php\DBConfig.php';
+require 'assets\php\randomSessionCreator.php';
 
-//Get PDO connection string
+$USERID = $_SESSION['user_id'];
 $connection = getConnection();
-
-
-
 //select all the users with the given username
-$query = $connection->prepare("SELECT device.deviceIP, device.deviceMacAddress, device.deviceName, device.deviceLastSeen FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
-JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
-$query->bindParam("scanID", $scanID, PDO::PARAM_STR);
+$query = $connection->prepare("SELECT * FROM scan WHERE userID=:userid");
+$query->bindParam("userid", $USERID, PDO::PARAM_STR);
 $query->execute();
 
 //get the result
@@ -35,7 +25,6 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
 ?>
-
 
 
 <!DOCTYPE html>
@@ -47,12 +36,15 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
     <title>NashNetworkScanner</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/Data-Table-1.css">
+    <link rel="stylesheet" href="assets/css/Data-Table.css">
     <link rel="stylesheet" href="assets/css/Features-Boxed.css">
     <link rel="stylesheet" href="assets/css/Features-Clean.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
     <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/Team-Grid.css">
 </head>
 
 <body>
@@ -69,42 +61,42 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </nav>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div><a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-1" href="#collapse-1" role="button">Show Content</a>
-                    <div class="collapse show" id="collapse-1"><table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Device Name</th>
-                <th>IP</th>
-                <th>Mac</th>
-                <th>Last Seen</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php
-
-        foreach ($result as $item) {
-            echo '<tr>';
-            echo '<td>' . $item['deviceName'] . '</td>';
-            echo '<td>' . $item['deviceIP'] . '</td>';
-            echo '<td>' . $item['deviceMacAddress'] . '</td>';
-            echo '<td>' . $item['deviceLastSeen'] . '</td>';
-            echo '<tr>';
-        }
-        ?>
-
-        </tbody>
-    </table></div>
-                </div>
+    <section class="features-clean">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">Previous Scans</h2>
+                <p class="text-center">Here you can see all your previous scans, this is where you can select what scan you would like to view&nbsp;</p>
             </div>
+            <form action="/ViewScan.php" method="post">
+            <div class="row features">
+
+                <?php
+                foreach (array_reverse($result) as $item) {
+                    echo '<div class="col-sm-6 col-lg-4 item"><i class="fa fa-map-marker icon"></i>';
+                    echo '<h3 class="name">User Initiated Scan</h3>';
+                    echo '<ul class="list-unstyled">';
+                    echo'<li><strong>Scan Type: </strong>'.$item['ScanType'].'</li>';
+                    echo'<li><strong>Scan Status:</strong>'.$item['ScanStatus'].'</li>';
+                    echo'<li><strong>Scan ID:</strong>'.$item['ScanID'].'</li>';
+                    echo'<li></li>';
+                    if ($item['ScanStatus'] == "Pending"){
+
+                        echo'<li></li>';
+                    }
+                    else {
+                        echo '</ul><button class="btn btn-primary bg-secondary d-lg-flex"  name="scanSelected" value="' . $item['ScanID'] . '">View Scan</button>';
+                    }
+                    echo'</div>';
+
+                }
+
+
+                ?>
+
+            </div>
+            </form>
         </div>
-        <div class="row">
-            <div class="col-md-6"></div>
-            <div class="col-md-6"></div>
-        </div>
-    </div>
+    </section>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
