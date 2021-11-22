@@ -27,7 +27,6 @@ if (isset($_POST['pingScan'])) {
 
 //if there is no results then show incorrect credentials
     if (!$result) {
-        require "assets/php/encryptData.php";
         $username = $_SESSION['user_id'];
         $SessionID = generateRandom();
         $scanInfo = "nmap -sP -oX";
