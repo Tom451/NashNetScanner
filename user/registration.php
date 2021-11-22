@@ -1,4 +1,4 @@
-<script src="assets/js/loginAndRegistrationJS.js"></script>
+<script src="../assets/js/loginAndRegistrationJS.js"></script>
 
 <?php
 session_start();
@@ -71,10 +71,10 @@ if (isset($_POST['register'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>NashNetworkScanner</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Login-Form-Clean.css">
 </head>
 
 <body>
@@ -95,7 +95,7 @@ if (isset($_POST['register'])) {
 <section class="login-clean" style="width: auto;height: auto;">
     <form  method="post">
         <h2 class="sr-only">Login Form</h2>
-        <div class="illustration"><img src="assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>
+        <div class="illustration"><img src="../assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>
         <div class="form-group"><input class="form-control" type="text" name="firstName" placeholder="First Name"></div>
         <div class="form-group"><input class="form-control" type="text" name="lastName" placeholder="Last Name"></div>
         <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
@@ -105,8 +105,8 @@ if (isset($_POST['register'])) {
     </form>
 </section>
 
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/bootstrap/js/bootstrap.min.js"></script>
 
 </body>
 
