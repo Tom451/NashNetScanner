@@ -107,6 +107,7 @@ namespace NND_Agent
             {
                 //if scan errors out
                 popUp("Unable to start", "Please reinstall app ", ToolTipIcon.Error);
+                //Application exit
                 Application.Exit();
 
             }
