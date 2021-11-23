@@ -23,7 +23,10 @@ namespace NND_Agent
         public long userNONCE = 0;
         public NNDAgent()
         {
+
+            //Start up code 
             InitializeComponent();
+
             //check nmap is installed 
             try
             {

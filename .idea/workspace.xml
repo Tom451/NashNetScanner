@@ -22,20 +22,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/.vs/NND Agent/v17/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/.vs/NND Agent/v17/.suo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/NND Agent.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/NND Agent.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.application" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.application" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.exe" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.exe.manifest" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.exe.manifest" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/NND Agent.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/bin/Debug/app.publish/NND Agent.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.application" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.application" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.exe" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.exe.manifest" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.exe.manifest" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/assets/AgentFile/NND Agent/NND Agent/obj/Debug/NND Agent.pdb" afterDir="false" />
-    </list>
+    <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -139,7 +126,7 @@
       <workItem from="1636712639488" duration="13896000" />
       <workItem from="1637143913484" duration="2647000" />
       <workItem from="1637591266787" duration="7841000" />
-      <workItem from="1637678118159" duration="1415000" />
+      <workItem from="1637678118159" duration="1685000" />
     </task>
     <servers />
   </component>
