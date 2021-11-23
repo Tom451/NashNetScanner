@@ -23,8 +23,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5e0044c0-178e-4a73-98d7-00b1ad6fb5f3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/networkScanner.php" beforeDir="false" afterPath="$PROJECT_DIR$/scan/networkScanner.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/previousScans.php" beforeDir="false" afterPath="$PROJECT_DIR$/scan/previousScans.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scan/createScan.php" beforeDir="false" afterPath="$PROJECT_DIR$/scan/createScan.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scan/previousScans.php" beforeDir="false" afterPath="$PROJECT_DIR$/scan/previousScans.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scan/viewScan.php" beforeDir="false" afterPath="$PROJECT_DIR$/scan/viewScan.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,10 +89,10 @@
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\assets\old" />
+      <recent name="C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\scan" />
+      <recent name="C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard\user" />
       <recent name="C:\Users\Tom\Documents\Uni Work\COMP3000Project\NashNetworkDashboard" />
       <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard" />
-      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets\css" />
-      <recent name="C:\Users\Tom\Documents\GitHub\NashNetworkDashboard\assets" />
     </key>
   </component>
   <component name="RunManager">
@@ -128,7 +130,7 @@
       <workItem from="1636620195215" duration="10199000" />
       <workItem from="1636712639488" duration="13896000" />
       <workItem from="1637143913484" duration="2647000" />
-      <workItem from="1637591266787" duration="6611000" />
+      <workItem from="1637591266787" duration="7246000" />
     </task>
     <servers />
   </component>
@@ -151,7 +153,7 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/registration.php</url>
+          <url>file://$PROJECT_DIR$/user/registration.php</url>
           <line>55</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>

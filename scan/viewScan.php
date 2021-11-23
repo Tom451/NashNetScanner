@@ -17,7 +17,7 @@ else {
     header('Location: previousScans.php');
 }
 
-require 'assets\php\DBConfig.php';
+require '..\assets\php\DBConfig.php';
 
 //Get PDO connection string
 $connection = getConnection();

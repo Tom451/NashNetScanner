@@ -10,8 +10,8 @@ if(!isset($_SESSION['user_id'])){
 
 
 
-require 'assets\php\DBConfig.php';
-require 'assets\php\randomSessionCreator.php';
+require '..\assets\php\DBConfig.php';
+require '..\assets\php\randomSessionCreator.php';
 
 $USERID = $_SESSION['user_id'];
 $connection = getConnection();
