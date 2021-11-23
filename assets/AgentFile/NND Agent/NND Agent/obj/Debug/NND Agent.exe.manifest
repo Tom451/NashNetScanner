@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="NND Agent.exe" version="1.0.0.4" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="NND Agent.exe" version="1.0.0.9" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <application />
   <entryPoint>
     <assemblyIdentity name="NND Agent" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
@@ -54,17 +54,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NND Agent.exe" size="450480">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NND Agent.exe" size="450992">
       <assemblyIdentity name="NND Agent" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>4wAJmCFvIi7d8Rc2tOc5XGSMNxnEyic0Wnn8/I3UUYU=</dsig:DigestValue>
+        <dsig:DigestValue>BY1vM6+dADN+k3Xlro8xgz5E4I+9Stj5OKlPAxXRMzM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
+  <file name="Data\Prerequisites\nmap-7.92-setup.exe" size="28644568">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>skANsaSvlgf91u5Q4PWSbYuScvie7JPUwwtW3IVK+3o=</dsig:DigestValue>
+    </hash>
+  </file>
   <file name="Data\UserNONCE.txt" size="18">
     <hash>
       <dsig:Transforms>
