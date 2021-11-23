@@ -17,11 +17,13 @@ namespace NND_Agent
         [STAThread]
         static void Main()
         {
+           
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new NNDAgent());
 
-        
+            
 
         }
         
