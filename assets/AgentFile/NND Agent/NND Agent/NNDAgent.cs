@@ -56,19 +56,14 @@ namespace NND_Agent
                         userNONCE = long.Parse(System.IO.File.ReadAllText(@"Data\UserNONCE.txt"));
 
                         //if found then greet user
-                        NNDToolBarIcon.BalloonTipTitle = "Welcome";
-                        NNDToolBarIcon.BalloonTipText = "Please right click the icon to run a scan!";
-                        NNDToolBarIcon.Visible = true;
-                        NNDToolBarIcon.ShowBalloonTip(100);
+                        popUp("Welcome", "Please right click the icon to run a scan!", ToolTipIcon.Info);
+
                     }
                     catch
                     {
                         //show the user the error 
+                        popUp("File Error", "Unable to find user ID file. Please try to re download agent", ToolTipIcon.Error);
 
-                        NNDToolBarIcon.BalloonTipTitle = "File Error";
-                        NNDToolBarIcon.BalloonTipText = "Unable to find user ID file. Please try to re download agent";
-                        NNDToolBarIcon.Visible = true;
-                        NNDToolBarIcon.ShowBalloonTip(100);
                     }
 
                     NNDForm = this;
@@ -76,16 +71,13 @@ namespace NND_Agent
                 }
                 else
                 {
+
                     //show the user the error that NMAp is not installed 
+                    popUp("NMAP Not Installed", "NMAP installer will open in 10 seconds, please follow the instructions to install", ToolTipIcon.Error);
 
-                    NNDToolBarIcon.BalloonTipTitle = "NMAP Not Installed";
-                    NNDToolBarIcon.BalloonTipText = "NMAP installer will open in 10 seconds, please follow the instructions to install";
-                    NNDToolBarIcon.Visible = true;
-                    NNDToolBarIcon.ShowBalloonTip(100);
-
+                    //wait for ten seconds
                     int milliseconds = 10000;
                     Thread.Sleep(milliseconds);
-
                     string sFilePath = Path.GetFullPath(@"Data\Prerequisites\nmap-7.92-setup.exe");
 
                     //start cmd proccess
@@ -96,6 +88,7 @@ namespace NND_Agent
                         UseShellExecute = true,
                     };
 
+                    //start the install
                     install.StartInfo = installInfo;
                     install.Start();
 
@@ -150,12 +143,16 @@ namespace NND_Agent
             
         }
 
-        public void popUp(string error, string errorText)
+        public void popUp(string title, string info, ToolTipIcon type)
         {
-            NNDToolBarIcon.BalloonTipTitle = error;
-            NNDToolBarIcon.BalloonTipText = errorText;
+            NNDToolBarIcon.BalloonTipTitle = title;
+            NNDToolBarIcon.BalloonTipText = info;
+            NNDToolBarIcon.BalloonTipIcon = type;
             NNDToolBarIcon.Visible = true;
             NNDToolBarIcon.ShowBalloonTip(100);
+           
+            // Create buttons and set text property.  
+            
         }
 
  

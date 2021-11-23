@@ -24,7 +24,7 @@ namespace NND_Agent.Data
 
             if (scan == null)
             {
-                NNDAgent.NNDForm.popUp("Error with fetching scan", "No scan avalable please start a scan from the web interface");
+                NNDAgent.NNDForm.popUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
                 return;
 
             }
