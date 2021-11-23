@@ -78,7 +78,7 @@ namespace NND_Agent
                     //show the user the error that NMAp is not installed 
 
                     NNDToolBarIcon.BalloonTipTitle = "NMAP Not Installed";
-                    NNDToolBarIcon.BalloonTipText = "Installing";
+                    NNDToolBarIcon.BalloonTipText = "Please download and Install NMAP";
                     NNDToolBarIcon.Visible = true;
                     NNDToolBarIcon.ShowBalloonTip(100);
 
