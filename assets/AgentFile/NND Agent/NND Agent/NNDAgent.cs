@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -78,9 +79,29 @@ namespace NND_Agent
                     //show the user the error that NMAp is not installed 
 
                     NNDToolBarIcon.BalloonTipTitle = "NMAP Not Installed";
-                    NNDToolBarIcon.BalloonTipText = "Please download and Install NMAP";
+                    NNDToolBarIcon.BalloonTipText = "NMAP installer will open in 10 seconds, please follow the instructions to install";
                     NNDToolBarIcon.Visible = true;
                     NNDToolBarIcon.ShowBalloonTip(100);
+
+                    int milliseconds = 10000;
+                    Thread.Sleep(milliseconds);
+
+                    string sFilePath = Path.GetFullPath(@"Data\Prerequisites\nmap-7.92-setup.exe");
+
+                    //start cmd proccess
+                    Process install = new Process();
+                    ProcessStartInfo installInfo = new ProcessStartInfo
+                    {
+                        FileName = sFilePath,
+                        UseShellExecute = true,
+                    };
+
+                    install.StartInfo = installInfo;
+                    install.Start();
+
+                    install.WaitForExit();
+
+                    
 
                 }
 

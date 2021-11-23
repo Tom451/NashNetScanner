@@ -38,8 +38,6 @@ if (isset($_POST['login'])) {
 
             //if the given password is correct then, get the derived key from the
             // password and store that in the session variable for later encryption use
-            require "assets/php/deriveKeyPassword.php";
-            $password = getKeyPassword($password, "testSalt");
             $_SESSION['key'] = $password;
             $_SESSION['user_id'] = $result['UserID'];
             $_SESSION['userName'] = $username;
