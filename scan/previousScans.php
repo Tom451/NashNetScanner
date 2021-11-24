@@ -11,7 +11,6 @@ if(!isset($_SESSION['user_id'])){
 
 
 require '..\assets\php\DBConfig.php';
-require '..\assets\php\randomSessionCreator.php';
 
 $USERID = $_SESSION['user_id'];
 $connection = getConnection();
@@ -44,19 +43,8 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
-        <div class="container"><a class="navbar-brand" href="#">NashNetworkScanner</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-1">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Network Scanner</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">View Data</a></li>
-                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Dropdown </a>
-                        <div class="dropdown-menu"><a class="dropdown-item" href="#">First Item</a><a class="dropdown-item" href="#">Second Item</a><a class="dropdown-item" href="#">Third Item</a></div>
-                    </li>
-                </ul><span class="navbar-text actions"> <button class="btn btn-light action-button" type="button">Log Out</button></span>
-            </div>
-        </div>
-    </nav>
+    <?php require '../assets/php/navBarLoggedIn.php' ?>
+
     <section class="features-clean">
         <div class="container">
             <div class="intro">
@@ -73,8 +61,8 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
                     echo '<ul class="list-unstyled">';
                     echo'<li><strong>Scan Type: </strong>'.$item['ScanType'].'</li>';
                     echo'<li><strong>Scan Status:</strong>'.$item['ScanStatus'].'</li>';
-                    echo'<li><strong>Scan ID:</strong>'.$item['ScanID'].'</li>';
-                    echo'<li></li>';
+                    echo'<li><strong>Scan ID: </strong>'.$item['ScanID'].'</li>';
+                    echo'<li><strong>Date: </strong>'.$item['SessionID'].'</li>';
                     if ($item['ScanStatus'] == "Pending"){
 
                         echo'<li></li>';
