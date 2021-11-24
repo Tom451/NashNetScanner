@@ -1,7 +1,9 @@
+<script src="../assets/js/errorMessagePopUp.js"></script>
+
 <?php
 session_start();
 if(!isset($_SESSION['user_id'])){
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit;
 } else {
 
@@ -11,11 +13,12 @@ if (isset($_POST['pingScan'])) {
 
 
     require '..\assets\php\DBConfig.php';
-    require '..\assets\php\randomSessionCreator.php';
 
     $USERID = $_SESSION['user_id'];
     $ScanStatus = "Pending";
     $connection = getConnection();
+
+
     //select all the users with the given username
     $query = $connection->prepare("SELECT * FROM scan WHERE userID=:userid AND ScanStatus = :ScanStatus");
     $query->bindParam("userid", $USERID, PDO::PARAM_STR);
@@ -28,7 +31,7 @@ if (isset($_POST['pingScan'])) {
 //if there is no results then show incorrect credentials
     if (!$result) {
         $username = $_SESSION['user_id'];
-        $SessionID = generateRandom();
+        $SessionID = date('d-m-y h:i:s');;
         $scanInfo = "nmap -sP -oX";
         $scanType = "NetDisc";
         $scanStatus = "Pending";
@@ -47,7 +50,7 @@ VALUES (:userID,:SessionID,:scanInfo,:scanType,:scanStatus)");
 
     } else {
 
-        echo "Scan Waiting to be run please run previous scan";
+        echo '<script>errorMessagePopUp("Scan waiting please run current scan")</script>';
     }
 
 
