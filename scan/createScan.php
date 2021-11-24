@@ -9,7 +9,8 @@ if(!isset($_SESSION['user_id'])){
 
 }
 
-if (isset($_POST['pingScan'])) {
+
+if (isset($_POST['createScan'])) {
 
 
     require '..\assets\php\DBConfig.php';
@@ -32,12 +33,24 @@ if (isset($_POST['pingScan'])) {
     if (!$result) {
         $username = $_SESSION['user_id'];
         $SessionID = date('d-m-y h:i:s');;
-        $scanInfo = "nmap -sP -oX";
-        $scanType = "NetDisc";
-        $scanStatus = "Pending";
+
+        if ($_POST['createScan'] == "NetDisc"){
+
+            $scanInfo = "nmap -sP -oX";
+            $scanType = "NetDisc";
+            $scanStatus = "Pending";
+
+        }
+        elseif($_POST['createScan'] == "VulnScan"){
+
+            $scanInfo = "nmap -sV -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml 10.0.1.242";
+            $scanType = "VulnScan";
+            $scanStatus = "Pending";
+        }
+
 
         $query = $connection->prepare("INSERT INTO scan(userID,SessionID,ScanInfo,scanType,scanStatus)
-VALUES (:userID,:SessionID,:scanInfo,:scanType,:scanStatus)");
+        VALUES (:userID,:SessionID,:scanInfo,:scanType,:scanStatus)");
         $query->bindParam("userID", $username, PDO::PARAM_STR);
         $query->bindParam("SessionID", $SessionID, PDO::PARAM_STR);
         $query->bindParam("scanInfo", $scanInfo, PDO::PARAM_STR);
@@ -87,13 +100,14 @@ VALUES (:userID,:SessionID,:scanInfo,:scanType,:scanStatus)");
                     <div class="box"><i class="fa fa-question icon"></i>
                         <h3 class="name">Network Discovery</h3>
                         <p class="description">Basic Network Discovery, this will allow you to view the devices on your current network</p>
-                        <form method="post"><button class="btn btn-primary" type="submit" name="pingScan">Run Discovery</button></form>
+                        <form method="post"><button class="btn btn-primary" type="submit" name="createScan" value="NetDisc">Run Discovery</button></form>
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-5 col-lg-4 item">
                     <div class="box"><i class="fa fa-laptop icon"></i>
                         <h3 class="name">Vulnerability Scan&nbsp;</h3>
-                        <p class="description">Vulnerability Scan, you can select a device you would like to preform the scan on .&nbsp;</p><a class="learn-more" href="#">Coming Soon »</a>
+                        <p class="description">Vulnerability Scan, you can select a device you would like to preform the scan on .&nbsp;</p>
+                        <form method="post"><button class="btn btn-primary" type="submit" name="createScan" value="VulnScan">Run Discovery</button></form>
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-5 col-lg-4 item">

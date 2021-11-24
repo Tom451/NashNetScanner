@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -71,18 +72,30 @@ namespace NND_Agent.Data
             string ScanSaveLocation = "C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml";
 
             // Pass the variables in 
-            startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", scan.scanInfo, ScanSaveLocation, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
-            process.StartInfo = startInfo;
-            process.Start();
-
-            // Read the output stream first and then wait.
-            process.WaitForExit();
 
             if (scan.scanType == "NetDisc")
             {
+                startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", scan.scanInfo, ScanSaveLocation, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
+                process.StartInfo = startInfo;
+                process.Start();
+
+                // Read the output stream first and then wait.
+                process.WaitForExit();
                 //parse the scan data 
                 ParseNetworkDiscoveryData(scan);
 
+            }
+            else if (scan.scanType == "VulnScan")
+            {
+                startInfo.Arguments = String.Format("/C {0} --no-stylesheet ", scan.scanInfo);
+                process.StartInfo = startInfo;
+                process.Start();
+
+                // Read the output stream first and then wait.
+                process.WaitForExit();
+                
+
+                ParseVulnerbilityData(scan);
             }
 
 
@@ -91,6 +104,28 @@ namespace NND_Agent.Data
 
 
         }
+
+        private void ParseVulnerbilityData(ScanModel scan)
+        {
+            Thread.Sleep(20000);
+
+            //read in data from the created XML File
+            XmlDocument NMapXMLScan = new XmlDocument();
+
+            //load the data after written
+            NMapXMLScan.Load("C:\\Users\\Public\\Documents\\NMAPVulnScan.xml");
+
+            //select all the hosts in the document 
+            XmlNodeList ports = NMapXMLScan.SelectNodes("nmaprun/host/ports/port");
+
+            for (int i = 0; i < ports.Count - 1; i++)
+            { 
+
+            }
+
+
+
+            }
 
         public void ParseNetworkDiscoveryData(ScanModel scan)
         {
