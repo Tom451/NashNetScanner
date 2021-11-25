@@ -45,38 +45,16 @@ if (isset($_GET['USERID'])) {
 
     }
 }
-elseif (isset($_POST['SCANUPDATE'])){
-
-    $scan = json_decode($_POST['SCANUPDATE']);
-
-    $ScanStatus = $scan->ScanStatus;
-    $ScanID = $scan->scanID;
-
-
-    $sql = 'UPDATE scan SET ScanStatus = :NewStatus WHERE ScanID = :ScanID';
-    $connection = getConnection();
-
-    // prepare statement
-    $statement = $connection->prepare($sql);
-
-// bind params
-    $statement->bindParam(':NewStatus', $ScanStatus, PDO::PARAM_STR);
-    $statement->bindParam(':ScanID', $ScanID);
-
-// execute the UPDATE statment
-    if ($statement->execute()) {
-        echo 'The publisher has been updated successfully!';
-    }
-}
 
 
 elseif (isset($_POST['UploadWithVerification'])){
 
-    $JSONObject = json_decode($_POST['Test1']);
+    $JSONObject = json_decode($_POST['UploadWithVerification']);
 
     $User = $JSONObject -> UserName;
     $Vulns = $JSONObject -> scannedVulns;
     $Devices = $JSONObject ->scannedDevices;
+    $Scan = $JSONObject ->currentScan;
 
     //Get PDO connection string
     $connection = getConnection();
@@ -126,16 +104,12 @@ elseif (isset($_POST['UploadWithVerification'])){
 
         foreach($Vulns as $mydata){
 
-            echo "Starting";
-
             $vulnName = $mydata->VulnName;
             $vulnVersion = $mydata->VulnVersion;
             $vulnExtraData = $mydata->VulnExtraData;
             $vulnProduct = $mydata->VulnProduct;
             $vulnPortNumber = $mydata->VulnPortNumber;
             $ScanID = $mydata->scanID;
-
-            echo $vulnName . $vulnVersion . $vulnExtraData . $vulnProduct . $vulnPortNumber . $ScanID;
 
             $statement = $connection->prepare($storedProcedure);
 
@@ -147,11 +121,27 @@ elseif (isset($_POST['UploadWithVerification'])){
             $statement->bindParam(':inScanID', $ScanID, PDO::PARAM_STR);
             $statement->execute();
 
-            echo "Success";
 
         }
 
-        return "Successful!";
+    }
+
+    $ScanStatus = $Scan->ScanStatus;
+    $ScanID = $Scan->scanID;
+
+
+    $sql = 'UPDATE scan SET ScanStatus = :NewStatus WHERE ScanID = :ScanID';
+
+    // prepare statement
+    $statement = $connection->prepare($sql);
+
+// bind params
+    $statement->bindParam(':NewStatus', $ScanStatus, PDO::PARAM_STR);
+    $statement->bindParam(':ScanID', $ScanID);
+
+    // execute the UPDATE statment
+    if ($statement->execute()) {
+        echo 'The upload was completed successfully!!';
     }
 
 }

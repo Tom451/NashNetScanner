@@ -25,88 +25,26 @@ namespace NND_Agent.Data
  
 
             //get the scan
-            ScanModel scan = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
+            currentUser.currentScan = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
 
-            if (scan == null)
+            if (currentUser.currentScan == null)
             {
                 NNDAgent.NNDForm.popUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
                 return;
 
             }
 
-            NMapScan(scan);
-
-            //get ready for item upload
-            string uploadDeviceJSON = Connection.ToJSON(currentUser);
+            //start the scan
+            NMapScan(currentUser.currentScan);
 
             //Convert the scan to JSON
-            scan.ScanStatus = "Finished";
-            string uploadScanJSON = Connection.ToJSON(scan);
+            currentUser.currentScan.ScanStatus = "Finished";
+
+            //get ready for item upload
+            string uploadJSON = Connection.ToJSON(currentUser);
 
             //upload the devices
-            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("Test1={0}", uploadDeviceJSON));
-
-            //upload the scan
-            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("SCANUPDATE={0}", uploadScanJSON));
-
-
-
-            //if (scan.scanInfo == "NetDisc")
-            //{
-            //    //convert the device objects to JSON
-            //    try
-            //    {
-            //        //get ready for item upload
-            //        string uploadDeviceJSON = Connection.ToJSON(devices);
-
-            //        //Convert the scan to JSON
-            //        scan.ScanStatus = "Finished";
-            //        string uploadScanJSON = Connection.ToJSON(scan);
-
-            //        //upload the devices
-            //        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadNetDisc={0}", uploadDeviceJSON));
-
-            //        //upload the scan
-            //        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("SCANUPDATE={0}", uploadScanJSON));
-            //    }
-            //    catch (Exception)
-            //    {
-            //        scan.ScanStatus = "Failed";
-
-            //    }
-            //}
-            //else if (scan.scanType == "VulnScan")
-            //{
-            //    //convert the device objects to JSON
-            //    try
-            //    {
-            //        //get ready for item upload
-            //        string uploadVulnJSON = Connection.ToJSON(currentUser.);
-
-            //        //Convert the scan to JSON
-            //        scan.ScanStatus = "Finished";
-            //        string uploadScanJSON = Connection.ToJSON(scan);
-
-            //        NameValueCollection formData = new NameValueCollection();
-            //        formData["username"] = "userName";
-            //        formData["data"] = uploadVulnJSON;
-
-            //        //upload the devices
-            //        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php");
-
-            //        //upload the devices
-            //        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadVulnScan={0}", uploadVulnJSON));
-
-            //        //upload the scan
-            //        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("SCANUPDATE={0}", uploadScanJSON));
-            //    }
-            //    catch (Exception)
-            //    {
-            //        scan.ScanStatus = "Failed";
-
-            //    }
-
-            //}
+            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
 
             
         }
