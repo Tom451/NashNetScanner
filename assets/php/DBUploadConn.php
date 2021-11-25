@@ -108,9 +108,7 @@ elseif (isset($_POST['UploadWithVerification'])){
 
             }
 
-        }
-        //if there are devices upload those
-        elseif ($Vulns != null){
+        if ($Vulns != null){
 
             $storedProcedure = 'CALL addVuln(:inScanID, :inVulnName, :inVulnVersion, :inVulnExtraData, :inVulnProduct, :inPortNumber)';
 
@@ -133,10 +131,16 @@ elseif (isset($_POST['UploadWithVerification'])){
                 $statement->bindParam(':inScanID', $ScanID, PDO::PARAM_STR);
                 $statement->execute();
 
-
             }
 
+
         }
+        else{
+            echo "No Data Provided";
+        }
+
+        }
+
 
         $ScanStatus = $Scan->ScanStatus;
         $ScanID = $Scan->scanID;

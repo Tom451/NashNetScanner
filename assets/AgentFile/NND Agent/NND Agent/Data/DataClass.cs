@@ -161,12 +161,30 @@ namespace NND_Agent.Data
 
                 currentUser.scannedVulns.Add(tempModel);
 
-            }
-            
 
-
+                
 
             }
+
+            //select all the hosts in the document 
+
+            XmlNodeList addresses = NMapXMLScan.SelectNodes("nmaprun/host/address");
+            XmlNode name = NMapXMLScan.SelectSingleNode("nmaprun/host/hostnames/hostname");
+
+            //create the list
+            currentUser.scannedDevices = new List<ComputerModel>();
+            ComputerModel scannedDevice = new ComputerModel();
+
+            scannedDevice.ipAddress = addresses.Item(0).Attributes.GetNamedItem("addr").InnerText;
+            scannedDevice.macAddress = addresses.Item(1).Attributes.GetNamedItem("addr").InnerText;
+            scannedDevice.name = name.Attributes.GetNamedItem("name").InnerText;
+            scannedDevice.ScanID = scan.scanID;
+
+            currentUser.scannedDevices.Add(scannedDevice);
+
+
+
+        }
 
         public void ParseNetworkDiscoveryData(ScanModel scan)
         {
