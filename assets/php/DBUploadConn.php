@@ -1,11 +1,10 @@
 <?php
 require 'DBConfig.php';
+//Get PDO connection string
+$connection = getConnection();
+
 //If the post Value is JSON for the upload start the upload of the devices
 if (isset($_GET['USERID'])) {
-
-
-    //Get PDO connection string
-    $connection = getConnection();
 
     //get the inputted username and the password
     $USERNONCE = $_GET['USERID'];
@@ -49,100 +48,119 @@ if (isset($_GET['USERID'])) {
 
 elseif (isset($_POST['UploadWithVerification'])){
 
+
+
     $JSONObject = json_decode($_POST['UploadWithVerification']);
 
-    $User = $JSONObject -> UserName;
-    $Vulns = $JSONObject -> scannedVulns;
-    $Devices = $JSONObject ->scannedDevices;
-    $Scan = $JSONObject ->currentScan;
+    if (empty($JSONObject->UserName)){
+        echo "Not Verified";
+    }
+    else{
 
-    //Get PDO connection string
-    $connection = getConnection();
+        $USERNONCE = $JSONObject->UserName;
 
+        //select all the users with the given username
+        $query = $connection->prepare("SELECT UserID FROM usercredentials WHERE userNonce=:userNonce");
+        $query->bindParam("userNonce", $USERNONCE, PDO::PARAM_STR);
 
-    //if there are devices upload those
-    if ($Devices != null){
+        if (!$query->execute()){
+            echo "Not verified";
+        }
 
-        $storedProcedure = 'CALL addDevice(:indeviceIP, :inRTT, :inMacAddress, :inName, :inScanID)';
-
-        $device = json_decode($_POST['JSON']);
-
-        foreach($Devices as $mydata){
-
-            $deviceIP = $mydata->ipAddress;
-            $deviceMac = $mydata->macAddress;
-            $deviceName = $mydata->name;
-            $RTT = $mydata->RTT;
-            $ScanID = $mydata->ScanID;
+        $User = $JSONObject -> UserName;
+        $Vulns = $JSONObject -> scannedVulns;
+        $Devices = $JSONObject ->scannedDevices;
+        $Scan = $JSONObject ->currentScan;
 
 
-            $statement = $connection->prepare($storedProcedure);
+        //if there are devices upload those
+        if ($Devices != null){
 
-            $statement->bindParam(':indeviceIP', $deviceIP, PDO::PARAM_STR);
-            $statement->bindParam(':inMacAddress', $deviceMac, PDO::PARAM_STR);
-            $statement->bindParam(':inName', $deviceName, PDO::PARAM_STR);
-            $statement->bindParam(':inRTT', $deviceName, PDO::PARAM_STR);
-            $statement->bindParam(':inScanID', $ScanID, PDO::PARAM_STR);
-            $statement->execute();
+            $storedProcedure = 'CALL addDevice(:indeviceIP, :inRTT, :inMacAddress, :inName, :inScanID)';
 
-            //get the userID of new user to be added.
-            $query = $connection->prepare("SELECT deviceID FROM device WHERE deviceMacAddress=:deviceMacAddress AND deviceIP = :deviceIP");
-            $query->bindParam("deviceMacAddress", $deviceMac, PDO::PARAM_STR);
-            $query->bindParam("deviceIP", $deviceIP, PDO::PARAM_STR);
-            $query->execute();
+            $device = json_decode($_POST['UploadWithVerification']);
 
-            $deviceIDResult = $query->fetchColumn();
+            foreach($Devices as $mydata){
+
+                $deviceIP = $mydata->ipAddress;
+                $deviceMac = $mydata->macAddress;
+                $deviceName = $mydata->name;
+                $RTT = $mydata->RTT;
+                $ScanID = $mydata->ScanID;
+
+
+                $statement = $connection->prepare($storedProcedure);
+
+                $statement->bindParam(':indeviceIP', $deviceIP, PDO::PARAM_STR);
+                $statement->bindParam(':inMacAddress', $deviceMac, PDO::PARAM_STR);
+                $statement->bindParam(':inName', $deviceName, PDO::PARAM_STR);
+                $statement->bindParam(':inRTT', $deviceName, PDO::PARAM_STR);
+                $statement->bindParam(':inScanID', $ScanID, PDO::PARAM_STR);
+                $statement->execute();
+
+                //get the userID of new user to be added.
+                $query = $connection->prepare("SELECT deviceID FROM device WHERE deviceMacAddress=:deviceMacAddress AND deviceIP = :deviceIP");
+                $query->bindParam("deviceMacAddress", $deviceMac, PDO::PARAM_STR);
+                $query->bindParam("deviceIP", $deviceIP, PDO::PARAM_STR);
+                $query->execute();
+
+                $deviceIDResult = $query->fetchColumn();
+
+            }
+
+        }
+        //if there are devices upload those
+        elseif ($Vulns != null){
+
+            $storedProcedure = 'CALL addVuln(:inScanID, :inVulnName, :inVulnVersion, :inVulnExtraData, :inVulnProduct, :inPortNumber)';
+
+            foreach($Vulns as $mydata){
+
+                $vulnName = $mydata->VulnName;
+                $vulnVersion = $mydata->VulnVersion;
+                $vulnExtraData = $mydata->VulnExtraData;
+                $vulnProduct = $mydata->VulnProduct;
+                $vulnPortNumber = $mydata->VulnPortNumber;
+                $ScanID = $mydata->scanID;
+
+                $statement = $connection->prepare($storedProcedure);
+
+                $statement->bindParam(':inVulnName', $vulnName, PDO::PARAM_STR);
+                $statement->bindParam(':inVulnVersion', $vulnVersion, PDO::PARAM_STR);
+                $statement->bindParam(':inVulnExtraData', $vulnExtraData, PDO::PARAM_STR);
+                $statement->bindParam(':inVulnProduct', $vulnProduct, PDO::PARAM_STR);
+                $statement->bindParam(':inPortNumber', $vulnPortNumber, PDO::PARAM_STR);
+                $statement->bindParam(':inScanID', $ScanID, PDO::PARAM_STR);
+                $statement->execute();
+
+
+            }
 
         }
 
-        return "Successful!";
-    }
-    //if there are devices upload those
-    elseif ($Vulns != null){
-
-        $storedProcedure = 'CALL addVuln(:inScanID, :inVulnName, :inVulnVersion, :inVulnExtraData, :inVulnProduct, :inPortNumber)';
-
-        foreach($Vulns as $mydata){
-
-            $vulnName = $mydata->VulnName;
-            $vulnVersion = $mydata->VulnVersion;
-            $vulnExtraData = $mydata->VulnExtraData;
-            $vulnProduct = $mydata->VulnProduct;
-            $vulnPortNumber = $mydata->VulnPortNumber;
-            $ScanID = $mydata->scanID;
-
-            $statement = $connection->prepare($storedProcedure);
-
-            $statement->bindParam(':inVulnName', $vulnName, PDO::PARAM_STR);
-            $statement->bindParam(':inVulnVersion', $vulnVersion, PDO::PARAM_STR);
-            $statement->bindParam(':inVulnExtraData', $vulnExtraData, PDO::PARAM_STR);
-            $statement->bindParam(':inVulnProduct', $vulnProduct, PDO::PARAM_STR);
-            $statement->bindParam(':inPortNumber', $vulnPortNumber, PDO::PARAM_STR);
-            $statement->bindParam(':inScanID', $ScanID, PDO::PARAM_STR);
-            $statement->execute();
+        $ScanStatus = $Scan->ScanStatus;
+        $ScanID = $Scan->scanID;
 
 
+        $sql = 'UPDATE scan SET ScanStatus = :NewStatus WHERE ScanID = :ScanID';
+
+        // prepare statement
+        $statement = $connection->prepare($sql);
+
+        // bind params
+        $statement->bindParam(':NewStatus', $ScanStatus, PDO::PARAM_STR);
+        $statement->bindParam(':ScanID', $ScanID);
+
+        // execute the UPDATE statment
+        if ($statement->execute()) {
+            echo 'The upload was completed successfully!!';
         }
 
     }
 
-    $ScanStatus = $Scan->ScanStatus;
-    $ScanID = $Scan->scanID;
 
 
-    $sql = 'UPDATE scan SET ScanStatus = :NewStatus WHERE ScanID = :ScanID';
 
-    // prepare statement
-    $statement = $connection->prepare($sql);
-
-// bind params
-    $statement->bindParam(':NewStatus', $ScanStatus, PDO::PARAM_STR);
-    $statement->bindParam(':ScanID', $ScanID);
-
-    // execute the UPDATE statment
-    if ($statement->execute()) {
-        echo 'The upload was completed successfully!!';
-    }
 
 }
 

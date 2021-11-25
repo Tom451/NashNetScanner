@@ -20,7 +20,6 @@ namespace NND_Agent.Data
         {
             //initalise the classes
             currentUser.UserName = userNONCE.ToString();
-
             DataUpload Connection = new DataUpload();
  
 
@@ -33,7 +32,7 @@ namespace NND_Agent.Data
                 return;
 
             }
-
+            
             //start the scan
             NMapScan(currentUser.currentScan);
 
@@ -46,7 +45,7 @@ namespace NND_Agent.Data
             //upload the devices
             Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
 
-            
+           
         }
 
         public void NMapScan(ScanModel scan)
@@ -73,20 +72,21 @@ namespace NND_Agent.Data
                 process.StartInfo = startInfo;
                 process.Start();
 
-                // Read the output stream first and then wait.
+                 //Read the output stream first and then wait.
                 process.WaitForExit();
+
                 //parse the scan data 
                 ParseNetworkDiscoveryData(scan);
 
             }
             else if (scan.scanType == "VulnScan")
             {
-               //startInfo.Arguments = String.Format("/C {0} --no-stylesheet ", scan.scanInfo);
-               //process.StartInfo = startInfo;
-               //process.Start();
+                startInfo.Arguments = String.Format("/C {0} --no-stylesheet ", scan.scanInfo);
+                process.StartInfo = startInfo;
+                process.Start();
 
-               //Read the output stream first and then wait.
-               //process.WaitForExit();
+                //Read the output stream first and then wait.
+                process.WaitForExit();
                 
 
                 ParseVulnerbilityData(scan);
@@ -162,6 +162,7 @@ namespace NND_Agent.Data
                 currentUser.scannedVulns.Add(tempModel);
 
             }
+            
 
 
 
@@ -169,6 +170,8 @@ namespace NND_Agent.Data
 
         public void ParseNetworkDiscoveryData(ScanModel scan)
         {
+            currentUser.scannedDevices = new List<ComputerModel>();
+
             //read in data from the created XML File
             XmlDocument NMapXMLScan = new XmlDocument();
 
@@ -181,6 +184,8 @@ namespace NND_Agent.Data
             //Get the number of hosts and loop through them.
             for (int i = 0; i < hosts.Count - 1; i++)
             {
+                
+
                 //create a temporay computer model
                 ComputerModel tempDevice = new ComputerModel();
 
