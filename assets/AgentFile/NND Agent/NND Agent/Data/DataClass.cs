@@ -1,6 +1,7 @@
 ﻿using NND_Agent.Items;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -13,10 +14,13 @@ namespace NND_Agent.Data
 {
     internal class DataClass
     {
-        List<ComputerModel> devices = new List<ComputerModel>();
+        userModel currentUser = new userModel();
+        
         public void StartScan(long userNONCE)
         {
             //initalise the classes
+            currentUser.UserName = userNONCE.ToString();
+
             DataUpload Connection = new DataUpload();
  
 
@@ -30,32 +34,84 @@ namespace NND_Agent.Data
 
             }
 
-            List<ComputerModel> upload = NMapScan(scan);
+            NMapScan(scan);
 
-            //convert the device objects to JSON
-            try
-            {
-                //get ready for item upload
-                string uploadDeviceJSON = Connection.ToJSON(upload);
+            //get ready for item upload
+            string uploadDeviceJSON = Connection.ToJSON(currentUser);
 
-                //Convert the scan to JSON
-                scan.ScanStatus = "Finished";
-                string uploadScanJSON = Connection.ToJSON(scan);
+            //Convert the scan to JSON
+            scan.ScanStatus = "Finished";
+            string uploadScanJSON = Connection.ToJSON(scan);
 
-                //upload the devices
-                Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("JSON={0}", uploadDeviceJSON));
+            //upload the devices
+            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("Test1={0}", uploadDeviceJSON));
 
-                //upload the scan
-                Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("SCANUPDATE={0}", uploadScanJSON));
-            }
-            catch (Exception)
-            {
-                scan.ScanStatus = "Failed";
+            //upload the scan
+            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("SCANUPDATE={0}", uploadScanJSON));
 
-            }
+
+
+            //if (scan.scanInfo == "NetDisc")
+            //{
+            //    //convert the device objects to JSON
+            //    try
+            //    {
+            //        //get ready for item upload
+            //        string uploadDeviceJSON = Connection.ToJSON(devices);
+
+            //        //Convert the scan to JSON
+            //        scan.ScanStatus = "Finished";
+            //        string uploadScanJSON = Connection.ToJSON(scan);
+
+            //        //upload the devices
+            //        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadNetDisc={0}", uploadDeviceJSON));
+
+            //        //upload the scan
+            //        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("SCANUPDATE={0}", uploadScanJSON));
+            //    }
+            //    catch (Exception)
+            //    {
+            //        scan.ScanStatus = "Failed";
+
+            //    }
+            //}
+            //else if (scan.scanType == "VulnScan")
+            //{
+            //    //convert the device objects to JSON
+            //    try
+            //    {
+            //        //get ready for item upload
+            //        string uploadVulnJSON = Connection.ToJSON(currentUser.);
+
+            //        //Convert the scan to JSON
+            //        scan.ScanStatus = "Finished";
+            //        string uploadScanJSON = Connection.ToJSON(scan);
+
+            //        NameValueCollection formData = new NameValueCollection();
+            //        formData["username"] = "userName";
+            //        formData["data"] = uploadVulnJSON;
+
+            //        //upload the devices
+            //        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php");
+
+            //        //upload the devices
+            //        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadVulnScan={0}", uploadVulnJSON));
+
+            //        //upload the scan
+            //        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("SCANUPDATE={0}", uploadScanJSON));
+            //    }
+            //    catch (Exception)
+            //    {
+            //        scan.ScanStatus = "Failed";
+
+            //    }
+
+            //}
+
+            
         }
 
-        public List<ComputerModel> NMapScan(ScanModel scan)
+        public void NMapScan(ScanModel scan)
         {
             //Start the Scan
             Process process = new Process();
@@ -87,27 +143,24 @@ namespace NND_Agent.Data
             }
             else if (scan.scanType == "VulnScan")
             {
-                startInfo.Arguments = String.Format("/C {0} --no-stylesheet ", scan.scanInfo);
-                process.StartInfo = startInfo;
-                process.Start();
+               //startInfo.Arguments = String.Format("/C {0} --no-stylesheet ", scan.scanInfo);
+               //process.StartInfo = startInfo;
+               //process.Start();
 
-                // Read the output stream first and then wait.
-                process.WaitForExit();
+               //Read the output stream first and then wait.
+               //process.WaitForExit();
                 
 
                 ParseVulnerbilityData(scan);
             }
 
 
-
-            return devices;
-
-
         }
 
         private void ParseVulnerbilityData(ScanModel scan)
         {
-            Thread.Sleep(20000);
+
+            currentUser.scannedVulns = new List<VulnModel>();
 
             //read in data from the created XML File
             XmlDocument NMapXMLScan = new XmlDocument();
@@ -120,6 +173,55 @@ namespace NND_Agent.Data
 
             for (int i = 0; i < ports.Count - 1; i++)
             { 
+                VulnModel tempModel = new VulnModel();
+
+                var port = ports.Item(i);
+                var service = port.SelectSingleNode("service");
+
+
+
+                if (service.Attributes.GetNamedItem("name") != null)
+                {
+                    tempModel.VulnName = service.Attributes.GetNamedItem("name").InnerText;
+                }
+                else
+                {
+                    tempModel.VulnName = null;
+                }
+
+                if (service.Attributes.GetNamedItem("version") != null)
+                {
+                    tempModel.VulnVersion = service.Attributes.GetNamedItem("version").InnerText;
+                }
+                else
+                {
+                    tempModel.VulnVersion = "No Value Found";
+                }
+
+
+                if (service.Attributes.GetNamedItem("product") != null)
+                {
+                    tempModel.VulnProduct = service.Attributes.GetNamedItem("product").InnerText;
+                }
+                else
+                {
+                    tempModel.VulnProduct = "No Value Found";
+                }
+
+                if (service.Attributes.GetNamedItem("extrainfo") != null)
+                {
+                    tempModel.VulnProduct = service.Attributes.GetNamedItem("extrainfo").InnerText;
+                }
+                else
+                {
+                    tempModel.VulnExtraData = "No Value Found";
+                }
+
+                tempModel.VulnPortNumber = port.Attributes.GetNamedItem("portid").InnerText;
+
+                tempModel.scanID = scan.scanID;
+
+                currentUser.scannedVulns.Add(tempModel);
 
             }
 
@@ -182,7 +284,7 @@ namespace NND_Agent.Data
                 tempDevice.name = hostActualName;
                 tempDevice.ScanID = scan.scanID;
 
-                devices.Add(tempDevice);
+                currentUser.scannedDevices.Add(tempDevice);
 
             }
 

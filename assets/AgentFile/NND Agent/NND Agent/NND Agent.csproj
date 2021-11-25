@@ -90,6 +90,8 @@
     <Compile Include="Data\DataClass.cs" />
     <Compile Include="Items\ComputerModel.cs" />
     <Compile Include="Items\ScanModel.cs" />
+    <Compile Include="Items\userModel.cs" />
+    <Compile Include="Items\VulnModel.cs" />
     <Compile Include="NNDAgent.cs">
       <SubType>Form</SubType>
     </Compile>
