@@ -43,7 +43,7 @@ if (isset($_POST['createScan'])) {
         }
         elseif($_POST['createScan'] == "VulnScan"){
 
-            $scanInfo = "nmap -sV -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml 10.0.1.242";
+            $scanInfo = "nmap -sV -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml " .$_POST['IPADDRESS'];
             $scanType = "VulnScan";
             $scanStatus = "Pending";
         }
@@ -107,7 +107,15 @@ if (isset($_POST['createScan'])) {
                     <div class="box"><i class="fa fa-laptop icon"></i>
                         <h3 class="name">Vulnerability Scan&nbsp;</h3>
                         <p class="description">Vulnerability Scan, you can select a device you would like to preform the scan on .&nbsp;</p>
-                        <form method="post"><button class="btn btn-primary" type="submit" name="createScan" value="VulnScan">Run Discovery</button></form>
+
+                        <form method="post">
+
+                            <label for="IPADDRESS">Address: </label>
+                            <input type="text" id="IPADDRESS" name="IPADDRESS">
+
+                            <button class="btn btn-primary" type="submit" name="createScan" value="VulnScan">Run Discovery</button>
+
+                        </form>
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-5 col-lg-4 item">
