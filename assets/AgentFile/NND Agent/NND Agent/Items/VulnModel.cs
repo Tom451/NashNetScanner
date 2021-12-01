@@ -18,6 +18,8 @@ namespace NND_Agent.Items
 
         public string VulnPortNumber { get; set; }
 
+        public string VulnCPE { get; set; }
+
         public int scanID { get; set; }
     }
 }

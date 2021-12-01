@@ -79,9 +79,9 @@ namespace NND_Agent.Data
 
             if (scan.scanType == "NetDisc")
             {
-                string NetworkScanSaveLocation = "C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml";
+                
 
-                startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", scan.scanInfo, NetworkScanSaveLocation, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
+                startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", scan.scanInfo, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
                 process.StartInfo = startInfo;
                 process.Start();
 
@@ -104,14 +104,15 @@ namespace NND_Agent.Data
             else if (scan.scanType == "VulnScan")
             {
 
-                string VulnScanSaveLocation = "C:\\Users\\Public\\Documents\\NMAPVulnScan.xml";
 
-                startInfo.Arguments = String.Format("/C {0} {1} --no-stylesheet ", scan.scanInfo, VulnScanSaveLocation);
+                startInfo.Arguments = String.Format("/C {0} --no-stylesheet ",  scan.scanInfo);
                 process.StartInfo = startInfo;
                 process.Start();
 
                 //Read the output stream first and then wait.
                 //Wait 3 mins 
+
+                
                 if (process.WaitForExit(180000))
                 {
                     ParseVulnerbilityData(scan);
@@ -191,6 +192,33 @@ namespace NND_Agent.Data
                 else
                 {
                     tempModel.VulnExtraData = "No Value Found";
+                }
+                if (service.Attributes.GetNamedItem("cpe") != null)
+                {
+                    tempModel.VulnCPE = service.Attributes.GetNamedItem("cpe").InnerText;
+                }
+                //if cpe is nested 
+                else
+                {
+                    if(service.ChildNodes.Count == 0)
+                    {
+                        tempModel.VulnCPE = "NO CPE";
+                    }
+                    else 
+                    {
+                        //if it is nested and services has chind nodes then try get a cpe 
+                        try
+                        {
+                            tempModel.VulnCPE = service.SelectNodes("cpe").Item(0).InnerText;
+
+                        }
+                        catch (Exception ex)
+                        {
+                            tempModel.VulnCPE = "NO CPE";
+                        }
+
+                    }
+                    
                 }
 
                 tempModel.VulnPortNumber = port.Attributes.GetNamedItem("portid").InnerText;

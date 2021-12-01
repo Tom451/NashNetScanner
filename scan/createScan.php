@@ -36,14 +36,14 @@ if (isset($_POST['createScan'])) {
 
         if ($_POST['createScan'] == "NetDisc"){
 
-            $scanInfo = "nmap -sP -oX";
+            $scanInfo = "nmap -sP -oX C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml";
             $scanType = "NetDisc";
             $scanStatus = "Pending";
 
         }
         elseif($_POST['createScan'] == "VulnScan"){
 
-            $scanInfo = "nmap -sV -oX" .$_POST['IPADDRESS'];
+            $scanInfo = "nmap -sV -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml " .$_POST['IPADDRESS'];
             $scanType = "VulnScan";
             $scanStatus = "Pending";
         }

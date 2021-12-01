@@ -110,7 +110,7 @@ elseif (isset($_POST['UploadWithVerification'])){
 
         if ($Vulns != null){
 
-            $storedProcedure = 'CALL addVuln(:inScanID, :inVulnName, :inVulnVersion, :inVulnExtraData, :inVulnProduct, :inPortNumber)';
+            $storedProcedure = 'CALL addVuln(:inScanID, :inVulnName, :inVulnVersion, :inVulnExtraData, :inVulnProduct, :inPortNumber, :inVulnCPE)';
 
             foreach($Vulns as $mydata){
 
@@ -119,6 +119,7 @@ elseif (isset($_POST['UploadWithVerification'])){
                 $vulnExtraData = $mydata->VulnExtraData;
                 $vulnProduct = $mydata->VulnProduct;
                 $vulnPortNumber = $mydata->VulnPortNumber;
+                $vulnCPE = $mydata->VulnCPE;
                 $ScanID = $mydata->scanID;
 
                 $statement = $connection->prepare($storedProcedure);
@@ -128,6 +129,7 @@ elseif (isset($_POST['UploadWithVerification'])){
                 $statement->bindParam(':inVulnExtraData', $vulnExtraData, PDO::PARAM_STR);
                 $statement->bindParam(':inVulnProduct', $vulnProduct, PDO::PARAM_STR);
                 $statement->bindParam(':inPortNumber', $vulnPortNumber, PDO::PARAM_STR);
+                $statement->bindParam(':inVulnCPE', $vulnCPE, PDO::PARAM_STR);
                 $statement->bindParam(':inScanID', $ScanID, PDO::PARAM_STR);
                 $statement->execute();
 

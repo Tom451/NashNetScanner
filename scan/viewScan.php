@@ -86,11 +86,38 @@ else{
     <div class="container">
         <div class="row">
             <div class="col-md-6">
+                <h2>Scan Information</h2>
+                <ul class="list-group">
+                    <?php
+                    echo '<li class="list-group-item"><span><strong>Scan Type: </strong> ' . $scan['ScanType'] . '&nbsp;</span></li>';
+                    echo '<li class="list-group-item"><span><strong>Time Started: </strong> ' . $scan['SessionID'] . '&nbsp;</span></li>';
+                    echo '<li class="list-group-item"><span><strong>ScanID: </strong>' . $scan['ScanID'] . '&nbsp;</span></li>'
+                    ?>
+                    <li class="list-group-item">
+                        <span>
+                        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-1" href="#collapse-1" role="button">Show Devices</a>
+                        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-2" href="#collapse-2" role="button">Show Vulnerabilities</a>
+                        </span>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="col-md-6"
+                 <?php
+
+                 if($scan['ScanType'] == "VulnScan")
+
+                     echo'style="visibility: shown"';
+                 else{
+                     echo'style="visibility: hidden" ';
+                 }
+
+                 ?>
+            >
                 <div class="infoarea">
                     <h2 title="This is calculated by the number of the devices divided by the number of vulnerabilities">Vulnerability Score</h2>
                     <p>Higher Number the more secure you are, hover on the title to get an explanation</p>
-
-
                 </div>
 
 
@@ -128,23 +155,7 @@ else{
 
 
             </div>
-            <div class="col-md-6">
-                <h2>Scan Information</h2>
-                <ul class="list-group">
-                    <?php
-                    echo '<li class="list-group-item"><span><strong>Scan Type: </strong> ' . $scan['ScanType'] . '&nbsp;</span></li>';
-                    echo '<li class="list-group-item"><span><strong>Time Started: </strong> ' . $scan['SessionID'] . '&nbsp;</span></li>';
-                    echo '<li class="list-group-item"><span><strong>ScanID: </strong>' . $scan['ScanID'] . '&nbsp;</span></li>'
-                    ?>
-                    <li class="list-group-item">
-                        <span>
-                        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-1" href="#collapse-1" role="button">Show Devices</a>
-                        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-2" href="#collapse-2" role="button">Show Vulnerabilities</a>
-                        </span>
-                    </li>
 
-                </ul>
-            </div>
         </div>
     </div>
     
