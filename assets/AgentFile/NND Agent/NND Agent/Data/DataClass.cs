@@ -83,11 +83,20 @@ namespace NND_Agent.Data
                 process.StartInfo = startInfo;
                 process.Start();
 
-                 //Read the output stream first and then wait.
-                process.WaitForExit();
+                //Read the output stream first and then wait.
+                if (process.WaitForExit(180000))
+                {
+                    //parse the scan data 
+                    ParseNetworkDiscoveryData(scan);
+                    return true;
+                }
+                else
+                {
+                    form.popUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+                    return false;
+                }
 
-                //parse the scan data 
-                ParseNetworkDiscoveryData(scan);
+                
 
             }
             else if (scan.scanType == "VulnScan")
@@ -190,18 +199,38 @@ namespace NND_Agent.Data
 
             }
 
-            //select all the hosts in the document 
-
-            XmlNodeList addresses = NMapXMLScan.SelectNodes("nmaprun/host/address");
-            XmlNode name = NMapXMLScan.SelectSingleNode("nmaprun/host/hostnames/hostname");
-
+            
             //create the list
             currentUser.scannedDevices = new List<ComputerModel>();
             ComputerModel scannedDevice = new ComputerModel();
 
+            //select all the hosts in the document with addresses
+            XmlNodeList addresses = NMapXMLScan.SelectNodes("nmaprun/host/address");
+
             scannedDevice.ipAddress = addresses.Item(0).Attributes.GetNamedItem("addr").InnerText;
             scannedDevice.macAddress = addresses.Item(1).Attributes.GetNamedItem("addr").InnerText;
-            scannedDevice.name = name.Attributes.GetNamedItem("name").InnerText;
+
+            //get the name, this is last as it may be false and error checking is needed 
+            try
+            {
+                XmlNode name = NMapXMLScan.SelectSingleNode("nmaprun/host/hostnames/hostname");
+
+                if (name != null)
+                {
+                    scannedDevice.name = name.Attributes.GetNamedItem("name").InnerText;
+                }
+                else
+                {
+                    scannedDevice.name = scannedDevice.macAddress;
+                }
+            }
+            catch (Exception ex)
+            {
+                form.popUp("Error", ex.Message, System.Windows.Forms.ToolTipIcon.Error);
+                return;
+            }
+
+
             scannedDevice.ScanID = scan.scanID;
 
             currentUser.scannedDevices.Add(scannedDevice);

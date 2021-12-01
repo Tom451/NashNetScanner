@@ -47,6 +47,15 @@ $query->execute();
 //get the result
 $vulns = $query->fetchAll(PDO::FETCH_ASSOC);
 
+if (count($vulns) == 0){
+  $vulnScore = 100;
+}
+else{
+    $vulnScore = count($devices)/count($vulns);
+    $vulnScore = $vulnScore*100;
+}
+
+
 
 ?>
 
@@ -67,6 +76,7 @@ $vulns = $query->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../assets/css/Login-Form-Clean.css">
     <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/percentages.css">
 </head>
 
 <body>
@@ -76,8 +86,47 @@ $vulns = $query->fetchAll(PDO::FETCH_ASSOC);
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <h2>Overview&nbsp;</h2>
-                <div class="row"></div>
+                <div class="infoarea">
+                    <h2 title="This is calculated by the number of the devices divided by the number of vulnerabilities">Vulnerability Score</h2>
+                    <p>Higher Number the more secure you are, hover on the title to get an explanation</p>
+
+
+                </div>
+
+
+
+                <div class="row">
+
+
+                    <!-- Chart 2 -->
+                    <svg viewBox="0 0 36 36" class="circular-chart" >
+                        <path class="circle"
+
+                              stroke-dasharray="<?php echo ''.$vulnScore.',100' ?>"
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                              stroke =
+                              <?php
+                              //sets colour
+
+                              if ($vulnScore >= 70){
+                                  echo 'green';
+                              }
+                              else if($vulnScore < 70 and $vulnScore >=40){
+                                  echo 'orange';
+                              }
+                              else{
+                                  echo 'red';
+                              }
+
+                              ?>
+
+                        />
+                        <text x="18" y="20.35" class="percentage"><?php echo ''.$vulnScore.'%' ?></text>
+                    </svg>
+
+                </div>
+
+
             </div>
             <div class="col-md-6">
                 <h2>Scan Information</h2>
@@ -87,6 +136,13 @@ $vulns = $query->fetchAll(PDO::FETCH_ASSOC);
                     echo '<li class="list-group-item"><span><strong>Time Started: </strong> ' . $scan['SessionID'] . '&nbsp;</span></li>';
                     echo '<li class="list-group-item"><span><strong>ScanID: </strong>' . $scan['ScanID'] . '&nbsp;</span></li>'
                     ?>
+                    <li class="list-group-item">
+                        <span>
+                        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-1" href="#collapse-1" role="button">Show Devices</a>
+                        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-2" href="#collapse-2" role="button">Show Vulnerabilities</a>
+                        </span>
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -95,8 +151,11 @@ $vulns = $query->fetchAll(PDO::FETCH_ASSOC);
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div><a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-1" href="#collapse-1" role="button">Show Devices</a>
-                    <div class="collapse show" id="collapse-1">
+                <div>
+                    <div class="collapse hide" id="collapse-1" style="padding-top: 30px">
+
+                        <h2>Devices</h2>
+
                         <table id="devices" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                             <tr>
@@ -127,8 +186,11 @@ $vulns = $query->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="col-md-12">
 
-                <div><a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-2" href="#collapse-2" role="button">Show Vulnerabilities</a>
-                    <div class="collapse show" id="collapse-2">
+
+                <div>
+                    <div class="collapse hide" id="collapse-2">
+                        <h2>Vulnerabilities</h2>
+
                         <table id="vuln" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                             <tr>
