@@ -57,7 +57,12 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
                 <?php
                 foreach (array_reverse($result) as $item) {
                     echo '<div class="col-sm-6 col-lg-4 item"><i class="fa fa-map-marker icon"></i>';
-                    echo '<h3 class="name">User Initiated Scan</h3>';
+                    if ($item['ScanType'] == "VulnScan"){
+                        echo '<h3 class="name">Vulnerability Scan</h3>';
+                    }
+                    elseif ($item['ScanType'] == "NetDisc"){
+                        echo '<h3 class="name">Network Discovery</h3>';
+                    }
                     echo '<ul class="list-unstyled">';
                     echo'<li><strong>Scan Type: </strong>'.$item['ScanType'].'</li>';
                     echo'<li><strong>Scan Status:</strong>'.$item['ScanStatus'].'</li>';
@@ -73,6 +78,8 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
                     echo'</div>';
 
                 }
+
+
 
 
                 ?>
