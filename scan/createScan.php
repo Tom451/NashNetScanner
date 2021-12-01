@@ -43,7 +43,7 @@ if (isset($_POST['createScan'])) {
         }
         elseif($_POST['createScan'] == "VulnScan"){
 
-            $scanInfo = "nmap -sV -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml " .$_POST['IPADDRESS'];
+            $scanInfo = "nmap -sV -oX" .$_POST['IPADDRESS'];
             $scanType = "VulnScan";
             $scanStatus = "Pending";
         }

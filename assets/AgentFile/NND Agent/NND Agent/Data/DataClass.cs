@@ -73,13 +73,15 @@ namespace NND_Agent.Data
             string gateway = GetNetworkGateway();
             string[] gatewayArray = gateway.Split('.');
 
-            string ScanSaveLocation = "C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml";
+            
 
             // Pass the variables in 
 
             if (scan.scanType == "NetDisc")
             {
-                startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", scan.scanInfo, ScanSaveLocation, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
+                string NetworkScanSaveLocation = "C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml";
+
+                startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", scan.scanInfo, NetworkScanSaveLocation, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
                 process.StartInfo = startInfo;
                 process.Start();
 
@@ -101,7 +103,10 @@ namespace NND_Agent.Data
             }
             else if (scan.scanType == "VulnScan")
             {
-                startInfo.Arguments = String.Format("/C {0} --no-stylesheet ", scan.scanInfo);
+
+                string VulnScanSaveLocation = "C:\\Users\\Public\\Documents\\NMAPVulnScan.xml";
+
+                startInfo.Arguments = String.Format("/C {0} {1} --no-stylesheet ", scan.scanInfo, VulnScanSaveLocation);
                 process.StartInfo = startInfo;
                 process.Start();
 
