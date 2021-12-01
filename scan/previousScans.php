@@ -72,6 +72,10 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
                         echo'<li></li>';
                     }
+                    //check if it is errored
+                    elseif ($item['ScanStatus'] == "Error"){
+                        echo'<li>Errored Please try running another scan</li>';
+                    }
                     else {
                         echo '</ul><button class="btn btn-primary bg-secondary d-lg-flex"  name="scanSelected" value="' . $item['ScanID'] . '">View Scan</button>';
                     }

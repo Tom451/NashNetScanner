@@ -15,6 +15,7 @@ namespace NND_Agent.Data
     internal class DataClass
     {
         userModel currentUser = new userModel();
+        NNDAgent form = NNDAgent.NNDForm;
         
         public void StartScan(long userNONCE)
         {
@@ -28,16 +29,25 @@ namespace NND_Agent.Data
 
             if (currentUser.currentScan == null)
             {
-                NNDAgent.NNDForm.popUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
+                form.popUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
                 return;
 
             }
-            
-            //start the scan
-            NMapScan(currentUser.currentScan);
 
-            //Convert the scan to JSON
-            currentUser.currentScan.ScanStatus = "Finished";
+            //start the scan
+            if (NMapScan(currentUser.currentScan))
+            {
+                //Convert the scan to JSON
+                currentUser.currentScan.ScanStatus = "Finished";
+            }
+            else
+            {
+                //Convert the scan to JSON
+                currentUser.currentScan.ScanStatus = "Error";
+            }
+            
+
+            
 
             //get ready for item upload
             string uploadJSON = Connection.ToJSON(currentUser);
@@ -48,7 +58,8 @@ namespace NND_Agent.Data
            
         }
 
-        public void NMapScan(ScanModel scan)
+        //returns true on success and false on error 
+        public bool NMapScan(ScanModel scan)
         {
             //Start the Scan
             Process process = new Process();
@@ -86,14 +97,27 @@ namespace NND_Agent.Data
                 process.Start();
 
                 //Read the output stream first and then wait.
-                process.WaitForExit();
+                //Wait 3 mins 
+                if (process.WaitForExit(180000))
+                {
+                    ParseVulnerbilityData(scan);
+                    return true;
+                }
+                else
+                {
+                    form.popUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+                    return false;
+                }
+                
                 
 
-                ParseVulnerbilityData(scan);
+                
             }
+            return false;
 
 
         }
+        
 
         private void ParseVulnerbilityData(ScanModel scan)
         {
