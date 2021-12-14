@@ -33,7 +33,7 @@ foreach ($files as $name => $file)
     if (!$file->isDir())
     {
         // add custom user nonce, if the file is the userNonce then add the users custom nonce.
-        if ($file->getFilename() == "UserNONCE.txt.deploy"){
+        if ($file->getFilename() == "UserNONCE.txt"){
 
             $filePath = $file->getRealPath();
 

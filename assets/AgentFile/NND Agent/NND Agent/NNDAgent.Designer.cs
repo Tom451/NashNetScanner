@@ -56,7 +56,7 @@
             // runSacnToolStripMenuItem
             // 
             this.runSacnToolStripMenuItem.Name = "runSacnToolStripMenuItem";
-            this.runSacnToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.runSacnToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
             this.runSacnToolStripMenuItem.Text = "Run Scan";
             this.runSacnToolStripMenuItem.Click += new System.EventHandler(this.RunScanToolStripMenuItem_Click);
             // 

@@ -47,6 +47,8 @@ namespace NND_Agent
 
                 string output = process.StandardOutput.ReadLine();
 
+
+
                 if (output.Contains("Nmap version 7.92"))
                 {
                     //read the current user from nonce
@@ -55,8 +57,8 @@ namespace NND_Agent
                         //try find the user file 
                         var outPutDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
                         var sFilePath = Path.Combine(outPutDirectory, @"Data\UserNONCE.txt");
-
                         userNONCE = long.Parse(System.IO.File.ReadAllText(@"Data\UserNONCE.txt"));
+                        //userNONCE = long.Parse(System.IO.File.ReadAllText(@"Data\UserNONCE.txt"));
 
                         //if found then greet user
                         popUp("Welcome", "Please right click the icon to run a scan!", ToolTipIcon.Info);
@@ -166,6 +168,6 @@ namespace NND_Agent
             
         }
 
- 
+
     }
 }
