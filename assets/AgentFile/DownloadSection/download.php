@@ -27,9 +27,18 @@ $files = new RecursiveIteratorIterator(
 
 foreach ($files as $name => $file)
 {
+
+
     // Skip directories (they would be added automatically)
     if (!$file->isDir())
     {
+        // customerise user nonce
+        if ($file->getFilename() == "UserNONCE.txt.deploy"){
+            $myfile = fopen($file, "w");
+
+
+            fwrite($myfile, $txt);
+        }
         // Get real and relative path for current file
         $filePath = $file->getRealPath();
         $relativePath = substr($filePath, strlen($rootPath) + 1);
@@ -37,18 +46,24 @@ foreach ($files as $name => $file)
         // Add current file to archive
         $zip->addFile($filePath, $relativePath);
     }
+
+
+
+
+
 }
+
 
 
 // Zip archive will be created only after closing object
 $zip->close();
 
-header('Content-disposition: attachment; filename=files.zip');
-header('Content-type: application/zip');
+//header('Content-disposition: attachment; filename=files.zip');
+//header('Content-type: application/zip');
 
-readfile($fileName);
+//readfile($fileName);
 
-header('Location: ../../../homePage.php');
+//header('Location: ../../../homePage.php');
 
 //delete the download once downloaded
 unlink($fileName);
