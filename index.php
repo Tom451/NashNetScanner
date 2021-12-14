@@ -1,4 +1,5 @@
 <script src="assets/js/loginAndRegistrationJS.js"></script>
+<link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon"/>
 
 <?php
 session_start();

@@ -1,0 +1,1 @@
+<link rel="icon" href="../../faviconIcon.ico" type='image/x-icon'/>

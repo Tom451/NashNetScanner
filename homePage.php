@@ -12,11 +12,9 @@ if(!isset($_SESSION['user_id'])){
 
 <!DOCTYPE html>
 <html lang="en">
-
-
-
-
 <head>
+
+    <?php require "assets/php/headerData.php "?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>NashNetworkScanner</title>
@@ -27,6 +25,8 @@ if(!isset($_SESSION['user_id'])){
     <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
     <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+
+
 </head>
 
 <body>
