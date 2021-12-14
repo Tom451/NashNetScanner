@@ -39,7 +39,7 @@ if (isset($_POST['login'])) {
 
             //if the given password is correct then, get the derived key from the
             // password and store that in the session variable for later encryption use
-            $_SESSION['key'] = $password;
+            $_SESSION['nonce'] = $result['userNonce'];
             $_SESSION['user_id'] = $result['UserID'];
             $_SESSION['userName'] = $username;
             // send the user to the home page
