@@ -27,17 +27,43 @@ $files = new RecursiveIteratorIterator(
 
 foreach ($files as $name => $file)
 {
+
+
     // Skip directories (they would be added automatically)
     if (!$file->isDir())
     {
-        // Get real and relative path for current file
-        $filePath = $file->getRealPath();
-        $relativePath = substr($filePath, strlen($rootPath) + 1);
+        // add custom user nonce, if the file is the userNonce then add the users custom nonce.
+        if ($file->getFilename() == "UserNONCE.txt.deploy"){
 
-        // Add current file to archive
-        $zip->addFile($filePath, $relativePath);
+            $filePath = $file->getRealPath();
+
+            $file = fopen($filePath, "w");
+
+            fwrite($file, $_SESSION['nonce']);
+
+            $relativePath = substr($filePath, strlen($rootPath) + 1);
+
+            $zip->addFile($filePath, $relativePath);
+
+        }
+        else{
+            // Get real and relative path for current file
+            $filePath = $file->getRealPath();
+            $relativePath = substr($filePath, strlen($rootPath) + 1);
+
+            // Add current file to archive
+            $zip->addFile($filePath, $relativePath);
+
+        }
+
     }
+
+
+
+
+
 }
+
 
 
 // Zip archive will be created only after closing object
