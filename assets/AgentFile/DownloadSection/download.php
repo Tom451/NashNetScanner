@@ -25,28 +25,33 @@ $files = new RecursiveIteratorIterator(
 );
 //Credit End
 
+//Create a new unique nonce
+$myfile = fopen($_SESSION['user_id']."NonceFile.txt", "w");
+
+//Get the user nonce
+$nonce = $_SESSION['nonce'];
+
+//write to the file
+fwrite($myfile, $nonce);
+
+//get the real path of the NEW nonce
+$noncePath = realpath($_SESSION['user_id']."NonceFile.txt");
+
+//close the file
+fclose($myfile);
+
+//get the relative path of the ORIGINAL nonce text to tell PHP where to put the new one
+$relativePath = substr($noncePath, strlen($rootPath) + 1);
+
+// Add current file to archive
+$zip->addFile($noncePath, "AppFiles/Data/UserNonce.txt");
+
 foreach ($files as $name => $file)
 {
-
-
     // Skip directories (they would be added automatically)
     if (!$file->isDir())
     {
-        // add custom user nonce, if the file is the userNonce then add the users custom nonce.
-        if ($file->getFilename() == "UserNONCE.txt"){
 
-            $filePath = $file->getRealPath();
-
-            $file = fopen($filePath, "w");
-
-            fwrite($file, $_SESSION['nonce']);
-
-            $relativePath = substr($filePath, strlen($rootPath) + 1);
-
-            $zip->addFile($filePath, $relativePath);
-
-        }
-        else{
             // Get real and relative path for current file
             $filePath = $file->getRealPath();
             $relativePath = substr($filePath, strlen($rootPath) + 1);
@@ -54,7 +59,8 @@ foreach ($files as $name => $file)
             // Add current file to archive
             $zip->addFile($filePath, $relativePath);
 
-        }
+
+
 
     }
 
@@ -74,10 +80,12 @@ header('Content-type: application/zip');
 
 readfile($fileName);
 
-header('Location: ../../../homePage.php');
+//header('Location: ../../../homePage.php');
 
-//delete the download once downloaded
+//delete the download and the new nonce file once downloaded
 unlink($fileName);
+unlink($_SESSION['user_id']."NonceFile.txt");
+
 ?>
 
 
