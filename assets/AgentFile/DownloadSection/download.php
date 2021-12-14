@@ -32,19 +32,30 @@ foreach ($files as $name => $file)
     // Skip directories (they would be added automatically)
     if (!$file->isDir())
     {
-        // customerise user nonce
+        // add custom user nonce, if the file is the userNonce then add the users custom nonce.
         if ($file->getFilename() == "UserNONCE.txt.deploy"){
-            $myfile = fopen($file, "w");
 
+            $filePath = $file->getRealPath();
 
-            fwrite($myfile, $txt);
+            $file = fopen($filePath, "w");
+
+            fwrite($file, $_SESSION['nonce']);
+
+            $relativePath = substr($filePath, strlen($rootPath) + 1);
+
+            $zip->addFile($filePath, $relativePath);
+
         }
-        // Get real and relative path for current file
-        $filePath = $file->getRealPath();
-        $relativePath = substr($filePath, strlen($rootPath) + 1);
+        else{
+            // Get real and relative path for current file
+            $filePath = $file->getRealPath();
+            $relativePath = substr($filePath, strlen($rootPath) + 1);
 
-        // Add current file to archive
-        $zip->addFile($filePath, $relativePath);
+            // Add current file to archive
+            $zip->addFile($filePath, $relativePath);
+
+        }
+
     }
 
 
@@ -58,12 +69,12 @@ foreach ($files as $name => $file)
 // Zip archive will be created only after closing object
 $zip->close();
 
-//header('Content-disposition: attachment; filename=files.zip');
-//header('Content-type: application/zip');
+header('Content-disposition: attachment; filename=files.zip');
+header('Content-type: application/zip');
 
-//readfile($fileName);
+readfile($fileName);
 
-//header('Location: ../../../homePage.php');
+header('Location: ../../../homePage.php');
 
 //delete the download once downloaded
 unlink($fileName);
