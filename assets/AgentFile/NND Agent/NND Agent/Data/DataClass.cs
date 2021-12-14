@@ -1,10 +1,12 @@
 ﻿using NND_Agent.Items;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -12,49 +14,52 @@ namespace NND_Agent.Data
 {
     internal class DataClass
     {
-        List<ComputerModel> devices = new List<ComputerModel>();
+        userModel currentUser = new userModel();
+        NNDAgent form = NNDAgent.NNDForm;
+        
         public void StartScan(long userNONCE)
         {
             //initalise the classes
+            currentUser.UserName = userNONCE.ToString();
             DataUpload Connection = new DataUpload();
  
 
             //get the scan
-            ScanModel scan = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
+            currentUser.currentScan = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
 
-            if (scan == null)
+            if (currentUser.currentScan == null)
             {
-                NNDAgent.NNDForm.popUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
+                form.popUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
                 return;
 
             }
 
-            List<ComputerModel> upload = NMapScan(scan);
-
-            //convert the device objects to JSON
-            try
+            //start the scan
+            if (NMapScan(currentUser.currentScan))
             {
-                //get ready for item upload
-                string uploadDeviceJSON = Connection.ToJSON(upload);
-
                 //Convert the scan to JSON
-                scan.ScanStatus = "Finished";
-                string uploadScanJSON = Connection.ToJSON(scan);
-
-                //upload the devices
-                Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("JSON={0}", uploadDeviceJSON));
-
-                //upload the scan
-                Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("SCANUPDATE={0}", uploadScanJSON));
+                currentUser.currentScan.ScanStatus = "Finished";
             }
-            catch (Exception)
+            else
             {
-                scan.ScanStatus = "Failed";
-
+                //Convert the scan to JSON
+                currentUser.currentScan.ScanStatus = "Error";
             }
+            
+
+            
+
+            //get ready for item upload
+            string uploadJSON = Connection.ToJSON(currentUser);
+
+            //upload the devices
+            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
+
+           
         }
 
-        public List<ComputerModel> NMapScan(ScanModel scan)
+        //returns true on success and false on error 
+        public bool NMapScan(ScanModel scan)
         {
             //Start the Scan
             Process process = new Process();
@@ -68,32 +73,209 @@ namespace NND_Agent.Data
             string gateway = GetNetworkGateway();
             string[] gatewayArray = gateway.Split('.');
 
-            string ScanSaveLocation = "C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml";
+            
 
             // Pass the variables in 
-            startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", scan.scanInfo, ScanSaveLocation, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
-            process.StartInfo = startInfo;
-            process.Start();
-
-            // Read the output stream first and then wait.
-            process.WaitForExit();
 
             if (scan.scanType == "NetDisc")
             {
-                //parse the scan data 
-                ParseNetworkDiscoveryData(scan);
+                
+
+                startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", scan.scanInfo, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
+                process.StartInfo = startInfo;
+                process.Start();
+
+                //Read the output stream first and then wait.
+                if (process.WaitForExit(180000))
+                {
+                    //parse the scan data 
+                    ParseNetworkDiscoveryData(scan);
+                    return true;
+                }
+                else
+                {
+                    form.popUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+                    return false;
+                }
+
+                
+
+            }
+            else if (scan.scanType == "VulnScan")
+            {
+
+
+                startInfo.Arguments = String.Format("/C {0} --no-stylesheet ",  scan.scanInfo);
+                process.StartInfo = startInfo;
+                process.Start();
+
+                //Read the output stream first and then wait.
+                //Wait 3 mins 
+
+                
+                if (process.WaitForExit(180000))
+                {
+                    ParseVulnerbilityData(scan);
+                    return true;
+                }
+                else
+                {
+                    form.popUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+                    return false;
+                }
+                
+                
+
+                
+            }
+            return false;
+
+
+        }
+        
+
+        private void ParseVulnerbilityData(ScanModel scan)
+        {
+
+            currentUser.scannedVulns = new List<VulnModel>();
+
+            //read in data from the created XML File
+            XmlDocument NMapXMLScan = new XmlDocument();
+
+            //load the data after written
+            NMapXMLScan.Load("C:\\Users\\Public\\Documents\\NMAPVulnScan.xml");
+
+            //select all the hosts in the document 
+            XmlNodeList ports = NMapXMLScan.SelectNodes("nmaprun/host/ports/port");
+
+            for (int i = 0; i < ports.Count - 1; i++)
+            { 
+                VulnModel tempModel = new VulnModel();
+
+                var port = ports.Item(i);
+                var service = port.SelectSingleNode("service");
+
+
+
+                if (service.Attributes.GetNamedItem("name") != null)
+                {
+                    tempModel.VulnName = service.Attributes.GetNamedItem("name").InnerText;
+                }
+                else
+                {
+                    tempModel.VulnName = null;
+                }
+
+                if (service.Attributes.GetNamedItem("version") != null)
+                {
+                    tempModel.VulnVersion = service.Attributes.GetNamedItem("version").InnerText;
+                }
+                else
+                {
+                    tempModel.VulnVersion = "No Value Found";
+                }
+
+
+                if (service.Attributes.GetNamedItem("product") != null)
+                {
+                    tempModel.VulnProduct = service.Attributes.GetNamedItem("product").InnerText;
+                }
+                else
+                {
+                    tempModel.VulnProduct = "No Value Found";
+                }
+
+                if (service.Attributes.GetNamedItem("extrainfo") != null)
+                {
+                    tempModel.VulnProduct = service.Attributes.GetNamedItem("extrainfo").InnerText;
+                }
+                else
+                {
+                    tempModel.VulnExtraData = "No Value Found";
+                }
+                if (service.Attributes.GetNamedItem("cpe") != null)
+                {
+                    tempModel.VulnCPE = service.Attributes.GetNamedItem("cpe").InnerText;
+                }
+                //if cpe is nested 
+                else
+                {
+                    if(service.ChildNodes.Count == 0)
+                    {
+                        tempModel.VulnCPE = "NO CPE";
+                    }
+                    else 
+                    {
+                        //if it is nested and services has chind nodes then try get a cpe 
+                        try
+                        {
+                            tempModel.VulnCPE = service.SelectNodes("cpe").Item(0).InnerText;
+
+                        }
+                        catch (Exception ex)
+                        {
+                            tempModel.VulnCPE = "NO CPE";
+                        }
+
+                    }
+                    
+                }
+
+                tempModel.VulnPortNumber = port.Attributes.GetNamedItem("portid").InnerText;
+
+                tempModel.scanID = scan.scanID;
+
+                currentUser.scannedVulns.Add(tempModel);
+
+
+                
 
             }
 
+            
+            //create the list
+            currentUser.scannedDevices = new List<ComputerModel>();
+            ComputerModel scannedDevice = new ComputerModel();
+
+            //select all the hosts in the document with addresses
+            XmlNodeList addresses = NMapXMLScan.SelectNodes("nmaprun/host/address");
+
+            scannedDevice.ipAddress = addresses.Item(0).Attributes.GetNamedItem("addr").InnerText;
+            scannedDevice.macAddress = addresses.Item(1).Attributes.GetNamedItem("addr").InnerText;
+
+            //get the name, this is last as it may be false and error checking is needed 
+            try
+            {
+                XmlNode name = NMapXMLScan.SelectSingleNode("nmaprun/host/hostnames/hostname");
+
+                if (name != null)
+                {
+                    scannedDevice.name = name.Attributes.GetNamedItem("name").InnerText;
+                }
+                else
+                {
+                    scannedDevice.name = scannedDevice.macAddress;
+                }
+            }
+            catch (Exception ex)
+            {
+                form.popUp("Error", ex.Message, System.Windows.Forms.ToolTipIcon.Error);
+                return;
+            }
 
 
-            return devices;
+            scannedDevice.ScanID = scan.scanID;
+
+            currentUser.scannedDevices.Add(scannedDevice);
+
 
 
         }
 
         public void ParseNetworkDiscoveryData(ScanModel scan)
         {
+            currentUser.scannedDevices = new List<ComputerModel>();
+
             //read in data from the created XML File
             XmlDocument NMapXMLScan = new XmlDocument();
 
@@ -106,6 +288,8 @@ namespace NND_Agent.Data
             //Get the number of hosts and loop through them.
             for (int i = 0; i < hosts.Count - 1; i++)
             {
+                
+
                 //create a temporay computer model
                 ComputerModel tempDevice = new ComputerModel();
 
@@ -147,7 +331,7 @@ namespace NND_Agent.Data
                 tempDevice.name = hostActualName;
                 tempDevice.ScanID = scan.scanID;
 
-                devices.Add(tempDevice);
+                currentUser.scannedDevices.Add(tempDevice);
 
             }
 

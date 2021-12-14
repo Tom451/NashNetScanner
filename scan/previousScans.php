@@ -53,11 +53,18 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <form action="/scan/viewScan.php" method="post">
             <div class="row features">
-
                 <?php
                 foreach (array_reverse($result) as $item) {
-                    echo '<div class="col-sm-6 col-lg-4 item"><i class="fa fa-map-marker icon"></i>';
-                    echo '<h3 class="name">User Initiated Scan</h3>';
+
+                    if ($item['ScanType'] == "VulnScan"){
+                        echo '<div class="col-sm-6 col-lg-4 item"><i class="fa fa-search icon"></i>';
+                        echo '<h3 class="name">Vulnerability Scan</h3>';
+                    }
+                    elseif ($item['ScanType'] == "NetDisc"){
+                        echo '<div class="col-sm-6 col-lg-4 item"><i class="fa fa-eye icon"></i>';
+                        echo '<h3 class="name">Network Discovery</h3>';
+
+                    }
                     echo '<ul class="list-unstyled">';
                     echo'<li><strong>Scan Type: </strong>'.$item['ScanType'].'</li>';
                     echo'<li><strong>Scan Status:</strong>'.$item['ScanStatus'].'</li>';
@@ -67,6 +74,10 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
                         echo'<li></li>';
                     }
+                    //check if it is errored
+                    elseif ($item['ScanStatus'] == "Error"){
+                        echo'<li></li>';
+                    }
                     else {
                         echo '</ul><button class="btn btn-primary bg-secondary d-lg-flex"  name="scanSelected" value="' . $item['ScanID'] . '">View Scan</button>';
                     }
@@ -74,10 +85,9 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
                 }
 
-
                 ?>
-
             </div>
+
             </form>
         </div>
     </section>
