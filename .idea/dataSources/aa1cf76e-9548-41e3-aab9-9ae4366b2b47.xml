@@ -1022,7 +1022,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     <routine id="286" parent="277" name="addVuln">
       <Definer>root@localhost</Definer>
       <RoutineKind>procedure</RoutineKind>
-      <SourceTextLength>1049</SourceTextLength>
+      <SourceTextLength>1069</SourceTextLength>
     </routine>
     <table id="287" parent="277" name="device"/>
     <table id="288" parent="277" name="devicescan"/>
@@ -1075,234 +1075,243 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <DataType>varchar(45)|0s</DataType>
       <Position>6</Position>
     </argument>
-    <column id="305" parent="287" name="deviceID">
+    <argument id="305" parent="286" name="inVulnCPE">
+      <DataType>varchar(100)|0s</DataType>
+      <Position>7</Position>
+    </argument>
+    <column id="306" parent="287" name="deviceID">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="306" parent="287" name="deviceIP">
+    <column id="307" parent="287" name="deviceIP">
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="307" parent="287" name="deviceMacAddress">
+    <column id="308" parent="287" name="deviceMacAddress">
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="308" parent="287" name="deviceName">
+    <column id="309" parent="287" name="deviceName">
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="309" parent="287" name="deviceLastSeen">
+    <column id="310" parent="287" name="deviceLastSeen">
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <key id="310" parent="287" name="PRIMARY">
+    <key id="311" parent="287" name="PRIMARY">
       <ColNames>deviceID</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
     </key>
-    <column id="311" parent="288" name="ScanID">
+    <column id="312" parent="288" name="ScanID">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="312" parent="288" name="DeviceID">
+    <column id="313" parent="288" name="DeviceID">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <foreign-key id="313" parent="288" name="devicescan-ScanID">
+    <foreign-key id="314" parent="288" name="devicescan-ScanID">
       <ColNames>ScanID</ColNames>
       <OnDelete>cascade</OnDelete>
       <RefColNames>ScanID</RefColNames>
       <RefTableName>scan</RefTableName>
     </foreign-key>
-    <foreign-key id="314" parent="288" name="devicescan-DeviceID">
+    <foreign-key id="315" parent="288" name="devicescan-DeviceID">
       <ColNames>DeviceID</ColNames>
       <OnDelete>cascade</OnDelete>
       <RefColNames>deviceID</RefColNames>
       <RefTableName>device</RefTableName>
     </foreign-key>
-    <index id="315" parent="288" name="devicescan-DeviceID_idx">
+    <index id="316" parent="288" name="devicescan-DeviceID_idx">
       <ColNames>DeviceID</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="316" parent="288" name="PRIMARY">
+    <key id="317" parent="288" name="PRIMARY">
       <ColNames>ScanID
 DeviceID</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
     </key>
-    <column id="317" parent="289" name="SessionID">
+    <column id="318" parent="289" name="SessionID">
       <DataType>varchar(20)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="318" parent="289" name="userID">
+    <column id="319" parent="289" name="userID">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="319" parent="289" name="ScanInfo">
+    <column id="320" parent="289" name="ScanInfo">
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="320" parent="289" name="ScanType">
+    <column id="321" parent="289" name="ScanType">
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="321" parent="289" name="ScanStatus">
+    <column id="322" parent="289" name="ScanStatus">
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="322" parent="289" name="ScanID">
+    <column id="323" parent="289" name="ScanID">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>6</Position>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <foreign-key id="323" parent="289" name="scanInfo-UserIDLink">
+    <foreign-key id="324" parent="289" name="scanInfo-UserIDLink">
       <ColNames>userID</ColNames>
       <RefColNames>UserID</RefColNames>
       <RefTableName>usercredentials</RefTableName>
     </foreign-key>
-    <index id="324" parent="289" name="scanInfo-UserName_idx">
+    <index id="325" parent="289" name="scanInfo-UserName_idx">
       <ColNames>userID</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="325" parent="289" name="PRIMARY">
+    <key id="326" parent="289" name="PRIMARY">
       <ColNames>ScanID</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
     </key>
-    <column id="326" parent="290" name="UserID">
+    <column id="327" parent="290" name="UserID">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="327" parent="290" name="firstName">
+    <column id="328" parent="290" name="firstName">
       <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="328" parent="290" name="lastName">
+    <column id="329" parent="290" name="lastName">
       <DataType>varchar(30)|0s</DataType>
       <Position>3</Position>
     </column>
-    <column id="329" parent="290" name="email">
+    <column id="330" parent="290" name="email">
       <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <key id="330" parent="290" name="PRIMARY">
+    <key id="331" parent="290" name="PRIMARY">
       <ColNames>UserID</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
     </key>
-    <column id="331" parent="291" name="userName">
+    <column id="332" parent="291" name="userName">
       <DataType>varchar(45)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="332" parent="291" name="password">
+    <column id="333" parent="291" name="password">
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="333" parent="291" name="UserID">
+    <column id="334" parent="291" name="UserID">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="334" parent="291" name="lastSeen">
+    <column id="335" parent="291" name="lastSeen">
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="335" parent="291" name="userNonce">
+    <column id="336" parent="291" name="userNonce">
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <foreign-key id="336" parent="291" name="usercredentials-deviceID">
+    <foreign-key id="337" parent="291" name="usercredentials-deviceID">
       <ColNames>UserID</ColNames>
       <RefColNames>UserID</RefColNames>
       <RefTableName>user</RefTableName>
     </foreign-key>
-    <index id="337" parent="291" name="credentials-userID_idx">
+    <index id="338" parent="291" name="credentials-userID_idx">
       <ColNames>UserID</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="338" parent="291" name="PRIMARY">
+    <key id="339" parent="291" name="PRIMARY">
       <ColNames>userName</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
     </key>
-    <column id="339" parent="292" name="VulnID">
+    <column id="340" parent="292" name="VulnID">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="340" parent="292" name="VulnName">
+    <column id="341" parent="292" name="VulnName">
       <DataType>varchar(45)|0s</DataType>
       <Position>2</Position>
     </column>
-    <column id="341" parent="292" name="VulnProduct">
+    <column id="342" parent="292" name="VulnProduct">
       <DataType>varchar(45)|0s</DataType>
       <Position>3</Position>
     </column>
-    <column id="342" parent="292" name="VulnVersion">
+    <column id="343" parent="292" name="VulnVersion">
       <DataType>varchar(45)|0s</DataType>
       <Position>4</Position>
     </column>
-    <column id="343" parent="292" name="VulnPortNumber">
+    <column id="344" parent="292" name="VulnPortNumber">
       <DataType>varchar(45)|0s</DataType>
       <Position>5</Position>
     </column>
-    <column id="344" parent="292" name="VulnExtraData">
+    <column id="345" parent="292" name="VulnExtraData">
       <DataType>varchar(45)|0s</DataType>
+      <DefaultExpression>&apos;No Value Found&apos;</DefaultExpression>
       <Position>6</Position>
     </column>
-    <key id="345" parent="292" name="PRIMARY">
+    <column id="346" parent="292" name="VulnCPE">
+      <DataType>varchar(100)|0s</DataType>
+      <Position>7</Position>
+    </column>
+    <key id="347" parent="292" name="PRIMARY">
       <ColNames>VulnID</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
     </key>
-    <column id="346" parent="293" name="VulnID">
+    <column id="348" parent="293" name="VulnID">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="347" parent="293" name="ScanID">
+    <column id="349" parent="293" name="ScanID">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <foreign-key id="348" parent="293" name="fk_grade_id">
+    <foreign-key id="350" parent="293" name="fk_grade_id">
       <ColNames>VulnID</ColNames>
       <RefColNames>VulnID</RefColNames>
       <RefTableName>vulnerabilities</RefTableName>
     </foreign-key>
-    <foreign-key id="349" parent="293" name="fk_vuln_scanID">
+    <foreign-key id="351" parent="293" name="fk_vuln_scanID">
       <ColNames>ScanID</ColNames>
       <RefColNames>ScanID</RefColNames>
       <RefTableName>scan</RefTableName>
     </foreign-key>
-    <index id="350" parent="293" name="fk_vuln_scanID">
+    <index id="352" parent="293" name="fk_vuln_scanID">
       <ColNames>ScanID</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="351" parent="293" name="PRIMARY">
+    <key id="353" parent="293" name="PRIMARY">
       <ColNames>VulnID
 ScanID</ColNames>
       <NameSurrogate>1</NameSurrogate>

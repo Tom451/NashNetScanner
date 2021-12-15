@@ -61,13 +61,13 @@ namespace NND_Agent
                         //userNONCE = long.Parse(System.IO.File.ReadAllText(@"Data\UserNONCE.txt"));
 
                         //if found then greet user
-                        popUp("Welcome", "Please right click the icon to run a scan!", ToolTipIcon.Info);
+                        PopUp("Welcome", "Please right click the icon to run a scan!", ToolTipIcon.Info);
 
                     }
                     catch
                     {
                         //show the user the error 
-                        popUp("File Error", "Unable to find user ID file. Please try to re download agent", ToolTipIcon.Error);
+                        PopUp("File Error", "Unable to find user ID file. Please try to re download agent", ToolTipIcon.Error);
 
                     }
 
@@ -78,7 +78,7 @@ namespace NND_Agent
                 {
 
                     //show the user the error that NMAp is not installed 
-                    popUp("NMAP Not Installed", "NMAP installer will open in 10 seconds, please follow the instructions to install", ToolTipIcon.Error);
+                    PopUp("NMAP Not Installed", "NMAP installer will open in 10 seconds, please follow the instructions to install", ToolTipIcon.Error);
 
                     //wait for ten seconds
                     int milliseconds = 10000;
@@ -108,7 +108,7 @@ namespace NND_Agent
             catch
             {
                 //if scan errors out
-                popUp("Unable to start", "Please reinstall app ", ToolTipIcon.Error);
+                PopUp("Unable to start", "Please reinstall app ", ToolTipIcon.Error);
                 //Application exit if error occurs, error shouldnt occur often
                 Application.Exit();
 
@@ -150,13 +150,14 @@ namespace NND_Agent
             
             DataClass Scan = new DataClass();
             //tell the user scan has started
-            popUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
+            PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
             Scan.StartScan(userNONCE);
-            popUp("Scan Finished", "Finished", ToolTipIcon.Info);
+            PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
 
         }
 
-        public void popUp(string title, string info, ToolTipIcon type)
+        //pop up method, made public so it can be called anywhere throught the app
+        public void PopUp(string title, string info, ToolTipIcon type)
         {
             NNDToolBarIcon.BalloonTipTitle = title;
             NNDToolBarIcon.BalloonTipText = info;
@@ -164,7 +165,6 @@ namespace NND_Agent
             NNDToolBarIcon.Visible = true;
             NNDToolBarIcon.ShowBalloonTip(100);
            
-            // Create buttons and set text property.  
             
         }
 

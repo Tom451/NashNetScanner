@@ -30,7 +30,7 @@ else {
 
 
 //select all the devices with the ip and mac address with scan ID
-$query = $connection->prepare("SELECT device.deviceIP, device.deviceMacAddress, device.deviceName, device.deviceLastSeen FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
+$query = $connection->prepare("SELECT * FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
 JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
 $query->bindParam("scanID", $scanID, PDO::PARAM_STR);
 $query->execute();
@@ -39,13 +39,13 @@ $query->execute();
 $devices = $query->fetchAll(PDO::FETCH_ASSOC);
 
 //select all the vulnerbilities
-$query = $connection->prepare("SELECT vulnerabilities.VulnName, vulnerabilities.VulnProduct, vulnerabilities.VulnVersion, vulnerabilities.VulnPortNumber, vulnerabilities.VulnExtraData
-FROM vulnerabilities JOIN vulnscan ON vulnerabilities.VulnID = vulnscan.VulnID JOIN scan ON vulnscan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
+$query = $connection->prepare("SELECT * FROM vulnerabilities JOIN vulnscan ON vulnerabilities.VulnID = vulnscan.VulnID JOIN scan ON vulnscan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
 $query->bindParam("scanID", $scanID, PDO::PARAM_STR);
 $query->execute();
 
-//get the result
+//get the result of the vulnerbilities
 $vulns = $query->fetchAll(PDO::FETCH_ASSOC);
+
 
 if (count($vulns) == 0){
   $vulnScore = 100;
@@ -96,7 +96,7 @@ else{
                     <li class="list-group-item">
                         <span>
                         <a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-1" href="#collapse-1" role="button">Show Devices</a>
-                        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-2" href="#collapse-2" role="button">Show Vulnerabilities</a>
+                        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-2" href="#collapse-2" role="button">Show Ports</a>
                         </span>
                     </li>
 
@@ -158,6 +158,55 @@ else{
 
         </div>
     </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" >
+                    <div class="col">
+                        <p>You Have</p>
+                        <h3>10</h3>
+                        <p>Vulnerbilities</p>
+                    </div>
+                    <div class="col">
+
+                        <p> Of these tis percentage need looking at: </p>
+                        <!-- Chart 2 -->
+                        <svg viewBox="0 0 36 36" class="circular-chart" >
+                            <path class="circle"
+
+                                  stroke-dasharray="<?php echo ''.$vulnScore.',100' ?>"
+                                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                  stroke =
+                                  <?php
+                                  //sets colour
+
+                                  if ($vulnScore >= 70){
+                                      echo 'green';
+                                  }
+                                  else if($vulnScore < 70 and $vulnScore >=40){
+                                      echo 'orange';
+                                  }
+                                  else{
+                                      echo 'red';
+                                  }
+
+                                  ?>
+
+                            />
+                            <text x="18" y="20.35" class="percentage"><?php echo ''.$vulnScore.'%' ?></text>
+                        </svg>
+
+                    </div>
+                    <div class="col">
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div class="container">
         <div class="row">
@@ -200,7 +249,7 @@ else{
 
                 <div>
                     <div class="collapse hide" id="collapse-2">
-                        <h2>Vulnerabilities</h2>
+                        <h2>Ports</h2>
 
                         <table id="vuln" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
@@ -235,6 +284,11 @@ else{
                     </div>
                 </div>
             </div>
+
+
+
+
+
         </div>
     </div>
 

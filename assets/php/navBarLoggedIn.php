@@ -1,7 +1,7 @@
 <?php ?>
 
 
-<nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+<nav class="navbar navbar-light navbar-expand-md navigation-clean-button" style="margin-bottom: 21px;box-shadow: 0px 2px 7px var(--secondary);padding: 0px;background: rgba(0,194,255,0.11);">
     <div class="container"><a class="navbar-brand" href="/homePage.php">NashNetworkScanner</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navcol-1">
             <ul class="navbar-nav mr-auto">
