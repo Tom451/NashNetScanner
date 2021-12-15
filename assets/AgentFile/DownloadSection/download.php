@@ -2,7 +2,6 @@
 session_start();
 if(!isset($_SESSION['user_id'])){
     header('Location: ../../../index.php');
-
     exit;
 } else {
 
@@ -40,10 +39,7 @@ $noncePath = realpath($_SESSION['user_id']."NonceFile.txt");
 //close the file
 fclose($myfile);
 
-//get the relative path of the ORIGINAL nonce text to tell PHP where to put the new one
-$relativePath = substr($noncePath, strlen($rootPath) + 1);
-
-// Add current file to archive
+// Add current file to archive where the ORIGINAL user nonce would be
 $zip->addFile($noncePath, "AppFiles/Data/UserNonce.txt");
 
 foreach ($files as $name => $file)
@@ -58,7 +54,6 @@ foreach ($files as $name => $file)
 
             // Add current file to archive
             $zip->addFile($filePath, $relativePath);
-
 
 
 
@@ -80,7 +75,7 @@ header('Content-type: application/zip');
 
 readfile($fileName);
 
-//header('Location: ../../../homePage.php');
+header('Location: ../../../homePage.php');
 
 //delete the download and the new nonce file once downloaded
 unlink($fileName);

@@ -66,8 +66,11 @@ namespace NND_Agent.Data
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 WindowStyle = ProcessWindowStyle.Hidden,
-                FileName = "cmd.exe"
-            };
+                FileName = "cmd.exe",
+                UseShellExecute = false,
+                CreateNoWindow = true
+
+        };
 
             //get gateway IP and Mac Address for scan 
             string gateway = GetNetworkGateway();
@@ -81,8 +84,10 @@ namespace NND_Agent.Data
             {
                 
 
-                startInfo.Arguments = String.Format("/C {0} {1} {2}.{3}.{4}.*/24 --no-stylesheet ", scan.scanInfo, gatewayArray[0], gatewayArray[1], gatewayArray[2], gatewayArray[3]);
+                startInfo.Arguments = String.Format("/C {0} {1}.{2}.{3}.*/24 --no-stylesheet ", scan.scanInfo, gatewayArray[0], gatewayArray[1], gatewayArray[2]);
                 process.StartInfo = startInfo;
+
+
                 process.Start();
 
                 //Read the output stream first and then wait.

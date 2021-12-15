@@ -72,6 +72,8 @@ namespace NND_Agent
             catch (Exception ex)
             {
                 //throw or return an appropriate response/exception
+                ScanModel nullModel = null;
+                return nullModel;
             }
 
             if(webpageContent == "False")
