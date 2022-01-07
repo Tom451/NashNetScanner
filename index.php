@@ -66,10 +66,13 @@ if (isset($_POST['login'])) {
     <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
 </head>
 
+
+
 <body>
+
     <?php require 'assets/php/navBarLoggedOut.php' ?>
 
-    <section class="login-clean" style="width: auto;height: auto;">
+    <section class="login-clean">
         <form method="post">
             <h2 class="sr-only">Login Form</h2>
             <div class="illustration"><img src="assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>
