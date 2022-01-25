@@ -165,7 +165,7 @@ else{
                 <div class="row" >
                     <div class="col">
                         <p>You Have</p>
-                        <h3>10</h3>
+                        <h3 id="numOfVulns">0</h3>
                         <p>Vulnerbilities</p>
                     </div>
                     <div class="col">
@@ -310,49 +310,61 @@ else{
                                 }
                                 else{
 
+                                    //check if the cpe is for the application or if it is for the operating system
 
-                                    $UPLOADString = "https://services.nvd.nist.gov/rest/json/cves/1.0/?cpeMatchString=".$item['VulnCPE'];
-                                    echo $UPLOADString;
-                                    $JSON = file_get_contents($UPLOADString);
-                                    $JSONObject = json_decode($JSON);
-
-                                    if ($JSONObject -> totalResults != 0){
-
-                                        $CVEItems = $JSONObject -> result ->CVE_Items;
-
-                                        if (!empty($CVEItems -> impact->baseMetricV3->cvssV3)){
-
-                                            foreach ($CVEItems as $CVE) {
-                                                echo '<tr>';
-                                                echo '<td>' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
-                                                echo '<td>' . $CVE ->impact->baseMetricV3->cvssV3->attackComplexity . '</td>';
-                                                echo '<td>' . $item['VulnName'] . '</td>';
-                                                echo '<td>' . $CVE ->impact->baseMetricV3->cvssV3->baseSeverity . '</td>';
-                                                echo '<tr>';
-                                            }
-
-                                        }
-                                        else{
-                                            foreach ($CVEItems as $CVE) {
-                                                echo '<tr>';
-                                                echo '<td>' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
-                                                echo '<td>' . $CVE ->impact->baseMetricV2->cvssV2->accessComplexity . '</td>';
-                                                echo '<td>' . $item['VulnName'] . '</td>';
-                                                echo '<td>' . $CVE ->impact->baseMetricV2->severity . '</td>';
-                                                echo '<tr>';
-                                            }
-                                        }
-
-
-
-
+                                    if(str_starts_with($item['VulnCPE'], "cpe:/o")){
+                                        //do something
+                                        print("Ignore === ". $item['VulnCPE']);
+                                        print("\n");
                                     }
                                     else{
 
+                                        $UPLOADString = "https://services.nvd.nist.gov/rest/json/cves/1.0/?cpeMatchString=".$item['VulnCPE'];
+                                        echo $UPLOADString;
+                                        $JSON = file_get_contents($UPLOADString);
+                                        $JSONObject = json_decode($JSON);
+
+
+
+
+
+                                        if ($JSONObject -> totalResults != 0){
+
+                                            $CVEItems = $JSONObject -> result ->CVE_Items;
+
+                                            if (!empty($CVEItems -> impact->baseMetricV3->cvssV3)){
+
+                                                foreach ($CVEItems as $CVE) {
+                                                    echo '<tr>';
+                                                    echo '<td>' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
+                                                    echo '<td>' . $CVE ->impact->baseMetricV3->cvssV3->attackComplexity . '</td>';
+                                                    echo '<td>' . $item['VulnName'] . '</td>';
+                                                    echo '<td>' . $CVE ->impact->baseMetricV3->cvssV3->baseSeverity . '</td>';
+                                                    echo '<tr>';
+                                                }
+
+                                            }
+                                            else{
+                                                foreach ($CVEItems as $CVE) {
+                                                    echo '<tr>';
+                                                    echo '<td>' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
+                                                    echo '<td>' . $CVE ->impact->baseMetricV2->cvssV2->accessComplexity . '</td>';
+                                                    echo '<td>' . $item['VulnName'] . '</td>';
+                                                    echo '<td>' . $CVE ->impact->baseMetricV2->severity . '</td>';
+                                                    echo '<tr>';
+                                                }
+                                            }
+
+
+
+
+                                        }
+                                        else{
+
+                                        }
+
+
                                     }
-
-
-
 
 
 
