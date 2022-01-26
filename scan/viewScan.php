@@ -1,5 +1,4 @@
 <?php
-
 //start the session
 session_start();
 if(!isset($_SESSION['user_id'])){
@@ -37,6 +36,11 @@ $query->execute();
 
 //get the result
 $devices = $query->fetchAll(PDO::FETCH_ASSOC);
+
+//if there is only one device set the device variable else the device(s) varible will be used
+if (count($devices) == 1 ){
+    $device = $devices[0];
+}
 
 //select all the vulnerbilities
 $query = $connection->prepare("SELECT * FROM vulnerabilities JOIN vulnscan ON vulnerabilities.VulnID = vulnscan.VulnID JOIN scan ON vulnscan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
@@ -82,6 +86,143 @@ else{
 <body>
 
     <?php require '../assets/php/navBarLoggedIn.php' ?>
+
+
+    <div class="container"<?php
+
+    if($scan['ScanType'] != "VulnScan")
+        echo'style="display: none" ';
+
+    ?>
+    >
+        <div class="row">
+            <div class="col" style="padding-top: 10px;">
+                <h1>Vulnerability Scan for Device:&nbsp;</h1>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <div class="col-md-4"><img class="d-lg-flex justify-content-center m-auto" style="padding-bottom: 5px;" src="https://media.istockphoto.com/photos/iphone-11-pro-max-in-silver-color-template-front-view-with-blank-for-picture-id1202959585?k=20&amp;m=1202959585&amp;s=612x612&amp;w=0&amp;h=8DsZSdfyxdzg9OaFS3gOHITfJxjE2gQr6mCJP7ghPiA=" width="100pxpx">
+                <ul class="list-group" style="padding-top: 5px;">
+                    <li class="list-group-item"><span>Device Name: <?php echo $device['deviceName']?></span></li>
+                    <li class="list-group-item"><span>Mac Address: <?php echo $device['deviceMacAddress']?></span></li>
+                    <li class="list-group-item"><span>IP: <?php echo $device['deviceIP']?></span></li>
+                </ul>
+            </div>
+            <div class="col-md-8">
+                <h2>Overview:</h2>
+                <p>Over View of your current security posture.&nbsp;</p><table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th>High</th>
+                        <th>Medium</th>
+                        <th>Low</th>
+                        <th>Unknown</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td style="width: 25%">
+                            <!-- Chart 2 -->
+                            <svg viewBox="0 0 36 36" class="circular-chart" >
+                                <path class="circle"
+
+                                      stroke-dasharray="<?php echo ''.$vulnScore.',100' ?>"
+                                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                      stroke = 'red'
+
+
+                                />
+                                <text x="18" y="20.35" class="percentage"><?php echo ''.$vulnScore.'%' ?></text>
+                            </svg>
+
+                        </td>
+                        <td style="width: 25%">
+                            <!-- Chart 3 -->
+                            <svg viewBox="0 0 36 36" class="circular-chart" >
+                                <path class="circle"
+
+                                      stroke-dasharray="<?php echo ''.$vulnScore.',100' ?>"
+                                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                      stroke = 'Orange'
+
+                                />
+                                <text x="18" y="20.35" class="percentage"><?php echo ''.$vulnScore.'%' ?></text>
+                            </svg></td>
+                        <td><!-- Chart 2 -->
+                            <svg viewBox="0 0 36 36" class="circular-chart" >
+                                <path class="circle"
+
+                                      stroke-dasharray="<?php echo ''.$vulnScore.',100' ?>"
+                                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                      stroke = 'Green'
+
+                                />
+                                <text x="18" y="20.35" class="percentage"><?php echo ''.$vulnScore.'%' ?></text>
+                            </svg></td>
+                        <td style="width: 25%"><!-- Chart 2 -->
+                            <svg viewBox="0 0 36 36" class="circular-chart" >
+                                <path class="circle"
+
+                                      stroke-dasharray="<?php echo ''.$vulnScore.',100' ?>"
+                                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                      stroke = 'Grey'
+
+                                />
+                                <text x="18" y="20.35" class="percentage"><?php echo ''.$vulnScore.'%' ?></text>
+                            </svg></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container"  <?php
+
+    if($scan['ScanType'] != "NetDisc"){
+
+        echo'style="display: none" ';
+    }
+
+    ?>
+    >
+        <div class="row">
+            <div class="col" style="padding-top: 10px;">
+                <h1>Discovery Scan for Device:&nbsp;</h1>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <div class="col-md-4"><img class="d-lg-flex justify-content-center m-auto" style="padding-bottom: 5px;" src="https://cdn-icons-png.flaticon.com/512/73/73400.png" width="100pxpx">
+                <ul class="list-group" style="padding-top: 5px;">
+                    <li class="list-group-item"><span>Number Of Devices:</span></li>
+                    <li class="list-group-item"><span>ScanID:&nbsp;</span></li>
+                    <li class="list-group-item"><span>Issues:</span></li>
+                </ul>
+            </div>
+            <div class="col-md-8">
+                <h2>Overview:</h2>
+                <p>Current Devices Attached to Given Network&nbsp;</p><table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>IP</th>
+                        <th>Mac</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>NameDevice</td>
+                        <td>IpDevice</td>
+                        <td>MacDevice</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <div class="row">
@@ -159,6 +300,26 @@ else{
         </div>
     </div>
 
+    <div class="container" style="padding-top: 3px;padding-bottom: 3px;">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col"><img class="d-lg-flex m-auto align-items-lg-center" src="/assets/images/NND.png" style="height: 20px"></div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <ul class="list-group">
+                            <li class="list-group-item"><span><strong>Device Name:&nbsp;</strong></span></li>
+                            <li class="list-group-item"><span><strong>Number of Issues:&nbsp;</strong></span></li>
+                            <li class="list-group-item"><span><strong>Device Type:&nbsp;</strong>&nbsp;</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6"></div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -207,7 +368,7 @@ else{
             </div>
         </div>
     </div>
-    
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">
