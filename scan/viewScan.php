@@ -111,43 +111,57 @@ if (isset($JSONObject)){
     $High = 0;
     $Medium = 0;
     $Low = 0;
+    $Unknown = 0;
 
 
-    foreach($CVEList as $CVEItem){
-        $count = null;
+    //check there is a list
+    if($CVEList != null){
+        foreach($CVEList as $CVEItem){
+            $count = null;
 
 
-        if (!empty($CVEItems -> impact->baseMetricV3->cvssV3)) {
-            $count = $CVEItem->impact->baseMetricV3->cvssV3->baseSeverity;
-            if ($count == "HIGH") {
-                $High = $High + 1;
-            } elseif ($count == "MEDIUM") {
-                $Medium = $Medium + 1;
-            } elseif ($count == "LOW") {
-                $Low = $Low + 1;
+            if (!empty($CVEItems -> impact->baseMetricV3->cvssV3)) {
+                $count = $CVEItem->impact->baseMetricV3->cvssV3->baseSeverity;
+                if ($count == "HIGH") {
+                    $High = $High + 1;
+                } elseif ($count == "MEDIUM") {
+                    $Medium = $Medium + 1;
+                } elseif ($count == "LOW") {
+                    $Low = $Low + 1;
+                }
+                else{
+                    $Unknown = $Unknown + 1;
+                }
             }
-        }
-        else{
-            $count = $CVEItem->impact->baseMetricV2->severity;
+            else{
+                $count = $CVEItem->impact->baseMetricV2->severity;
 
-            if ($count == "HIGH") {
-                $High = $High + 1;
-                echo "Value ". $High;
-            } elseif ($count == "MEDIUM") {
-                $Medium = $Medium + 1;
-            } elseif ($count == "LOW") {
-                $Low = $Low + 1;
+                if ($count == "HIGH") {
+                    $High = $High + 1;
+                } elseif ($count == "MEDIUM") {
+                    $Medium = $Medium + 1;
+                } elseif ($count == "LOW") {
+                    $Low = $Low + 1;
+                }
+                else{
+                    $Unknown = $Unknown + 1;
+                }
+
             }
 
+
+
         }
-
-
 
     }
+
     //get the percentages
-    $HighPercentage = $High / count($vulns) * 100;
-    $MedPercentage = $Medium / count($vulns) * 100;
-    $LowPercentage = $Low / count($vulns) * 100;
+    $HighPercentage = round($High / count($CVEList)* 100);
+    $MedPercentage = round($Medium / count($CVEList) * 100);
+    $LowPercentage = round($Low / count($CVEList) * 100);
+    $UnknownPercentage = round($Unknown / count($CVEList) * 100);
+
+
 }
 
 
@@ -255,12 +269,12 @@ if (isset($JSONObject)){
                             <svg viewBox="0 0 36 36" class="circular-chart" >
                                 <path class="circle"
 
-                                      stroke-dasharray="<?php echo ''.$vulnScore.',100' ?>"
+                                      stroke-dasharray="<?php echo ''.$UnknownPercentage.',100' ?>"
                                       d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                       stroke = 'Grey'
 
                                 />
-                                <text x="18" y="20.35" class="percentage"><?php echo ''.$Low ?></text>
+                                <text x="18" y="20.35" class="percentage"><?php echo ''.$Unknown ?></text>
                             </svg></td>
                     </tr>
 
@@ -286,7 +300,7 @@ if (isset($JSONObject)){
                             <tbody>
                             <?php
 
-                            if (isset($CVEList)){
+                            if ($CVEList != null){
                                     //$CVEItems = $JSONObject -> result ->CVE_Items;
 
                                     if (!empty($CVEList -> impact->baseMetricV3->cvssV3)){
@@ -314,7 +328,9 @@ if (isset($JSONObject)){
                                 }
 
                             else{
-
+                                echo '<tr>';
+                                echo '<td colspan="4"> No Vulnerabilities! </td>';
+                                echo '<tr>';
                             }
 
 
@@ -348,9 +364,9 @@ if (isset($JSONObject)){
         <div class="row" style="padding-top: 10px;">
             <div class="col-md-4"><img class="d-lg-flex justify-content-center m-auto" style="padding-bottom: 5px;" src="https://cdn-icons-png.flaticon.com/512/73/73400.png" width="100pxpx">
                 <ul class="list-group" style="padding-top: 5px;">
-                    <li class="list-group-item"><span>Number Of Devices:</span></li>
-                    <li class="list-group-item"><span>ScanID:&nbsp;</span></li>
-                    <li class="list-group-item"><span>Issues:</span></li>
+                    <li class="list-group-item"><span>Number Of Devices: <?php echo count($devices)?></span> </li>
+                    <li class="list-group-item"><span>ScanID:&nbsp;<?php echo $scan['ScanID']?></span></li>
+                    <li class="list-group-item"><span>Issues: <?php echo "0"?></span></li>
                 </ul>
             </div>
             <div class="col-md-8">
@@ -364,11 +380,15 @@ if (isset($JSONObject)){
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>NameDevice</td>
-                        <td>IpDevice</td>
-                        <td>MacDevice</td>
-                    </tr>
+                    <?php
+                    foreach ($devices as $item) {
+                        echo '<tr>';
+                        echo '<td>' . $item['deviceName'] . '</td>';
+                        echo '<td>' . $item['deviceIP'] . '</td>';
+                        echo '<td>' . $item['deviceMacAddress'] . '</td>';
+                        echo '<tr>';
+                    }
+                    ?>
 
                     </tbody>
                 </table>
