@@ -26,8 +26,6 @@ else {
 }
 
 
-
-
 //select all the devices with the ip and mac address with scan ID
 $query = $connection->prepare("SELECT * FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
 JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
@@ -106,13 +104,13 @@ else{
     $vulnScore = $vulnScore*100;
 }
 
-if (isset($JSONObject)){
-    //number for wheels
-    $High = 0;
-    $Medium = 0;
-    $Low = 0;
-    $Unknown = 0;
+//number for wheels
+$High = 0;
+$Medium = 0;
+$Low = 0;
+$Unknown = 0;
 
+if (isset($JSONObject)){
 
     //check there is a list
     if($CVEList != null){
@@ -153,18 +151,52 @@ if (isset($JSONObject)){
 
         }
 
+        //get the percentages
+        $HighPercentage = round($High / count($CVEList)* 100);
+        $MedPercentage = round($Medium / count($CVEList) * 100);
+        $LowPercentage = round($Low / count($CVEList) * 100);
+        $UnknownPercentage = round($Unknown / count($CVEList) * 100);
+
     }
 
-    //get the percentages
-    $HighPercentage = round($High / count($CVEList)* 100);
-    $MedPercentage = round($Medium / count($CVEList) * 100);
-    $LowPercentage = round($Low / count($CVEList) * 100);
-    $UnknownPercentage = round($Unknown / count($CVEList) * 100);
+
+
 
 
 }
 
+function getSecurity($device, $CVEList){
+    if(!is_null($CVEList)){
+        if (count($CVEList) >= 15){
+            echo('<section class="highlight-blue" style="background: red;"> <div class="container"> <div class="intro">
+                <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">Multiple ssues with' . $device['deviceName'] . ',
+                                have been , vulnerabilities will be listed bellow for your information, action will need to be taken and 
+                                appropriate mesures are listed bellow</p>
+               </div></div></section>');
+        }
+        else {
+            echo('<section class="highlight-blue" style="background: forestgreen;"> <div class="container"> <div class="intro">
+                <h2 class="text-center"><i class="fa fa-check-circle" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">No concerning issues with' . $device['deviceName'] . ',
+                                the found vulnerabilities will be listed bellow for your information, however your device is currently safe so no
+                                extra action will need to be taken,
+                                feel free to scan another device </p>
+                </div></div></section>');
+        }
+    }
+    else{
+        echo('<section class="highlight-blue" style="background: dodgerblue;"> <div class="container"> <div class="intro">
+                <h2 class="text-center"><i class="fa fa-smile-o" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">No issues at all with ' . $device['deviceName'] . ',
+                                your device is currently safe so no
+                                extra action will need to be taken,
+                                enjoy your day </p>
+                </div></div></section>');
 
+    }
+
+}
 
 
 ?>
@@ -187,6 +219,7 @@ if (isset($JSONObject)){
     <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/percentages.css">
+    <link rel="stylesheet" href="../assets/css/Highlight-Blue.css">
 </head>
 
 <body>
@@ -204,7 +237,10 @@ if (isset($JSONObject)){
         <div class="row">
             <div class="col" style="padding-top: 10px;">
                 <h1>Vulnerability Scan for Device:&nbsp;</h1>
+                <?php getSecurity($device, $CVEList); ?>
+
             </div>
+
         </div>
         <div class="row" style="padding-top: 10px;">
             <div class="col-md-4"><img class="d-lg-flex justify-content-center m-auto" style="padding-bottom: 5px;" src="https://media.istockphoto.com/photos/iphone-11-pro-max-in-silver-color-template-front-view-with-blank-for-picture-id1202959585?k=20&amp;m=1202959585&amp;s=612x612&amp;w=0&amp;h=8DsZSdfyxdzg9OaFS3gOHITfJxjE2gQr6mCJP7ghPiA=" width="100pxpx">
