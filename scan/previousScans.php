@@ -26,10 +26,12 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>NashNetworkScanner</title>
@@ -40,10 +42,25 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../assets/css/Login-Form-Clean.css">
     <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/visStyling.css">
 </head>
 
 <body>
     <?php require '../assets/php/navBarLoggedIn.php' ?>
+
+    <script src="../assets/js/visDrawing.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    <script>
+        window.addEventListener(
+
+            "load", () =>
+            {draw();}
+
+        );</script>
+
+    <div id="mynetwork"></div>
+
 
     <section class="features-clean">
         <div class="container">
@@ -79,6 +96,9 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
                         echo'<li></li>';
                     }
                     else {
+                        if ($item['ScanType'] == "NetDisc"){
+
+                        }
                         echo '</ul><button class="btn btn-primary bg-secondary d-lg-flex"  name="scanSelected" value="' . $item['ScanID'] . '">View Scan</button>';
                     }
                     echo'</div>';

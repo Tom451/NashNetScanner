@@ -41,10 +41,11 @@ namespace NND_Agent
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //throw or return an appropriate response/exception
-                
+                return "Error";
+
             }
 
             return webpageContent;
@@ -69,7 +70,7 @@ namespace NND_Agent
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //throw or return an appropriate response/exception
                 ScanModel nullModel = null;

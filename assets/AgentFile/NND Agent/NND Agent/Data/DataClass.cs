@@ -14,8 +14,8 @@ namespace NND_Agent.Data
 {
     internal class DataClass
     {
-        userModel currentUser = new userModel();
-        NNDAgent form = NNDAgent.NNDForm;
+        readonly userModel currentUser = new userModel();
+        readonly NNDAgent form = NNDAgent.NNDForm;
         
         public void StartScan(long userNONCE)
         {
@@ -29,7 +29,7 @@ namespace NND_Agent.Data
 
             if (currentUser.currentScan == null)
             {
-                form.popUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
+                form.PopUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
                 return;
 
             }
@@ -53,7 +53,16 @@ namespace NND_Agent.Data
             string uploadJSON = Connection.ToJSON(currentUser);
 
             //upload the devices
-            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
+            try
+            {
+                Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
+                
+            }
+            catch
+            {
+                form.PopUp("No returned value", "Website may be down try again later", System.Windows.Forms.ToolTipIcon.Error);
+            }
+            
 
            
         }
@@ -99,7 +108,7 @@ namespace NND_Agent.Data
                 }
                 else
                 {
-                    form.popUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+                    form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
                     return false;
                 }
 
@@ -125,7 +134,7 @@ namespace NND_Agent.Data
                 }
                 else
                 {
-                    form.popUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+                    form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
                     return false;
                 }
                 
@@ -217,8 +226,9 @@ namespace NND_Agent.Data
                             tempModel.VulnCPE = service.SelectNodes("cpe").Item(0).InnerText;
 
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
+
                             tempModel.VulnCPE = "NO CPE";
                         }
 
@@ -264,7 +274,7 @@ namespace NND_Agent.Data
             }
             catch (Exception ex)
             {
-                form.popUp("Error", ex.Message, System.Windows.Forms.ToolTipIcon.Error);
+                form.PopUp("Error", ex.Message, System.Windows.Forms.ToolTipIcon.Error);
                 return;
             }
 

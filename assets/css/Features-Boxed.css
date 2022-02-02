@@ -1,6 +1,6 @@
 .features-boxed {
   color: #313437;
-  background-color: #eef4f7;
+
 }
 
 .features-boxed p {
@@ -45,6 +45,11 @@
   padding: 30px;
   background-color: #fff;
   margin-bottom: 30px;
+  box-shadow: 1px 1px 6px var(--secondary);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 .features-boxed .item .icon {
