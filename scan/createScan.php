@@ -9,6 +9,10 @@ if(!isset($_SESSION['user_id'])){
 
 }
 
+if(isset($_POST['previousScans'])){
+    header('Location: previousScans.php');
+}
+
 
 if (isset($_POST['createScan'])) {
 
@@ -121,7 +125,9 @@ if (isset($_POST['createScan'])) {
                 <div class="col-sm-6 col-md-5 col-lg-4 item">
                     <div class="box"><i class="fa fa-history icon"></i>
                         <h3 class="name">History</h3>
-                        <p class="description">View your latest and your oldest scans all in one area!&nbsp;</p><a class="learn-more" href="#">Coming Soon »</a>
+                        <p class="description">View your latest and your oldest scans all in one area!&nbsp;</p>
+
+                        <form method="post"><button class="btn btn-primary" type="submit" name="previousScans" value="PrevScan">View Scans</button></form>
                     </div>
                 </div>
             </div>

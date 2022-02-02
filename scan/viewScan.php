@@ -170,9 +170,9 @@ function getSecurity($device, $CVEList){
         if (count($CVEList) >= 15){
             echo('<section class="highlight-blue" style="background: red;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
-                            <p class="text-center">Multiple ssues with' . $device['deviceName'] . ',
-                                have been , vulnerabilities will be listed bellow for your information, action will need to be taken and 
-                                appropriate mesures are listed bellow</p>
+                            <p class="text-center">Multiple issues with ' . $device['deviceName'] . ',
+                                have been found, vulnerabilities will be listed bellow for your information, action will need to be taken and 
+                                appropriate mesures will also be listed below</p>
                </div></div></section>');
         }
         else {
@@ -191,7 +191,7 @@ function getSecurity($device, $CVEList){
                             <p class="text-center">No issues at all with ' . $device['deviceName'] . ',
                                 your device is currently safe so no
                                 extra action will need to be taken,
-                                enjoy your day </p>
+                                enjoy your day! </p>
                 </div></div></section>');
 
     }

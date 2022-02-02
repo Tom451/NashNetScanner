@@ -26,6 +26,7 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,10 +42,25 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../assets/css/Login-Form-Clean.css">
     <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/visStyling.css">
 </head>
 
 <body>
     <?php require '../assets/php/navBarLoggedIn.php' ?>
+
+    <script src="../assets/js/visDrawing.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    <script>
+        window.addEventListener(
+
+            "load", () =>
+            {draw();}
+
+        );</script>
+
+    <div id="mynetwork"></div>
+
 
     <section class="features-clean">
         <div class="container">

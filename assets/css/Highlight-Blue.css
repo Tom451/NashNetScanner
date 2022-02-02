@@ -1,10 +1,13 @@
 .highlight-blue {
+  /* default colour for teh header  */
   color: #fff;
   background-color: forestgreen;
   padding: 50px 0;
+  /* set the boarders */
   border-radius: 14px;
   margin-left: -10px;
   margin-right: -10px;
+  margin-bottom: 10px;
 }
 
 .highlight-blue p {
