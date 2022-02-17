@@ -17,8 +17,10 @@ namespace NND_Agent.Data
         readonly userModel currentUser = new userModel();
         readonly NNDAgent form = NNDAgent.NNDForm;
         
-        public void StartScan(long userNONCE)
+        public async Task StartScan(long userNONCE)
         {
+
+            Thread.Sleep(10000);
             //initalise the classes
             currentUser.UserName = userNONCE.ToString();
             DataUpload Connection = new DataUpload();
@@ -50,7 +52,7 @@ namespace NND_Agent.Data
             
 
             //get ready for item upload
-            string uploadJSON = Connection.ToJSON(currentUser);
+            string uploadJSON = await Task.Run(() => Connection.ToJSON(currentUser));
 
             //upload the devices
             try
@@ -129,8 +131,7 @@ namespace NND_Agent.Data
                 
                 if (process.WaitForExit(180000))
                 {
-                    ParseVulnerbilityData(scan);
-                    return true;
+                    return ParseVulnerbilityData(scan);
                 }
                 else
                 {
@@ -148,7 +149,7 @@ namespace NND_Agent.Data
         }
         
 
-        private void ParseVulnerbilityData(ScanModel scan)
+        private Boolean ParseVulnerbilityData(ScanModel scan)
         {
 
             currentUser.scannedVulns = new List<VulnModel>();
@@ -158,6 +159,19 @@ namespace NND_Agent.Data
 
             //load the data after written
             NMapXMLScan.Load("C:\\Users\\Public\\Documents\\NMAPVulnScan.xml");
+
+            //check if all the hosts are down
+            XmlNode hosts = NMapXMLScan.SelectSingleNode("nmaprun/runstats/hosts");
+
+            var numberDown = hosts.Attributes.GetNamedItem("down").InnerText;
+            var numberTotal = hosts.Attributes.GetNamedItem("total").InnerText;
+
+            if (numberDown == numberTotal)
+            {
+                form.PopUp("Host Down", "The host is currently down", System.Windows.Forms.ToolTipIcon.Warning);
+                return false;
+            }
+
 
             //select all the hosts in the document 
             XmlNodeList ports = NMapXMLScan.SelectNodes("nmaprun/host/ports/port");
@@ -275,13 +289,15 @@ namespace NND_Agent.Data
             catch (Exception ex)
             {
                 form.PopUp("Error", ex.Message, System.Windows.Forms.ToolTipIcon.Error);
-                return;
+                return false;
             }
 
 
             scannedDevice.ScanID = scan.scanID;
 
             currentUser.scannedDevices.Add(scannedDevice);
+
+            return true;
 
 
 

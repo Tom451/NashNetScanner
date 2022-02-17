@@ -5,64 +5,32 @@ var edges = null;
 var network = null;
 
 // Called when the Visualization API is loaded.
-function draw() {
+function draw(items) {
     // create people.
     // value corresponds with the age of the person
     var DIR = "../img/indonesia/";
-    nodes = [
-        { id: 1, shape: "circularImage", image: DIR + "1.png" },
-        { id: 2, shape: "circularImage", image: DIR + "2.png" },
-        { id: 3, shape: "circularImage", image: DIR + "3.png" },
-        {
-            id: 4,
-            shape: "circularImage",
-            image: DIR + "4.png",
-            label: "pictures by this guy!",
-        },
-        { id: 5, shape: "image", image: DIR + "5.png" },
-        { id: 6, shape: "circularImage", image: DIR + "6.png" },
-        { id: 7, shape: "circularImage", image: DIR + "7.png" },
-        { id: 8, shape: "circularImage", image: DIR + "8.png" },
-        { id: 9, shape: "circularImage", image: DIR + "9.png" },
-        { id: 10, shape: "circularImage", image: DIR + "10.png" },
-        { id: 11, shape: "circularImage", image: DIR + "11.png" },
-        { id: 12, shape: "circularImage", image: DIR + "12.png" },
-        { id: 13, shape: "circularImage", image: DIR + "13.png" },
-        { id: 14, shape: "circularImage", image: DIR + "14.png" },
-        {
-            id: 15,
-            shape: "circularImage",
-            image: DIR + "missing.png",
-            brokenImage: DIR + "missingBrokenImage.png",
-            label: "when images\nfail\nto load",
-        },
-        {
-            id: 16,
-            shape: "circularImage",
-            image: DIR + "anotherMissing.png",
-            brokenImage: DIR + "9.png",
-            label: "fallback image in action",
-        },
-    ];
 
-    // create connections between people
-    // value corresponds with the amount of contact between two people
-    edges = [
-        { from: 1, to: 2 },
-        { from: 1, to: 3 },
-        { from: 1, to: 4 },
-        { from: 1, to: 5 },
-        { from: 1, to: 10 },
-        { from: 1, to: 6 },
-        { from: 1, to: 7 },
-        { from: 1, to: 8 },
-        { from: 1, to: 9 },
-        { from: 1, to: 11 },
-        { from: 1, to: 12 },
-        { from: 1, to: 13 },
-        { from: 1, to: 14 },
-        { from: 1, to: 16 },
-    ];
+
+    //create the network
+    nodes = [
+        { id: 1, shape: "circularImage",
+            image: "https://library.kissclipart.com/20180829/jxw/kissclipart-router-icon-clipart-wireless-router-computer-icons-7daa203c111e1196.jpg",
+            label: "Router"
+        }];
+
+    edges = []
+    console.log(items)
+    for (index = 0; index < items.length; index++) {
+        nodes.push(
+            { id: items[index].ScanID,
+                shape: "circularImage",
+                image: "https://www.pinclipart.com/picdir/middle/560-5606930_file-wifiservice-svg-wikimedia-commons-wifi-symbol-black.png",
+                label: items[index].deviceName
+            })
+        edges.push({ from: 1, to: items[index].ScanID })
+    }
+
+
 
     // create a network
     var container = document.getElementById("mynetwork");
@@ -78,8 +46,9 @@ function draw() {
                 border: "#222222",
                 background: "#666666",
             },
-            font: { color: "#eeeeee" },
+            font: { color: "#111111" },
             shadow: true,
+
         },
         edges: {
             color: "lightgray",
@@ -87,4 +56,28 @@ function draw() {
         },
     };
     network = new vis.Network(container, data, options);
+
+    network.on("click", function (params) {
+
+        console.log(params.nodes[0]);
+        if (params.nodes[0]===1){
+
+        }
+        else{
+            try {
+                var pagebutton= document.getElementById(params.nodes[0]);
+                pagebutton.click();
+            } catch (error) {
+                console.error(error);
+                // expected output: ReferenceError: nonExistentFunction is not defined
+                // Note - error messages will vary depending on browser
+            }
+
+        }
+
+
+    });
+
+
+
 }

@@ -14,6 +14,7 @@ require '..\assets\php\DBConfig.php';
 
 $USERID = $_SESSION['user_id'];
 $connection = getConnection();
+
 //select all the users with the given username
 $query = $connection->prepare("SELECT * FROM scan WHERE userID=:userid");
 $query->bindParam("userid", $USERID, PDO::PARAM_STR);
@@ -21,6 +22,17 @@ $query->execute();
 
 //get the result
 $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+//get all the devices that have had a vulnerbility scan
+//select all the devices with the ip and mac address with scan ID
+$query = $connection->prepare("SELECT * FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
+JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE scan.ScanType = 'VulnScan' AND scan.userID = :userid");
+$query->bindParam("userid", $USERID, PDO::PARAM_STR);
+
+$query->execute();
+
+//get the result
+$devices = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
 ?>
@@ -46,31 +58,65 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
+
     <?php require '../assets/php/navBarLoggedIn.php' ?>
 
     <script src="../assets/js/visDrawing.js"></script>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
     <script>
+
+        function convert(){
+            <?php
+
+            $js_array = json_encode($devices);
+
+            echo "var javascript_array = ". $js_array . ";";
+            ?>
+
+             return javascript_array;
+
+        }
         window.addEventListener(
 
             "load", () =>
-            {draw();}
+            {
+                var items = convert();
 
-        );</script>
+                draw(items);
 
-    <div id="mynetwork"></div>
+
+            }
+
+
+        );
+
+
+
+
+    </script>
+
+
 
 
     <section class="features-clean">
         <div class="container">
             <div class="intro">
                 <h2 class="text-center">Previous Scans</h2>
-                <p class="text-center">Here you can see all your previous scans, this is where you can select what scan you would like to view&nbsp;</p>
             </div>
+
+            <div class="row" style="padding-bottom: 10px">
+                <div class="col-md-6"><div id="mynetwork"></div></div>
+                <div class="col-md-6"><p class="text-center">Here you can see all your previous scans, this is where you can select what scan you would like to view&nbsp;</p></div>
+            </div>
+
             <form action="/scan/viewScan.php" method="post">
             <div class="row features">
                 <?php
+                if(count($result) == 0){
+                    header('Location: tutorial.php');
+                }
+
                 foreach (array_reverse($result) as $item) {
 
                     if ($item['ScanType'] == "VulnScan"){
@@ -99,7 +145,7 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
                         if ($item['ScanType'] == "NetDisc"){
 
                         }
-                        echo '</ul><button class="btn btn-primary bg-secondary d-lg-flex"  name="scanSelected" value="' . $item['ScanID'] . '">View Scan</button>';
+                        echo '</ul><button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . $item['ScanID'] . '" id="'.$item['ScanID'].'">View Scan</button>';
                     }
                     echo'</div>';
 
@@ -111,6 +157,8 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
             </form>
         </div>
     </section>
+
+
     <script src="../assets/js/jquery.min.js"></script>
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>

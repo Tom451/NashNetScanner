@@ -1,5 +1,4 @@
 #mynetwork {
-    width: 800px;
-    height: 800px;
-    border: 1px solid lightgray;
+    width: 100%;
+    height: 300px;
     background-color: white; }

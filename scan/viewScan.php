@@ -50,6 +50,7 @@ $vulns = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
 //API ACCESS
+//Create a new variable for the CVE list which will be created
 $CVEList = null;
 
 foreach ($vulns as $item) {
@@ -64,16 +65,23 @@ foreach ($vulns as $item) {
         //check if the cpe is for the application or if it is for the operating system
 
         if(str_starts_with($item['VulnCPE'], "cpe:/o")){
-            //do something
+            //if the CPE is an Opering system one due to the large number of errors and vulnerabilities
+            // Leave it out and move onto the application vulnerabilities
             print("Ignore === ". $item['VulnCPE']);
             print("\n");
         }
         else{
+            //make the JSON object global to allow it to be accessed from the HTML
             global $JSONObject;
+
+            //Create the API String to query the NVD Database
             $UPLOADString = "https://services.nvd.nist.gov/rest/json/cves/1.0/?cpeMatchString=".$item['VulnCPE'];
+
+            //Get the return JSON object
             $JSON = file_get_contents($UPLOADString);
             $JSONObject = json_decode($JSON);
 
+            //if there is no CPE then
             if($JSONObject -> totalResults != 0){
                 $CVEItems = $JSONObject -> result ->CVE_Items;
 
@@ -165,9 +173,13 @@ if (isset($JSONObject)){
 
 }
 
+//this fucntion is called bt the page to show the banner at the top to give the user a quick overview on their currrent
+// Security status
 function getSecurity($device, $CVEList){
+    //As long and the CVE list is not null then it will calculate
     if(!is_null($CVEList)){
         if (count($CVEList) >= 15){
+            //High ammount of issues found
             echo('<section class="highlight-blue" style="background: red;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
                             <p class="text-center">Multiple issues with ' . $device['deviceName'] . ',
@@ -176,6 +188,7 @@ function getSecurity($device, $CVEList){
                </div></div></section>');
         }
         else {
+            //Low amount of issues
             echo('<section class="highlight-blue" style="background: forestgreen;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"><i class="fa fa-check-circle" style="transform: scale(2);"></i></h2>
                             <p class="text-center">No concerning issues with' . $device['deviceName'] . ',
@@ -186,6 +199,7 @@ function getSecurity($device, $CVEList){
         }
     }
     else{
+        //No issues found
         echo('<section class="highlight-blue" style="background: dodgerblue;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"><i class="fa fa-smile-o" style="transform: scale(2);"></i></h2>
                             <p class="text-center">No issues at all with ' . $device['deviceName'] . ',
@@ -215,7 +229,6 @@ function getSecurity($device, $CVEList){
     <link rel="stylesheet" href="../assets/css/Features-Boxed.css">
     <link rel="stylesheet" href="../assets/css/Features-Clean.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/css/Login-Form-Clean.css">
     <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/percentages.css">
@@ -224,11 +237,11 @@ function getSecurity($device, $CVEList){
 
 <body>
 
+    <!-- Get the nav bar for a logged in page -->
     <?php require '../assets/php/navBarLoggedIn.php' ?>
 
-
     <div class="container"<?php
-
+    //If the scan type is vulnerability then:
     if($scan['ScanType'] != "VulnScan")
         echo'style="display: none" ';
 
@@ -413,6 +426,7 @@ function getSecurity($device, $CVEList){
                         <th>Name</th>
                         <th>IP</th>
                         <th>Mac</th>
+                        <th>Start Scan</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -422,6 +436,9 @@ function getSecurity($device, $CVEList){
                         echo '<td>' . $item['deviceName'] . '</td>';
                         echo '<td>' . $item['deviceIP'] . '</td>';
                         echo '<td>' . $item['deviceMacAddress'] . '</td>';
+                        echo '<form action="/scan/createScan.php" method="post">';
+                        echo '<td> <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="' . $item['deviceIP'] . '" id="'.$item['deviceIP'].'">View Scan</button> </td>';
+                        echo '</form>';
                         echo '<tr>';
                     }
                     ?>

@@ -176,13 +176,13 @@ namespace NND_Agent
             NNDToolBarIcon.Visible = true;
         }
 
-        private void RunScanToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void RunScanToolStripMenuItem_Click(object sender, EventArgs e)
         {
             
             DataClass Scan = new DataClass();
             //tell the user scan has started
             PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
-            Scan.StartScan(userNONCE);
+            await Task.Run(() => Scan.StartScan(userNONCE));
             PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
 
         }

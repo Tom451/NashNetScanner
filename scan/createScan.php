@@ -50,6 +50,13 @@ if (isset($_POST['createScan'])) {
             $scanInfo = "nmap -sV -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml " .$_POST['IPADDRESS'];
             $scanType = "VulnScan";
             $scanStatus = "Pending";
+
+        }
+        //if the post value contains an IP address it means that the user has already selected a device
+        elseif(filter_var($_POST['createScan'], FILTER_VALIDATE_IP)){
+            $scanInfo = "nmap -sV -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml " .$_POST['createScan'];
+            $scanType = "VulnScan";
+            $scanStatus = "Pending";
         }
 
 

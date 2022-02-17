@@ -42,6 +42,8 @@ if (isset($_POST['login'])) {
             $_SESSION['nonce'] = $result['userNonce'];
             $_SESSION['user_id'] = $result['UserID'];
             $_SESSION['userName'] = $username;
+
+            //set the users last seen
             // send the user to the home page
             header('Location: homepage.php');
         } else {
