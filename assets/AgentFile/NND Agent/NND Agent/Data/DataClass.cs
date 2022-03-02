@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace NND_Agent.Data
 {
@@ -16,18 +18,21 @@ namespace NND_Agent.Data
     {
         readonly userModel currentUser = new userModel();
         readonly NNDAgent form = NNDAgent.NNDForm;
-        
+        DataUpload Connection = new DataUpload();
+
         public async Task StartScan(long userNONCE)
         {
 
-            Thread.Sleep(10000);
             //initalise the classes
-            currentUser.UserName = userNONCE.ToString();
-            DataUpload Connection = new DataUpload();
+            currentUser.userName = userNONCE.ToString();
+            
  
 
             //get the scan
             currentUser.currentScan = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
+
+            
+            
 
             if (currentUser.currentScan == null)
             {
@@ -37,7 +42,7 @@ namespace NND_Agent.Data
             }
 
             //start the scan
-            if (NMapScan(currentUser.currentScan))
+            if (NMapScan(currentUser.currentScan, userNONCE))
             {
                 //Convert the scan to JSON
                 currentUser.currentScan.ScanStatus = "Finished";
@@ -70,7 +75,7 @@ namespace NND_Agent.Data
         }
 
         //returns true on success and false on error 
-        public bool NMapScan(ScanModel scan)
+        public bool NMapScan(ScanModel scan, long userNonce)
         {
             //Start the Scan
             Process process = new Process();
@@ -120,7 +125,7 @@ namespace NND_Agent.Data
             else if (scan.scanType == "VulnScan")
             {
 
-
+                
                 startInfo.Arguments = String.Format("/C {0} --no-stylesheet ",  scan.scanInfo);
                 process.StartInfo = startInfo;
                 process.Start();
@@ -138,17 +143,108 @@ namespace NND_Agent.Data
                     form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
                     return false;
                 }
+
+                
+
+
+            }
+            else if (scan.scanType == "FullScan")
+            {
+                for (int i = 1; i < 254; i++)
+                {
+                    //get host mac address and check if it is up 
+                    startInfo.Arguments = String.Format("/C nmap -sP -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml -n {0}.{1}.{2}.{3}", gatewayArray[0], gatewayArray[1], gatewayArray[2], i);
+                    startInfo.RedirectStandardOutput = true;
+                    process.StartInfo = startInfo;
+                    process.Start();
+
+                    //read in data from the created XML File
+                    XmlDocument NMapXMLScan = new XmlDocument();
+
+                    //load the data after written
+                    NMapXMLScan.Load("C:\\Users\\Public\\Documents\\NMAPVulnScan.xml");
+
+                    //check if all the hosts are down
+                    XmlNode hosts = NMapXMLScan.SelectSingleNode("nmaprun/runstats/hosts");
+
+                    var numberDown = hosts.Attributes.GetNamedItem("down").InnerText;
+                    var numberTotal = hosts.Attributes.GetNamedItem("total").InnerText;
+
+                    if (numberDown == numberTotal)
+                    {
+                        //upload the devices
+                        try
+                        {
+                            string status = Connection.ToJSON("{scanstatus: down}");
+                            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", status));
+
+                        }
+                        catch
+                        {
+                            form.PopUp("No returned value", "Website may be down try again later", System.Windows.Forms.ToolTipIcon.Error);
+                        }
+                        
+                        return false;
+                    }
+                    else
+                    {
+                        ScanModel currentScan = new ScanModel();
+                        currentScan.userName = userNonce.ToString();
+                        currentScan.ScanStatus = "Scanning";
+
+                        //get the device in question 
+                        XmlNodeList address = NMapXMLScan.SelectNodes("nmaprun/host/address");
+                        currentScan.scanInfo = address.Item(1).Attributes.GetNamedItem("addr").InnerText;
+
+
+                        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
+
+                        startInfo.Arguments = String.Format("/C {0} {1}.{2}.{3}.{4} --no-stylesheet ", scan.scanInfo, gatewayArray[0], gatewayArray[1], gatewayArray[2], i);
+                        process.StartInfo = startInfo;
+                        process.Start();
+                        
+                    }
+
+
+
+
+         
+
+                    
+                }
+                
+
+
                 
                 
 
+                startInfo.Arguments = String.Format("/C {0} --no-stylesheet ", scan.scanInfo);
+                process.StartInfo = startInfo;
+                process.Start();
+
+                //Read the output stream first and then wait.
+                //Wait 3 mins 
+
+
+                if (process.WaitForExit(180000))
+                {
+                    return ParseVulnerbilityData(scan);
+                }
+                else
+                {
+                    form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+                    return false;
+                }
+
                 
+
+
             }
             return false;
 
 
         }
         
-
         private Boolean ParseVulnerbilityData(ScanModel scan)
         {
 
@@ -171,6 +267,7 @@ namespace NND_Agent.Data
                 form.PopUp("Host Down", "The host is currently down", System.Windows.Forms.ToolTipIcon.Warning);
                 return false;
             }
+            
 
 
             //select all the hosts in the document 

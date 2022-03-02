@@ -48,16 +48,33 @@ if (isset($_GET['USERID'])) {
 
 elseif (isset($_POST['UploadWithVerification'])){
 
-
-
     $JSONObject = json_decode($_POST['UploadWithVerification']);
 
-    if (empty($JSONObject->UserName)){
+    //check if user if varified
+    if (empty($JSONObject->userName)){
         echo "Not Verified";
     }
     else{
+        //check if its a mac address being provided if it is then its a device scan
+        if (filter_var($JSONObject->scanInfo, FILTER_VALIDATE_MAC)){
 
-        $USERNONCE = $JSONObject->UserName;
+            $storedProcedure = 'CALL setDeviceStatus(:inMacAddress, :inDeviceScanned)';
+
+            $statement = $connection->prepare($storedProcedure);
+
+            $statement->bindParam(':inMacAddress', $JSONObject->scanInfo, PDO::PARAM_STR);
+            $statement->bindParam(':inDeviceScanned', $JSONObject->ScanStatus, PDO::PARAM_STR);
+            if($statement->execute()){
+                echo "Updated Scan";
+            }else{
+                echo "Error";
+            }
+
+            return;
+
+        }
+
+        $USERNONCE = $JSONObject->userName;
 
         //select all the users with the given username
         $query = $connection->prepare("SELECT UserID FROM usercredentials WHERE userNonce=:userNonce");
@@ -67,7 +84,7 @@ elseif (isset($_POST['UploadWithVerification'])){
             echo "Not verified";
         }
 
-        $User = $JSONObject -> UserName;
+        $User = $JSONObject -> userName;
         $Vulns = $JSONObject -> scannedVulns;
         $Devices = $JSONObject ->scannedDevices;
         $Scan = $JSONObject ->currentScan;
@@ -137,6 +154,7 @@ elseif (isset($_POST['UploadWithVerification'])){
 
 
         }
+
         else{
             echo "No Data Provided";
         }
