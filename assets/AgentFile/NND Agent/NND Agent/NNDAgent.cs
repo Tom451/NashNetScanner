@@ -142,9 +142,12 @@ namespace NND_Agent
                 Application.Exit();
 
             }
-            
 
-           
+            DataClass Scan = new DataClass();
+
+
+
+
         }
         
 
@@ -199,6 +202,16 @@ namespace NND_Agent
             
         }
 
+        private void cancelScanToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PopUp("Scan Cancled", "Ended", ToolTipIcon.Error);
+            // WinForms app
+            System.Windows.Forms.Application.Exit();
+        }
 
+        private void scanStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

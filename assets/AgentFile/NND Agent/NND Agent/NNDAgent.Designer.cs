@@ -33,6 +33,8 @@
             this.NNDToolBarIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.NNDContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.runSacnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelScanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scanStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.NNDContext.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,16 +51,32 @@
             // 
             this.NNDContext.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.NNDContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.runSacnToolStripMenuItem});
+            this.runSacnToolStripMenuItem,
+            this.cancelScanToolStripMenuItem,
+            this.scanStatusToolStripMenuItem});
             this.NNDContext.Name = "contextMenuStrip1";
-            this.NNDContext.Size = new System.Drawing.Size(139, 28);
+            this.NNDContext.Size = new System.Drawing.Size(211, 104);
             // 
             // runSacnToolStripMenuItem
             // 
             this.runSacnToolStripMenuItem.Name = "runSacnToolStripMenuItem";
-            this.runSacnToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.runSacnToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.runSacnToolStripMenuItem.Text = "Run Scan";
             this.runSacnToolStripMenuItem.Click += new System.EventHandler(this.RunScanToolStripMenuItem_Click);
+            // 
+            // cancelScanToolStripMenuItem
+            // 
+            this.cancelScanToolStripMenuItem.Name = "cancelScanToolStripMenuItem";
+            this.cancelScanToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.cancelScanToolStripMenuItem.Text = "Cancel Scan";
+            this.cancelScanToolStripMenuItem.Click += new System.EventHandler(this.cancelScanToolStripMenuItem_Click);
+            // 
+            // scanStatusToolStripMenuItem
+            // 
+            this.scanStatusToolStripMenuItem.Name = "scanStatusToolStripMenuItem";
+            this.scanStatusToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.scanStatusToolStripMenuItem.Text = "Scan Status";
+            this.scanStatusToolStripMenuItem.Click += new System.EventHandler(this.scanStatusToolStripMenuItem_Click);
             // 
             // NNDAgent
             // 
@@ -79,6 +97,8 @@
         private System.Windows.Forms.NotifyIcon NNDToolBarIcon;
         private System.Windows.Forms.ContextMenuStrip NNDContext;
         private System.Windows.Forms.ToolStripMenuItem runSacnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelScanToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem scanStatusToolStripMenuItem;
     }
 }
 
