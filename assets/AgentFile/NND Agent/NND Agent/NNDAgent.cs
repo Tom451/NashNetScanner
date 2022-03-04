@@ -21,6 +21,9 @@ namespace NND_Agent
         public static NNDAgent NNDForm = null;
 
         public long userNONCE = 0;
+
+        DataClass Scan;
+        //tell the user scan has started
         public NNDAgent()
         {
 
@@ -143,7 +146,7 @@ namespace NND_Agent
 
             }
 
-            DataClass Scan = new DataClass();
+            Scan = new DataClass();
 
 
 
@@ -182,10 +185,10 @@ namespace NND_Agent
         private async void RunScanToolStripMenuItem_Click(object sender, EventArgs e)
         {
             
-            DataClass Scan = new DataClass();
-            //tell the user scan has started
+            
             PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
             await Task.Run(() => Scan.StartScan(userNONCE));
+            
             PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
 
         }
@@ -212,6 +215,7 @@ namespace NND_Agent
         private void scanStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             
+            PopUp("There are", Scan.CheckProgress() + " Left to Go", ToolTipIcon.Info);
         }
     }
 }

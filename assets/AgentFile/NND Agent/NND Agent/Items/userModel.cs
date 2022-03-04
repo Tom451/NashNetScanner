@@ -15,6 +15,8 @@ namespace NND_Agent.Items
 
         public List<ComputerModel> scannedDevices { get; set; }
 
+        public List<ScanModel> listScans { get; set; }
+
         public ScanModel currentScan { get; set; }
 
         

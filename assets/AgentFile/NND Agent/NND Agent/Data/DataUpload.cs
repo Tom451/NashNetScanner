@@ -52,7 +52,7 @@ namespace NND_Agent
         }
 
         //method used to get the scan data using the NONCE 
-        public ScanModel SendGet(string url)
+        public List<ScanModel> SendGet(string url)
         {
             string webpageContent = string.Empty;
 
@@ -73,13 +73,13 @@ namespace NND_Agent
             catch (Exception)
             {
                 //throw or return an appropriate response/exception
-                ScanModel nullModel = null;
+                List<ScanModel> nullModel = null;
                 return nullModel;
             }
 
             if(webpageContent == "False")
             {
-                ScanModel nullModel = null;
+                List<ScanModel> nullModel = null;
                 return nullModel;
             }
             else
@@ -96,25 +96,44 @@ namespace NND_Agent
             string stringjson = JsonConvert.SerializeObject(obj);
             return stringjson;
         }
-        public ScanModel FromJSON(string input)
+        public List<ScanModel> FromJSON(string input)
         {
+
+            List<ScanModel> tempList = new List<ScanModel>();
+
             //create the JSON object 
-            JObject jObject = JObject.Parse(input);
-
-            //create the scan object
-            JToken jScan = jObject["scan"];
-
-            //create a model 
-            ScanModel tempModel = new ScanModel
+            try
             {
-                scanID = (int)jScan["scanID"],
-                scanInfo = (string)jScan["ScanInfo"],
-                scanType = (string)jScan["ScanType"],
-                userName = (string)jScan["userID"],
-                ScanStatus = (string)jScan["ScanStatus"]
-            };
+                JArray jArray = JArray.Parse(input);
 
-            return tempModel;
+                //create the scan object
+
+                
+
+                foreach (var item in jArray)
+                {
+                    JToken jScan = item["scan"];
+
+                    ScanModel tempModel = new ScanModel
+                    {
+                        scanID = (int)jScan["scanID"],
+                        scanInfo = (string)jScan["ScanInfo"],
+                        scanType = (string)jScan["ScanType"],
+                        userName = (string)jScan["userID"],
+                        ScanStatus = (string)jScan["ScanStatus"]
+                    };
+
+                    tempList.Add(tempModel);
+                }
+                
+
+                //create a model 
+                
+            }catch (Exception) { 
+            }
+            
+
+            return tempList;
 
         }
 

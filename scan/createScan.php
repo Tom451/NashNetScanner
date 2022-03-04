@@ -40,23 +40,54 @@ if (isset($_POST['createScan'])) {
 
         if ($_POST['createScan'] == "NetDisc"){
 
-            $scanInfo = "nmap -sP -oX C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml";
+            $scanInfo = "N/A";
             $scanType = "NetDisc";
             $scanStatus = "Pending";
 
         }
         elseif($_POST['createScan'] == "VulnScan"){
 
-            $scanInfo = "nmap -sV -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml " .$_POST['IPADDRESS'];
+            $scanInfo = $_POST['IPADDRESS'];
             $scanType = "VulnScan";
             $scanStatus = "Pending";
 
         }
         //if the post value contains an IP address it means that the user has already selected a device
         elseif(filter_var($_POST['createScan'], FILTER_VALIDATE_IP)){
-            $scanInfo = "nmap -sV -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml " .$_POST['createScan'];
+            $scanInfo = $_POST['createScan'];
             $scanType = "VulnScan";
             $scanStatus = "Pending";
+        }
+        elseif($_POST['createScan'] == "FULLSCAN"){
+
+            //select all the users with the given username
+            $query = $connection->prepare("SELECT * FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
+            JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE scan.ScanType = 'NetDisc' AND scan.userID = :userid");
+
+            $query->bindParam("userid", $USERID, PDO::PARAM_STR);
+            $query->execute();
+
+            $devices = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($devices as $item){
+                $scanInfo = $item['deviceIP'];
+                $scanType = "VulnScan";
+                $scanStatus = "Pending";
+
+                $query = $connection->prepare("INSERT INTO scan(userID,SessionID,ScanInfo,scanType,scanStatus)
+                VALUES (:userID,:SessionID,:scanInfo,:scanType,:scanStatus)");
+                $query->bindParam("userID", $username, PDO::PARAM_STR);
+                $query->bindParam("SessionID", $SessionID, PDO::PARAM_STR);
+                $query->bindParam("scanInfo", $scanInfo, PDO::PARAM_STR);
+                $query->bindParam("scanType", $scanType, PDO::PARAM_STR);
+                $query->bindParam("scanStatus", $scanStatus, PDO::PARAM_STR);
+
+                $result = $query->execute();
+
+            }
+
+
+
         }
 
 

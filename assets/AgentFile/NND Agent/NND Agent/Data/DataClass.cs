@@ -11,14 +11,21 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace NND_Agent.Data
 {
     internal class DataClass
     {
+        //current user 
         readonly userModel currentUser = new userModel();
-        readonly NNDAgent form = NNDAgent.NNDForm;
+        
+        //current form
+        NNDAgent form = NNDAgent.NNDForm;
+        //data connection 
         DataUpload Connection = new DataUpload();
+        //current user scanned devices 
+        
 
         public async Task StartScan(long userNONCE)
         {
@@ -29,12 +36,12 @@ namespace NND_Agent.Data
  
 
             //get the scan
-            currentUser.currentScan = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
+            currentUser.listScans = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
 
             
             
 
-            if (currentUser.currentScan == null)
+            if (currentUser.listScans == null)
             {
                 form.PopUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
                 return;
@@ -42,33 +49,40 @@ namespace NND_Agent.Data
             }
 
             //start the scan
-            if (NMapScan(currentUser.currentScan, userNONCE))
+            foreach (var currentScan in currentUser.listScans)
             {
-                //Convert the scan to JSON
-                currentUser.currentScan.ScanStatus = "Finished";
-            }
-            else
-            {
-                //Convert the scan to JSON
-                currentUser.currentScan.ScanStatus = "Error";
+                //reset the current scan 
+                currentUser.currentScan = currentScan;
+                currentUser.scannedVulns = null;
+                currentUser.scannedDevices = null;
+
+                if (NMapScan(currentScan, userNONCE))
+                {
+                    //Convert the scan to JSON
+                    currentScan.ScanStatus = "Finished";
+                }
+                else
+                {
+                    //Convert the scan to JSON
+                    currentScan.ScanStatus = "Error";
+                }
+
+                //get ready for item upload
+                string uploadJSON = await Task.Run(() => Connection.ToJSON(currentUser));
+
+                //upload the devices
+                try
+                {
+                    Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
+
+                }
+                catch
+                {
+                    form.PopUp("No returned value", "Website may be down try again later", System.Windows.Forms.ToolTipIcon.Error);
+                }
             }
             
-
             
-
-            //get ready for item upload
-            string uploadJSON = await Task.Run(() => Connection.ToJSON(currentUser));
-
-            //upload the devices
-            try
-            {
-                Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
-                
-            }
-            catch
-            {
-                form.PopUp("No returned value", "Website may be down try again later", System.Windows.Forms.ToolTipIcon.Error);
-            }
             
 
            
@@ -86,161 +100,66 @@ namespace NND_Agent.Data
                 UseShellExecute = false,
                 CreateNoWindow = true
 
-        };
+            };
 
-            //get gateway IP and Mac Address for scan 
-            string gateway = GetNetworkGateway();
-            string[] gatewayArray = gateway.Split('.');
 
-            
 
+                  
             // Pass the variables in 
 
             if (scan.scanType == "NetDisc")
             {
-                
+                RunNetworkScan(scan, process, startInfo);
+                return true;
+            }
+            else if (scan.scanType == "VulnScan")
+            {
+                //upload the current device being scanned 
+                ScanModel currentScan = new ScanModel();
+                currentScan.userName = userNonce.ToString();
+                currentScan.ScanStatus = "Scan Pending";
 
-                startInfo.Arguments = String.Format("/C {0} {1}.{2}.{3}.*/24 --no-stylesheet ", scan.scanInfo, gatewayArray[0], gatewayArray[1], gatewayArray[2]);
-                process.StartInfo = startInfo;
+                //start a network scan to get device mac address 
+                RunNetworkScan(scan, process, startInfo);
 
-
-                process.Start();
-
-                //Read the output stream first and then wait.
-                if (process.WaitForExit(180000))
+                //set to scanning 
+                if (currentUser.scannedDevices.Count == 0)
                 {
-                    //parse the scan data 
-                    ParseNetworkDiscoveryData(scan);
+                    currentScan.ScanStatus = "Host Down";
+                    Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
                     return true;
                 }
                 else
                 {
-                    form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
-                    return false;
-                }
+                    currentScan.scanInfo = currentUser.scannedDevices[0].macAddress;
+                    currentScan.ScanStatus = "Scanning";
+                    Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
 
-                
-
-            }
-            else if (scan.scanType == "VulnScan")
-            {
-
-                
-                startInfo.Arguments = String.Format("/C {0} --no-stylesheet ",  scan.scanInfo);
-                process.StartInfo = startInfo;
-                process.Start();
-
-                //Read the output stream first and then wait.
-                //Wait 3 mins 
-
-                
-                if (process.WaitForExit(180000))
-                {
-                    return ParseVulnerbilityData(scan);
-                }
-                else
-                {
-                    form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
-                    return false;
-                }
-
-                
-
-
-            }
-            else if (scan.scanType == "FullScan")
-            {
-                for (int i = 1; i < 254; i++)
-                {
-                    //get host mac address and check if it is up 
-                    startInfo.Arguments = String.Format("/C nmap -sP -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml -n {0}.{1}.{2}.{3}", gatewayArray[0], gatewayArray[1], gatewayArray[2], i);
-                    startInfo.RedirectStandardOutput = true;
-                    process.StartInfo = startInfo;
-                    process.Start();
-
-                    //read in data from the created XML File
-                    XmlDocument NMapXMLScan = new XmlDocument();
-
-                    //load the data after written
-                    NMapXMLScan.Load("C:\\Users\\Public\\Documents\\NMAPVulnScan.xml");
-
-                    //check if all the hosts are down
-                    XmlNode hosts = NMapXMLScan.SelectSingleNode("nmaprun/runstats/hosts");
-
-                    var numberDown = hosts.Attributes.GetNamedItem("down").InnerText;
-                    var numberTotal = hosts.Attributes.GetNamedItem("total").InnerText;
-
-                    if (numberDown == numberTotal)
+                    if(!RunVulnScan(scan, process, startInfo))
                     {
-                        //upload the devices
-                        try
-                        {
-                            string status = Connection.ToJSON("{scanstatus: down}");
-                            Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", status));
-
-                        }
-                        catch
-                        {
-                            form.PopUp("No returned value", "Website may be down try again later", System.Windows.Forms.ToolTipIcon.Error);
-                        }
-                        
-                        return false;
-                    }
-                    else
-                    {
-                        ScanModel currentScan = new ScanModel();
-                        currentScan.userName = userNonce.ToString();
-                        currentScan.ScanStatus = "Scanning";
-
-                        //get the device in question 
-                        XmlNodeList address = NMapXMLScan.SelectNodes("nmaprun/host/address");
-                        currentScan.scanInfo = address.Item(1).Attributes.GetNamedItem("addr").InnerText;
-
-
+                        currentScan.ScanStatus = "Error";
                         Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
-
-                        startInfo.Arguments = String.Format("/C {0} {1}.{2}.{3}.{4} --no-stylesheet ", scan.scanInfo, gatewayArray[0], gatewayArray[1], gatewayArray[2], i);
-                        process.StartInfo = startInfo;
-                        process.Start();
-                        
-                    }
-
-
-
-
-         
-
-                    
+                    };
                 }
                 
 
-
-                
-                
-
-                startInfo.Arguments = String.Format("/C {0} --no-stylesheet ", scan.scanInfo);
-                process.StartInfo = startInfo;
-                process.Start();
-
-                //Read the output stream first and then wait.
-                //Wait 3 mins 
-
-
-                if (process.WaitForExit(180000))
+                //upload the current device being scanned
+                 if (currentUser.scannedVulns == null || currentUser.scannedVulns.Count > 0)
                 {
-                    return ParseVulnerbilityData(scan);
+                    currentScan.ScanStatus = "Analysing";
                 }
                 else
                 {
-                    form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
-                    return false;
+                    currentScan.ScanStatus = "Yes: Safe";
                 }
-
                 
+                Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
 
+                return true;
 
             }
-            return false;
+
+            return true;
 
 
         }
@@ -357,49 +276,51 @@ namespace NND_Agent.Data
                 
 
             }
+            if (currentUser.scannedDevices == null)
+            {
+                //create the list
+                currentUser.scannedDevices = new List<ComputerModel>();
+                ComputerModel scannedDevice = new ComputerModel();
 
+                //select all the hosts in the document with addresses
+                XmlNodeList addresses = NMapXMLScan.SelectNodes("nmaprun/host/address");
+
+                scannedDevice.ipAddress = addresses.Item(0).Attributes.GetNamedItem("addr").InnerText;
+                scannedDevice.macAddress = addresses.Item(1).Attributes.GetNamedItem("addr").InnerText;
+
+                //get the name, this is last as it may be false and error checking is needed 
+                try
+                {
+                    XmlNode name = NMapXMLScan.SelectSingleNode("nmaprun/host/hostnames/hostname");
+
+                    if (name != null)
+                    {
+                        scannedDevice.name = name.Attributes.GetNamedItem("name").InnerText;
+                    }
+                    else
+                    {
+                        scannedDevice.name = scannedDevice.macAddress;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    form.PopUp("Error", ex.Message, System.Windows.Forms.ToolTipIcon.Error);
+                    return false;
+                }
+
+
+                scannedDevice.ScanID = scan.scanID;
+
+                currentUser.scannedDevices.Add(scannedDevice);
+            }
             
-            //create the list
-            currentUser.scannedDevices = new List<ComputerModel>();
-            ComputerModel scannedDevice = new ComputerModel();
-
-            //select all the hosts in the document with addresses
-            XmlNodeList addresses = NMapXMLScan.SelectNodes("nmaprun/host/address");
-
-            scannedDevice.ipAddress = addresses.Item(0).Attributes.GetNamedItem("addr").InnerText;
-            scannedDevice.macAddress = addresses.Item(1).Attributes.GetNamedItem("addr").InnerText;
-
-            //get the name, this is last as it may be false and error checking is needed 
-            try
-            {
-                XmlNode name = NMapXMLScan.SelectSingleNode("nmaprun/host/hostnames/hostname");
-
-                if (name != null)
-                {
-                    scannedDevice.name = name.Attributes.GetNamedItem("name").InnerText;
-                }
-                else
-                {
-                    scannedDevice.name = scannedDevice.macAddress;
-                }
-            }
-            catch (Exception ex)
-            {
-                form.PopUp("Error", ex.Message, System.Windows.Forms.ToolTipIcon.Error);
-                return false;
-            }
-
-
-            scannedDevice.ScanID = scan.scanID;
-
-            currentUser.scannedDevices.Add(scannedDevice);
+            
 
             return true;
 
 
 
         }
-
         public void ParseNetworkDiscoveryData(ScanModel scan)
         {
             currentUser.scannedDevices = new List<ComputerModel>();
@@ -414,7 +335,7 @@ namespace NND_Agent.Data
             XmlNodeList hosts = NMapXMLScan.SelectNodes("nmaprun/host");
 
             //Get the number of hosts and loop through them.
-            for (int i = 0; i < hosts.Count - 1; i++)
+            for (int i = 0; i < hosts.Count; i++)
             {
                 
 
@@ -424,6 +345,13 @@ namespace NND_Agent.Data
                 //get the host currently at "i"
                 var host = hosts.Item(i);
 
+                //select the addresses nodeS this contains mac and ip and check if its an actual connection
+                var status = host.SelectSingleNode("status").Attributes.GetNamedItem("reason").InnerText;
+
+                if (status == "localhost-response")
+                {
+                    break;
+                }
 
                 //select the addresses nodeS this contains mac and ip
                 var hostAddresses = host.SelectNodes("address");
@@ -436,18 +364,51 @@ namespace NND_Agent.Data
 
                 //creat string for host name, ip address and the mac address
                 string hostActualName;
-                int hostRTT = int.Parse(hostTimes.Attributes.GetNamedItem("rttvar").InnerText);
+
+                //catch RTT issue 
+                int hostRTT = 0;
+
+                try
+                {
+                    if (hostTimes is null)
+                    {
+                        hostRTT = 0;
+                    }
+                    else
+                    {
+                        hostRTT = int.Parse(hostTimes.Attributes.GetNamedItem("rttvar").InnerText);
+                    }
+
+
+                    
+                    
+                }
+                catch(Exception ex)
+                {
+                    hostRTT = 0;
+                }
+                
                 string hostipaddress = hostAddresses.Item(0).Attributes.GetNamedItem("addr").InnerText;
                 string mac = hostAddresses.Item(1).Attributes.GetNamedItem("addr").InnerText;
 
                 // if the host name is null then set a default name 
                 if (hostName == null)
                 {
-                    hostActualName = mac;
+                    if(hostAddresses.Item(1).Attributes.GetNamedItem("vendor") == null)
+                    {
+                        hostActualName = mac;
+                    }
+                    else
+                    {
+                        hostActualName = hostAddresses.Item(1).Attributes.GetNamedItem("vendor").InnerText;
+                    }
+
+                    
                 }
                 //else if there os a name then set it to that
                 else
                 {
+
                     hostActualName = hostName.Attributes.GetNamedItem("name").InnerText;
                 }
 
@@ -465,6 +426,69 @@ namespace NND_Agent.Data
 
 
 
+        }
+
+        public Boolean RunNetworkScan(ScanModel scan, Process process, ProcessStartInfo startInfo)
+        {
+            //get gateway IP and Mac Address for scan 
+            string gateway = GetNetworkGateway();
+            string[] gatewayArray = gateway.Split('.');
+            IPAddress ip;
+
+            if (scan.scanInfo == "N/A")
+            {
+                startInfo.Arguments = String.Format("/C nmap -sn -oX C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml {0}.{1}.{2}.*/24 --no-stylesheet ", gatewayArray[0], gatewayArray[1], gatewayArray[2]);
+                process.StartInfo = startInfo;
+
+
+                process.Start();
+            }
+            else if(IPAddress.TryParse(scan.scanInfo, out ip))
+            {
+                startInfo.Arguments = String.Format("/C nmap -sn -oX C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml {0} --no-stylesheet ", ip.ToString() );
+                process.StartInfo = startInfo;
+
+
+                process.Start();
+            }
+            
+
+            //Read the output stream first and then wait.
+            if (process.WaitForExit(180000))
+            {
+                //parse the scan data 
+                ParseNetworkDiscoveryData(scan);
+                return true;
+            }
+            else
+            {
+                form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+                return false;
+            }
+        }
+
+        public Boolean RunVulnScan(ScanModel scan, Process process, ProcessStartInfo startInfo)
+        {
+            
+
+            startInfo.Arguments = String.Format("/C nmap -sV -oX C:\\Users\\Public\\Documents\\NMAPVulnScan.xml {0} --no-stylesheet ", scan.scanInfo);
+            process.StartInfo = startInfo;
+            process.Start();
+
+            //Read the output stream first and then wait.
+            //Wait 3 mins 
+
+
+            if (process.WaitForExit(180000))
+            {
+                return ParseVulnerbilityData(scan);
+            }
+            else
+            {
+
+                form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+                return false;
+            }
         }
         public string GetNetworkGateway()
         {
@@ -490,6 +514,21 @@ namespace NND_Agent.Data
             }
 
             return ip;
+        }
+
+        public int CheckProgress()
+        {
+            int scanCount = 0;
+
+            foreach (var item in currentUser.listScans)
+            {
+                if(item.ScanStatus == "Pending")
+                {
+                    scanCount++;
+                }
+            }
+
+            return scanCount;
         }
 
 
