@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace NND_Agent
 {
@@ -21,6 +22,8 @@ namespace NND_Agent
         public static NNDAgent NNDForm = null;
 
         public long userNONCE = 0;
+
+        private Timer timer1;
 
         DataClass Scan;
         //tell the user scan has started
@@ -149,10 +152,32 @@ namespace NND_Agent
             Scan = new DataClass();
 
 
+            scanChecker();
+
 
 
         }
-        
+
+        private void scanChecker()
+        {
+            timer1 = new Timer();
+            timer1.Tick += new EventHandler(scanCheck_Tick);
+            timer1.Interval = 2000; // in miliseconds
+            timer1.Start();
+        }
+
+        private async void scanCheck_Tick(object sender, EventArgs e)
+        {
+            if (Scan.checkForScan(userNONCE))
+            {
+                PopUp("AutoScan Found", "Starting your scan now", ToolTipIcon.Info);
+
+                await Task.Run(() => Scan.StartScan(userNONCE));
+
+                PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
+            };
+        }
+
 
 
         private void NNDAgent_Resize(object sender, EventArgs e)

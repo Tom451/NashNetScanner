@@ -25,7 +25,19 @@ namespace NND_Agent.Data
         //data connection 
         DataUpload Connection = new DataUpload();
         //current user scanned devices 
-        
+
+        public bool checkForScan(long userNONCE)
+        {
+            if (Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE) == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            };
+        }
+
 
         public async Task StartScan(long userNONCE)
         {

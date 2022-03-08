@@ -44,6 +44,42 @@ function getNewestScan($deviceID, $scannedDevices){
     }
 
 }
+
+function getVulns($NeedsAttention, $Secure, $Other){
+    //As long and the CVE list is not null then it will calculate
+    if(!is_null($NeedsAttention)){
+        if (count($NeedsAttention) >= 5){
+            //High ammount of issues found
+            echo('<section class="highlight-blue" style="background: red;"> <div class="container"> <div class="intro">
+                <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">Your Network contains '.count($NeedsAttention).' that will need attention they will 
+                             be listed bellow for your information</p>
+               </div></div></section>');
+        }
+        else {
+            //Low amount of issues
+            echo('<section class="highlight-blue" style="background: forestgreen;"> <div class="container"> <div class="intro">
+                <h2 class="text-center"><i class="fa fa-check-circle" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">No concerning issues with,
+                                the found vulnerabilities will be listed bellow for your information, however your device is currently safe so no
+                                extra action will need to be taken,
+                                feel free to scan another device </p>
+                </div></div></section>');
+        }
+    }
+    else{
+        //No issues found
+        echo('<section class="highlight-blue" style="background: dodgerblue;"> <div class="container"> <div class="intro">
+                <h2 class="text-center"><i class="fa fa-smile-o" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">No issues at all with,
+                                your device is currently safe so no
+                                extra action will need to be taken,
+                                enjoy your day! </p>
+                </div></div></section>');
+
+    }
+
+}
 ?>
 
 <!DOCTYPE html>
@@ -64,16 +100,71 @@ function getNewestScan($deviceID, $scannedDevices){
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.1/css/swiper.min.css">
     <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/scanCreationOverlay.css">
 </head>
 
 <body>
 <?php require '../assets/php/navBarLoggedIn.php' ?>
+
+
+<!-- The overlay -->
+<div id="myNav" class="overlay">
+
+    <!-- Button to close the overlay navigation -->
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <div class="overlay-content">
+    <section class="features-clean">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">Please select what you would like to do</h2>
+                <p class="text-center">Here we have a list of the scans you can run on your network,</p>
+            </div>
+            <div class="row justify-content-center features">
+                <div class="col-sm-6 col-md-5 col-lg-4 item">
+                    <div class="box"><i class="fa fa-question icon"></i>
+                        <h3 class="name">Network Discovery</h3>
+                        <p class="description">Basic Network Discovery, this will allow you to view the devices on your current network</p>
+                        <form method="post"><button class="btn btn-primary" type="submit" name="createScan" value="NetDisc">Run Discovery</button></form>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-5 col-lg-4 item">
+                    <div class="box"><i class="fa fa-laptop icon"></i>
+                        <h3 class="name">Full Scan</h3>
+                        <p class="description">Scan All the currently known devices on the network. Note this will not find new devices but
+                            rather scan the ones currently known&nbsp;</p>
+
+                        <form action="/scan/createScan.php" method="post">';
+                            <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="FULLSCAN" id="FULLSCAN">Start Scan</button>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-5 col-lg-4 item">
+                    <div class="box"><i class="fa fa-history icon"></i>
+                        <h3 class="name">History</h3>
+                        <p class="description">View your latest and your oldest scans all in one area!&nbsp;</p>
+
+                        <form method="post"><button class="btn btn-primary" type="submit" name="previousScans" value="PrevScan">View Scans</button></form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+
+</div>
+
+<!-- Use any element to open/show the overlay navigation menu -->
+<span onclick="openNav()">open</span>
 
 <section class="features-clean">
     <div class="container">
         <div class="intro">
             <h2 class="text-center">Devices</h2>
             <p class="text-center">Here are all your vulnerabilities of all the devices on the network&nbsp;</p>
+            <button class="btn btn-primary bg-secondary d-lg-flex" data-toggle="collapse" data-target="#needsattention">Toggle Needs Attention</button>
+            <button class="btn btn-primary bg-secondary d-lg-flex" data-toggle="collapse" data-target="#safe">Toggle Safe</button>
+            <button class="btn btn-primary bg-secondary d-lg-flex" data-toggle="collapse" data-target="#other">Toggle Other</button>
             <?php
             echo '<form action="/scan/createScan.php" method="post">';
             echo '<td> <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="FULLSCAN" id="FULLSCAN">Start Scan</button> </td>';
@@ -87,6 +178,8 @@ function getNewestScan($deviceID, $scannedDevices){
             $NeedsAttention = null;
             $Secure = null;
             $Other = null;
+
+
             foreach ($devices as $item){
                 if($item['deviceScanned']=="Yes: Vulnerable"){
                     $NeedsAttention[] =$item;
@@ -101,7 +194,11 @@ function getNewestScan($deviceID, $scannedDevices){
                     $Other[] = $item;
                 }
             }
-            echo'<h1 style="padding-bottom: 10px">Needs Attention: </h1>';
+
+            getVulns($NeedsAttention, $Secure, $Other);
+
+            //needs attention area
+            echo'<div id="needsattention" class="collapse in"><h1 style="padding-bottom: 10px" >Needs Attention: </h1>';
             echo '<div class="row features">';
             foreach ($NeedsAttention as $item){
                 echo'<div class="col-sm-6 col-lg-4 item"><i class="fa fa-desktop icon" style="color: red"></i>';
@@ -132,8 +229,10 @@ function getNewestScan($deviceID, $scannedDevices){
 
                 echo'</div>';
             }
-            echo '</div>';
-            echo'<h1 style="padding-bottom: 10px">Safe: </h1>';
+            echo '</div></div>';
+
+
+            echo'<div id="safe" class="collapse"><h1 style="padding-bottom: 10px">Safe: </h1>';
             echo '<div class="row features">';
             foreach ($Secure as $item){
                 echo'<div class="col-sm-6 col-lg-4 item"><i class="fa fa-desktop icon" style="color: Green"></i>';
@@ -164,8 +263,10 @@ function getNewestScan($deviceID, $scannedDevices){
 
                 echo'</div>';
             }
-            echo '</div>';
-            echo'<h1 style="padding-bottom: 10px">Other: </h1>';
+            echo '</div></div>';
+
+
+            echo'<div id="other" class="collapse in"><h1 style="padding-bottom: 10px">Other: </h1>';
             echo '<div class="row features">';
             foreach ($Other as $item){
                 echo'<div class="col-sm-6 col-lg-4 item"><i class="fa fa-desktop icon" style="color: grey"></i>';
@@ -197,7 +298,7 @@ function getNewestScan($deviceID, $scannedDevices){
 
                 echo'</div>';
             }
-            echo '</div>';
+            echo '</div></div>';
 
             echo'</div>';
             echo'</div>';
@@ -210,7 +311,16 @@ function getNewestScan($deviceID, $scannedDevices){
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.1/js/swiper.jquery.min.js"></script>
-<script src="assets/js/Simple-Slider.js"></script>
+<script>
+    function openNav() {
+        document.getElementById("myNav").style.width = "100%";
+    }
+
+    function closeNav() {
+        document.getElementById("myNav").style.width = "0%";
+    }
+</script>
+
 </body>
 
 </html>
