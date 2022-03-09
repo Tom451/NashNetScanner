@@ -1,14 +1,9 @@
 <?php
 //start the session
-session_start();
-if(!isset($_SESSION['user_id'])){
-    header('Location: index.php');
-    exit;
-} else {
-    require '..\assets\php\DBConfig.php';
-    $connection = getConnection();
-}
+require '..\assets\php\sessionChecker.php';
 
+require '..\assets\php\DBConfig.php';
+$connection = getConnection();
 //when the user selects the scan, get the post request from that
 if (isset($_POST['scanSelected'])) {
 
@@ -212,7 +207,7 @@ function getSecurity($device, $CVEList){
 
 }
 
-
+require '../assets/php/VulnHelp.php';
 ?>
 
 
@@ -233,12 +228,15 @@ function getSecurity($device, $CVEList){
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/percentages.css">
     <link rel="stylesheet" href="../assets/css/Highlight-Blue.css">
+    <link rel="stylesheet" href="../assets/css/scanOverlayAndAccoridion.css">
 </head>
 
 <body>
 
     <!-- Get the nav bar for a logged in page -->
     <?php require '../assets/php/navBarLoggedIn.php' ?>
+
+
 
     <div class="container"<?php
     //If the scan type is vulnerability then:
@@ -332,63 +330,128 @@ function getSecurity($device, $CVEList){
             </div>
 
             <div class="col-md-12">
-                <div>
-                    <div style="padding-top: 30px">
+                <h2>Vulnerbilities</h2>
 
-                        <h2>Vulnerbilities</h2>
+                <table class="table table-hover table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Vulnerbility Name</th>
+                        <th>Type Of Vulnerbility</th>
+                        <th>Port Name</th>
+                        <th>Serverty</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
 
-                        <table id="Vulnerbilities" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                            <thead>
-                            <tr>
-                                <th>Vulnerbility Name</th>
-                                <th>Complexity</th>
-                                <th>Port Name</th>
-                                <th>Serverty</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php
+                    $CommonClassification = array(
+                            "misconfiguration", "default installations", "buffer overflow", "unpatched", "flaw",
+                         "application flaws", "default password");
 
-                            if ($CVEList != null){
-                                    //$CVEItems = $JSONObject -> result ->CVE_Items;
+                    if ($CVEList != null){
+                        //$CVEItems = $JSONObject -> result ->CVE_Items;
 
-                                    if (!empty($CVEList -> impact->baseMetricV3->cvssV3)){
+                        if (!empty($CVEList -> impact->baseMetricV3->cvssV3)){
+                            foreach ($CVEList as $CVE) {
+                                $ID = $CVE -> cve -> CVE_data_meta -> ID;
+                                $Description = null;
+                                $Links = array();
 
-                                        foreach ($CVEList as $CVE) {
-                                            echo '<tr>';
-                                            echo '<td>' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
-                                            echo '<td>' . $CVE ->impact->baseMetricV3->cvssV3->attackComplexity . '</td>';
-                                            echo '<td>' . $item['VulnName'] . '</td>';
-                                            echo '<td>' . $CVE ->impact->baseMetricV3->cvssV3->baseSeverity . '</td>';
-                                            echo '<tr>';
-                                        }
-
-                                    }
-                                    else{
-                                        foreach ($CVEList as $CVE) {
-                                            echo '<tr>';
-                                            echo '<td>' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
-                                            echo '<td>' . $CVE ->impact->baseMetricV2->cvssV2->accessComplexity . '</td>';
-                                            echo '<td>' . $item['VulnName'] . '</td>';
-                                            echo '<td>' . $CVE ->impact->baseMetricV2->severity . '</td>';
-                                            echo '<tr>';
-                                        }
-                                    }
+                                foreach ($CVE -> cve -> description -> description_data as $descriptionList) {
+                                    $Description = $descriptionList -> value;
                                 }
 
-                            else{
+                                foreach ($CVE -> cve -> references -> reference_data as $URLItem) {
+                                    $Links[] = $URLItem -> url;
+                                }
+
+                                $Type = "Unknown";
+
+                                foreach($CommonClassification as $a) {
+                                    if (stripos(strtolower($Description),$a) !== false)
+                                        $Type = $a;
+                                }
+
+
+                                echo '<tr data-toggle="collapse" data-target="#'.$ID.'" class="clickable">';
+                                echo '<td>' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
+                                echo '<td>' . $Type . '</td>';
+                                echo '<td>' . $item['VulnName'] . '</td>';
+                                echo '<td>' . $CVE ->impact->baseMetricV3->cvssV3->baseSeverity . '</td>';
                                 echo '<tr>';
-                                echo '<td colspan="4"> No Vulnerabilities! </td>';
-                                echo '<tr>';
+                                //Data area
+
+                                echo '<tr><td id="'.$ID.'" class="collapse" colspan="4"><div ">';
+                                echo '<h3>Description</h3>';
+                                echo $Description . '<br>';
+                                echo '<h3>How to fix</h3>';
+                                echo getHelp($Type) . '<br>';
+                                echo '<h3>Relevant Links</h3>';
+                                foreach ($Links as $link){
+                                    echo'<a href="'.$link.'">'. $link .'</a><br>';
+
+                                }
+                                echo '</div></td></tr>';
                             }
+                        }
+                        else{
+                            foreach ($CVEList as $CVE) {
+                                $ID = $CVE -> cve -> CVE_data_meta -> ID;
+                                $Description = null;
+                                $Links = array();
+
+                                foreach ($CVE -> cve -> description -> description_data as $descriptionList) {
+                                    $Description = $descriptionList -> value;
+                                }
+
+                                foreach ($CVE -> cve -> references -> reference_data as $URLItem) {
+                                    $Links[] = $URLItem -> url;
+                                }
+
+                                $Type = "Unknown";
+
+                                foreach($CommonClassification as $a) {
+                                    if (stripos(strtolower($Description),$a) !== false)
+                                        $Type = $a;
+                                }
+
+                                echo '<tr data-toggle="collapse" data-target="#'.$ID.'" class="clickable">';
+                                echo '<td>' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
+                                echo '<td>' . $Type . '</td>';
+                                echo '<td>' . $item['VulnName'] . '</td>';
+                                echo '<td>' . $CVE ->impact->baseMetricV2->severity . '</td>';
+                                echo '<tr>';
+
+                                //Data area
+                                echo '<tr><td id="'.$ID.'" class="collapse" colspan="4"><div ">';
+                                echo '<h3>Description</h3>';
+                                echo $Description . '<br>';
+                                echo '<h3>How to fix</h3>';
+                                echo getHelp($Type) . '<br>';
+                                echo '<h3>Relevant Links</h3>';
+                                foreach ($Links as $link){
+                                    echo'<a href="'.$link.'">'. $link .'</a><br>';
+
+                                }
+
+                                echo '</div></td></tr>';
+
+
+                            }
+                        }
+                    }
+
+                    else{
+                        echo '<tr>';
+                        echo '<td colspan="4"> No Vulnerabilities! </td>';
+                        echo '<tr>';
+                    }
 
 
 
-                            ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                    ?>
+
+                </table>
             </div>
         </div>
 

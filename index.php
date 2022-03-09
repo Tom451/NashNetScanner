@@ -30,6 +30,8 @@ if (isset($_POST['login'])) {
     //get the result
     $result = $query->fetch(PDO::FETCH_ASSOC);
 
+
+
     //if there is no results then show incorrect credentials
     if (!$result) {
         echo '<script>IncorrectCredentials()</script>';
@@ -42,6 +44,19 @@ if (isset($_POST['login'])) {
             $_SESSION['nonce'] = $result['userNonce'];
             $_SESSION['user_id'] = $result['UserID'];
             $_SESSION['userName'] = $username;
+
+
+            //select all the users with the given username
+            $query = $connection->prepare("SELECT agentOnline FROM user WHERE userID=:UserID");
+            $query->bindParam("UserID", $_SESSION['user_id'], PDO::PARAM_STR);
+            $query->execute();
+
+            //get the result
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+
+
+
+            $_SESSION['agentStatus'] = $result['agentOnline'];
 
             //set the users last seen
             // send the user to the home page

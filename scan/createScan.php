@@ -1,13 +1,7 @@
 <script src="../assets/js/errorMessagePopUp.js"></script>
 
 <?php
-session_start();
-if(!isset($_SESSION['user_id'])){
-    header('Location: ../index.php');
-    exit;
-} else {
-
-}
+require '..\assets\php\sessionChecker.php';
 
 if(isset($_POST['previousScans'])){
     header('Location: previousScans.php');

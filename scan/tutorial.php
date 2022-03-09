@@ -1,12 +1,5 @@
 <?php
-session_start();
-if(!isset($_SESSION['user_id'])){
-    header('Location: index.php');
-
-    exit;
-} else {
-
-}
+require '..\assets\php\sessionChecker.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,7 +64,7 @@ if(!isset($_SESSION['user_id'])){
                     <div class="container">
                         <div class="row">
                             <div class="col-md-6">
-                                <p>Right now that is out of the way, the second part is to create a scan. This is important as it will show where the vulnerabilities are located on the network, please begin by starting a scan below:&nbsp; &nbsp;</p><button class="btn btn-secondary" type="button">Download</button>
+                                <p>Right now that is out of the way, the second part is to create a scan. This is important as it will show where the vulnerabilities are located on the network, please begin by starting a scan below:&nbsp; &nbsp;</p><form action="/scan/createScan.php" method="post"><button class="btn btn-primary" type="submit" name="createScan" value="NetDisc">Run Discovery</button></form>
                             </div>
                             <div class="col-md-6"></div>
                         </div>

@@ -1,14 +1,6 @@
 <?php
 
-session_start();
-if(!isset($_SESSION['user_id'])){
-    header('Location: index.php');
-
-
-    exit;
-} else {
-
-}
+require '..\assets\php\sessionChecker.php';
 require '..\assets\php\DBConfig.php';
 
 $USERID = $_SESSION['user_id'];
@@ -23,6 +15,10 @@ $query->execute();
 
 //get the result
 $devices = $query->fetchAll(PDO::FETCH_ASSOC);
+
+if(count($devices) == 0){
+    header('Location: tutorial.php');
+}
 
 //select all the devices that have been discovered by the loged in user
 $query = $connection->prepare("SELECT * FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
@@ -84,7 +80,7 @@ function getVulns($NeedsAttention, $Secure, $Other){
 
 <!DOCTYPE html>
 <html lang="en">
-<meta http-equiv="refresh" content="20" />
+<meta http-equiv="refresh" content="60" />
 
 <head>
     <meta charset="utf-8">
@@ -100,10 +96,11 @@ function getVulns($NeedsAttention, $Secure, $Other){
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.1/css/swiper.min.css">
     <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="../assets/css/scanCreationOverlay.css">
+    <link rel="stylesheet" href="../assets/css/scanOverlayAndAccoridion.css">
 </head>
 
 <body>
+
 <?php require '../assets/php/navBarLoggedIn.php' ?>
 
 
@@ -124,7 +121,7 @@ function getVulns($NeedsAttention, $Secure, $Other){
                     <div class="box"><i class="fa fa-question icon"></i>
                         <h3 class="name">Network Discovery</h3>
                         <p class="description">Basic Network Discovery, this will allow you to view the devices on your current network</p>
-                        <form method="post"><button class="btn btn-primary" type="submit" name="createScan" value="NetDisc">Run Discovery</button></form>
+                        <form action="/scan/createScan.php" method="post"><button class="btn btn-primary" type="submit" name="createScan" value="NetDisc">Run Discovery</button></form>
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-5 col-lg-4 item">
@@ -154,23 +151,16 @@ function getVulns($NeedsAttention, $Secure, $Other){
 
 </div>
 
-<!-- Use any element to open/show the overlay navigation menu -->
-<span onclick="openNav()">open</span>
 
 <section class="features-clean">
     <div class="container">
         <div class="intro">
             <h2 class="text-center">Devices</h2>
             <p class="text-center">Here are all your vulnerabilities of all the devices on the network&nbsp;</p>
-            <button class="btn btn-primary bg-secondary d-lg-flex" data-toggle="collapse" data-target="#needsattention">Toggle Needs Attention</button>
-            <button class="btn btn-primary bg-secondary d-lg-flex" data-toggle="collapse" data-target="#safe">Toggle Safe</button>
-            <button class="btn btn-primary bg-secondary d-lg-flex" data-toggle="collapse" data-target="#other">Toggle Other</button>
-            <?php
-            echo '<form action="/scan/createScan.php" method="post">';
-            echo '<td> <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="FULLSCAN" id="FULLSCAN">Start Scan</button> </td>';
-            echo '</form>';
+        </div>
 
-            ?>
+        <div id="menuBox">
+            <a onclick="openNav()">Menu</a>
         </div>
 
             <?php
@@ -198,8 +188,9 @@ function getVulns($NeedsAttention, $Secure, $Other){
             getVulns($NeedsAttention, $Secure, $Other);
 
             //needs attention area
-            echo'<div id="needsattention" class="collapse in"><h1 style="padding-bottom: 10px" >Needs Attention: </h1>';
-            echo '<div class="row features">';
+
+            echo'<div id="needsattention"><button class="accordion" data-toggle="collapse" data-target="#needsattentiondata">Needs Attention:</button>';
+            echo '<div id = "needsattentiondata" class="collapse show"><div class="row features" style="padding-top: 10px;">';
             foreach ($NeedsAttention as $item){
                 echo'<div class="col-sm-6 col-lg-4 item"><i class="fa fa-desktop icon" style="color: red"></i>';
                 echo'<ul class="list-unstyled">';
@@ -229,11 +220,11 @@ function getVulns($NeedsAttention, $Secure, $Other){
 
                 echo'</div>';
             }
-            echo '</div></div>';
+            echo '</div></div></div>';
 
 
-            echo'<div id="safe" class="collapse"><h1 style="padding-bottom: 10px">Safe: </h1>';
-            echo '<div class="row features">';
+            echo'<div id="safe"><button class="accordion collapsed" data-toggle="collapse" data-target="#safedata">Safe:</button>';
+            echo '<div id="safedata" class="collapse"><div  class="row features">';
             foreach ($Secure as $item){
                 echo'<div class="col-sm-6 col-lg-4 item"><i class="fa fa-desktop icon" style="color: Green"></i>';
                 echo'<ul class="list-unstyled">';
@@ -263,11 +254,11 @@ function getVulns($NeedsAttention, $Secure, $Other){
 
                 echo'</div>';
             }
-            echo '</div></div>';
+            echo '</div></div></div>';
 
 
-            echo'<div id="other" class="collapse in"><h1 style="padding-bottom: 10px">Other: </h1>';
-            echo '<div class="row features">';
+            echo'<div id="other"><button class="accordion collapsed" data-toggle="collapse" data-target="#otherdata">Other:</button>';
+            echo '<div id="otherdata" class="collapse"><div  class="row features">';
             foreach ($Other as $item){
                 echo'<div class="col-sm-6 col-lg-4 item"><i class="fa fa-desktop icon" style="color: grey"></i>';
 
@@ -298,7 +289,7 @@ function getVulns($NeedsAttention, $Secure, $Other){
 
                 echo'</div>';
             }
-            echo '</div></div>';
+            echo '</div></div></div>';
 
             echo'</div>';
             echo'</div>';
@@ -319,6 +310,9 @@ function getVulns($NeedsAttention, $Secure, $Other){
     function closeNav() {
         document.getElementById("myNav").style.width = "0%";
     }
+
+
+</script>
 </script>
 
 </body>

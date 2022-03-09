@@ -55,26 +55,26 @@
             this.cancelScanToolStripMenuItem,
             this.scanStatusToolStripMenuItem});
             this.NNDContext.Name = "contextMenuStrip1";
-            this.NNDContext.Size = new System.Drawing.Size(211, 104);
+            this.NNDContext.Size = new System.Drawing.Size(158, 76);
             // 
             // runSacnToolStripMenuItem
             // 
             this.runSacnToolStripMenuItem.Name = "runSacnToolStripMenuItem";
-            this.runSacnToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.runSacnToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
             this.runSacnToolStripMenuItem.Text = "Run Scan";
             this.runSacnToolStripMenuItem.Click += new System.EventHandler(this.RunScanToolStripMenuItem_Click);
             // 
             // cancelScanToolStripMenuItem
             // 
             this.cancelScanToolStripMenuItem.Name = "cancelScanToolStripMenuItem";
-            this.cancelScanToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.cancelScanToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
             this.cancelScanToolStripMenuItem.Text = "Cancel Scan";
             this.cancelScanToolStripMenuItem.Click += new System.EventHandler(this.cancelScanToolStripMenuItem_Click);
             // 
             // scanStatusToolStripMenuItem
             // 
             this.scanStatusToolStripMenuItem.Name = "scanStatusToolStripMenuItem";
-            this.scanStatusToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.scanStatusToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
             this.scanStatusToolStripMenuItem.Text = "Scan Status";
             this.scanStatusToolStripMenuItem.Click += new System.EventHandler(this.scanStatusToolStripMenuItem_Click);
             // 

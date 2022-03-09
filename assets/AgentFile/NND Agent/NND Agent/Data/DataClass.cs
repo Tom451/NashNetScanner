@@ -67,20 +67,49 @@ namespace NND_Agent.Data
                 currentUser.currentScan = currentScan;
                 currentUser.scannedVulns = null;
                 currentUser.scannedDevices = null;
-
-                if (NMapScan(currentScan, userNONCE))
+                try
                 {
-                    //Convert the scan to JSON
-                    currentScan.ScanStatus = "Finished";
+                    if (NMapScan(currentScan, userNONCE))
+                    {
+                        //Convert the scan to JSON
+                        currentScan.ScanStatus = "Finished";
+                    }
+                    else
+                    {
+                        //Convert the scan to JSON
+                        currentScan.ScanStatus = "Error";
+                    }
                 }
-                else
+                catch (System.IO.IOException ex)
                 {
-                    //Convert the scan to JSON
-                    currentScan.ScanStatus = "Error";
+                    Process[] runningProcesses = Process.GetProcesses();
+                    foreach (Process process in runningProcesses)
+                    {
+                        // now check the modules of the process
+                        foreach (ProcessModule module in process.Modules)
+                        {
+                            if (module.FileName.Equals("NMAP.exe"))
+                            {
+                                process.Kill();
+                            }
+                            else
+                            {
+                                form.PopUp("Error", ex.ToString(), System.Windows.Forms.ToolTipIcon.Error) ;
+                            }
+                        }
+                    }
                 }
+                
 
                 //get ready for item upload
-                string uploadJSON = await Task.Run(() => Connection.ToJSON(currentUser));
+                //create a temp upload object 
+                userModel tempUserModel = new userModel();
+                tempUserModel.currentScan = currentUser.currentScan;
+                tempUserModel.scannedVulns = currentUser.scannedVulns;
+                tempUserModel.scannedDevices = currentUser.scannedDevices;
+                tempUserModel.userName = currentUser.userName;
+
+                string uploadJSON = await Task.Run(() => Connection.ToJSON(tempUserModel));
 
                 //upload the devices
                 try
@@ -121,8 +150,7 @@ namespace NND_Agent.Data
 
             if (scan.scanType == "NetDisc")
             {
-                RunNetworkScan(scan, process, startInfo);
-                return true;
+                return RunNetworkScan(scan, process, startInfo);
             }
             else if (scan.scanType == "VulnScan")
             {
@@ -151,6 +179,7 @@ namespace NND_Agent.Data
                     {
                         currentScan.ScanStatus = "Error";
                         Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
+                        return false;
                     };
                 }
                 
@@ -475,6 +504,7 @@ namespace NND_Agent.Data
             else
             {
                 form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+
                 return false;
             }
         }

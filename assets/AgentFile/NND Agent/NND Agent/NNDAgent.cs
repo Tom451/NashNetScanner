@@ -1,4 +1,5 @@
-﻿using NND_Agent.Data;
+﻿using Newtonsoft.Json;
+using NND_Agent.Data;
 using NND_Agent.Items;
 using System;
 using System.Collections.Generic;
@@ -23,9 +24,11 @@ namespace NND_Agent
 
         public long userNONCE = 0;
 
+        //create a timer
         private Timer timer1;
-
         DataClass Scan;
+        bool ScanStatus;
+
         //tell the user scan has started
         public NNDAgent()
         {
@@ -154,6 +157,19 @@ namespace NND_Agent
 
             scanChecker();
 
+            //check for scan on load 
+            DataUpload setAgentOnline = new DataUpload();
+            var agent = new
+            {
+                userNONCE = userNONCE,
+                agentStatus = 1
+            };
+            //Tranform it to Json object
+            string jsonData = JsonConvert.SerializeObject(agent);
+
+            setAgentOnline.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("AgentStatus={0}",jsonData)); 
+            
+
 
 
         }
@@ -171,10 +187,14 @@ namespace NND_Agent
             if (Scan.checkForScan(userNONCE))
             {
                 PopUp("AutoScan Found", "Starting your scan now", ToolTipIcon.Info);
+                timer1.Stop();
+                ScanStatus = true;
 
                 await Task.Run(() => Scan.StartScan(userNONCE));
 
                 PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
+                timer1.Start();
+                ScanStatus = false;
             };
         }
 
@@ -209,12 +229,21 @@ namespace NND_Agent
 
         private async void RunScanToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+            if (ScanStatus)
+            {
+                PopUp("Scan Already Started","No need to start", ToolTipIcon.Warning);
+            }
+            else
+            {
+                await Task.Run(() => Scan.StartScan(userNONCE));
+                ScanStatus = true;
+                PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
+
+                PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
+                ScanStatus = false;
+            }
             
-            
-            PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
-            await Task.Run(() => Scan.StartScan(userNONCE));
-            
-            PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
 
         }
 
@@ -242,5 +271,7 @@ namespace NND_Agent
             
             PopUp("There are", Scan.CheckProgress() + " Left to Go", ToolTipIcon.Info);
         }
+
+        
     }
 }
