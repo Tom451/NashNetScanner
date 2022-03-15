@@ -12,7 +12,6 @@ if(isset($_SESSION['user_id'])){
 
 require 'assets\php\DBConfig.php';
 
-
 if (isset($_POST['login'])) {
 
     //Get PDO connection string
@@ -44,19 +43,10 @@ if (isset($_POST['login'])) {
             $_SESSION['nonce'] = $result['userNonce'];
             $_SESSION['user_id'] = $result['UserID'];
             $_SESSION['userName'] = $username;
+            $_SESSION['timestamp'] = time();
 
 
-            //select all the users with the given username
-            $query = $connection->prepare("SELECT agentOnline FROM user WHERE userID=:UserID");
-            $query->bindParam("UserID", $_SESSION['user_id'], PDO::PARAM_STR);
-            $query->execute();
-
-            //get the result
-            $result = $query->fetch(PDO::FETCH_ASSOC);
-
-
-
-            $_SESSION['agentStatus'] = $result['agentOnline'];
+            agentChecker();
 
             //set the users last seen
             // send the user to the home page

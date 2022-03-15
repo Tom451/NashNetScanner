@@ -159,3 +159,35 @@
 #menuBox a:hover {
     background:#00495d;
 }
+
+#menuBox {
+    height: 0px;
+    width: 85px;
+    position: fixed;
+    right: 0;
+
+    top: 50%;
+    z-index: 1000;
+    transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+#menuBox a {
+    display: block;
+    background:dodgerblue;
+    border-radius: 25px 25px 0 0;
+    height: 52px;
+    padding-top: 10px;
+    width: 155px;
+    text-align: center;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    font-weight: bold;
+    text-decoration: none;
+}
+#menuBox a:hover {
+    background:#00495d;
+}

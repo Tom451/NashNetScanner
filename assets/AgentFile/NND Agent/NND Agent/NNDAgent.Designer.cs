@@ -35,6 +35,7 @@
             this.runSacnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cancelScanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scanStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.NNDContext.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,32 +52,40 @@
             // 
             this.NNDContext.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.NNDContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.runSacnToolStripMenuItem,
             this.cancelScanToolStripMenuItem,
-            this.scanStatusToolStripMenuItem});
+            this.scanStatusToolStripMenuItem,
+            this.runSacnToolStripMenuItem,
+            this.closeApplicationToolStripMenuItem});
             this.NNDContext.Name = "contextMenuStrip1";
-            this.NNDContext.Size = new System.Drawing.Size(158, 76);
+            this.NNDContext.Size = new System.Drawing.Size(211, 128);
             // 
             // runSacnToolStripMenuItem
             // 
             this.runSacnToolStripMenuItem.Name = "runSacnToolStripMenuItem";
-            this.runSacnToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.runSacnToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.runSacnToolStripMenuItem.Text = "Run Scan";
             this.runSacnToolStripMenuItem.Click += new System.EventHandler(this.RunScanToolStripMenuItem_Click);
             // 
             // cancelScanToolStripMenuItem
             // 
             this.cancelScanToolStripMenuItem.Name = "cancelScanToolStripMenuItem";
-            this.cancelScanToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.cancelScanToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.cancelScanToolStripMenuItem.Text = "Cancel Scan";
             this.cancelScanToolStripMenuItem.Click += new System.EventHandler(this.cancelScanToolStripMenuItem_Click);
             // 
             // scanStatusToolStripMenuItem
             // 
             this.scanStatusToolStripMenuItem.Name = "scanStatusToolStripMenuItem";
-            this.scanStatusToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.scanStatusToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.scanStatusToolStripMenuItem.Text = "Scan Status";
             this.scanStatusToolStripMenuItem.Click += new System.EventHandler(this.scanStatusToolStripMenuItem_Click);
+            // 
+            // closeApplicationToolStripMenuItem
+            // 
+            this.closeApplicationToolStripMenuItem.Name = "closeApplicationToolStripMenuItem";
+            this.closeApplicationToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.closeApplicationToolStripMenuItem.Text = "Close Application";
+            this.closeApplicationToolStripMenuItem.Click += new System.EventHandler(this.closeApplicationToolStripMenuItem_Click);
             // 
             // NNDAgent
             // 
@@ -85,6 +94,8 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "NNDAgent";
             this.Text = "NND Agent";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NNDAgent_FormClosing);
+            this.Load += new System.EventHandler(this.NNDAgent_Load);
             this.Shown += new System.EventHandler(this.NNDAgent_Shown);
             this.Resize += new System.EventHandler(this.NNDAgent_Resize);
             this.NNDContext.ResumeLayout(false);
@@ -99,6 +110,7 @@
         private System.Windows.Forms.ToolStripMenuItem runSacnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cancelScanToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scanStatusToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeApplicationToolStripMenuItem;
     }
 }
 

@@ -63,24 +63,34 @@ elseif (isset($_POST['UploadWithVerification'])) {
     } else {
         //check if its a mac address being provided if it is then its a device scan
         if (!empty($JSONObject->scanInfo)) {
+
+            $storedProcedure = 'CALL setDeviceStatus(:inMacAddress, :inIPAddress, :inDeviceScanned)';
+
+            $statement = $connection->prepare($storedProcedure);
+
+            $statement->bindParam(':inDeviceScanned', $JSONObject->ScanStatus, PDO::PARAM_STR);
+
             if (filter_var($JSONObject->scanInfo, FILTER_VALIDATE_MAC)) {
 
-                $storedProcedure = 'CALL setDeviceStatus(:inMacAddress, :inDeviceScanned)';
-
-                $statement = $connection->prepare($storedProcedure);
-
+                $IP = "Null";
                 $statement->bindParam(':inMacAddress', $JSONObject->scanInfo, PDO::PARAM_STR);
-                $statement->bindParam(':inDeviceScanned', $JSONObject->ScanStatus, PDO::PARAM_STR);
-
-                if ($statement->execute()) {
-                    echo "Updated Scan";
-                } else {
-                    echo "Error";
-                }
-
-                return;
+                $statement->bindParam(':inIPAddress', $IP, PDO::PARAM_STR);
 
             }
+            else if (filter_var($JSONObject->scanInfo, FILTER_VALIDATE_IP)){
+                $MAC = "Null";
+                $statement->bindParam(':inMacAddress', $MAC, PDO::PARAM_STR);
+                $statement->bindParam(':inIPAddress', $JSONObject->scanInfo, PDO::PARAM_STR);
+
+
+            }
+
+            if ($statement->execute()) {
+                echo "Updated Scan";
+            } else {
+                echo "Error";
+            }
+            return;
         }
 
         $USERNONCE = $JSONObject->userName;
@@ -94,13 +104,16 @@ elseif (isset($_POST['UploadWithVerification'])) {
         }
 
         $User = $JSONObject->userName;
-        $Vulns = $JSONObject->scannedVulns;
+
         $Devices = $JSONObject->scannedDevices;
+
         $Scan = $JSONObject->currentScan;
 
 
         //if there are devices upload those
         if ($Devices != null) {
+
+            $Vulns = $JSONObject->scannedVulns;
 
             $storedProcedure = 'CALL addDevice(:indeviceIP, :inRTT, :inMacAddress, :inName, :inScanID)';
 
@@ -258,6 +271,7 @@ elseif(isset($_POST['AgentStatus'])){
     }
 
 }
+
 
 
 ?>

@@ -10,7 +10,7 @@ require 'assets\php\sessionChecker.php';
     <?php require "assets/php/headerData.php "?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>NashNetworkScanner</title>
+    <title>Home Page</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/Features-Clean.css">
@@ -54,7 +54,7 @@ require 'assets\php\sessionChecker.php';
 
 </html>
 <script type="text/javascript">
-        var userName = "<?php echo $_SESSION['userName'];?>"
+        var userName = "<?php echo ucfirst($_SESSION['userName']);?>"
         var doc = document.getElementById("NameHolder")
         doc.innerText ="Welcome, " + userName;
 </script>

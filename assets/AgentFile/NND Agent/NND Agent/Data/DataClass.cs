@@ -82,22 +82,7 @@ namespace NND_Agent.Data
                 }
                 catch (System.IO.IOException ex)
                 {
-                    Process[] runningProcesses = Process.GetProcesses();
-                    foreach (Process process in runningProcesses)
-                    {
-                        // now check the modules of the process
-                        foreach (ProcessModule module in process.Modules)
-                        {
-                            if (module.FileName.Equals("NMAP.exe"))
-                            {
-                                process.Kill();
-                            }
-                            else
-                            {
-                                form.PopUp("Error", ex.ToString(), System.Windows.Forms.ToolTipIcon.Error) ;
-                            }
-                        }
-                    }
+                    Thread.Sleep(10000);
                 }
                 
 
@@ -165,9 +150,15 @@ namespace NND_Agent.Data
                 //set to scanning 
                 if (currentUser.scannedDevices.Count == 0)
                 {
+                    //if the host is down and there are no devices 
+                    ComputerModel hostDown = new ComputerModel();
                     currentScan.ScanStatus = "Host Down";
+                    currentScan.scanID = currentUser.currentScan.scanID;
+                    currentScan.scanType = "Return";
+                    currentScan.scanInfo = currentUser.currentScan.scanInfo;
+                    
                     Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
-                    return true;
+                    return false;
                 }
                 else
                 {
@@ -529,6 +520,7 @@ namespace NND_Agent.Data
             {
 
                 form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
+                Thread.Sleep(10000);
                 return false;
             }
         }
