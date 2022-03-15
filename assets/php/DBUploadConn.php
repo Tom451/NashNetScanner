@@ -1,5 +1,6 @@
 <?php
 require 'DBConfig.php';
+
 //Get PDO connection string
 $connection = getConnection();
 
@@ -61,7 +62,8 @@ elseif (isset($_POST['UploadWithVerification'])) {
     if (empty($JSONObject->userName)) {
         echo "Not Verified";
     } else {
-        //check if its a mac address being provided if it is then its a device scan
+
+        // if a mac address is provided in the scan info section then it is a Scan update
         if (!empty($JSONObject->scanInfo)) {
 
             $storedProcedure = 'CALL setDeviceStatus(:inMacAddress, :inIPAddress, :inDeviceScanned)';
@@ -92,6 +94,7 @@ elseif (isset($_POST['UploadWithVerification'])) {
             }
             return;
         }
+
 
         $USERNONCE = $JSONObject->userName;
 
@@ -150,10 +153,12 @@ elseif (isset($_POST['UploadWithVerification'])) {
             }
 
             //if there is vulnerabilities
+            $vulnCount = 0;
+
             if ($Vulns != null) {
 
                 $storedProcedure = 'CALL addVuln(:inScanID, :inVulnName, :inVulnVersion, :inVulnExtraData, :inVulnProduct, :inPortNumber, :inVulnCPE)';
-                $vulnCount = 0;
+
 
                 foreach ($Vulns as $item){
                     $VulnCPE = $item->VulnCPE;
@@ -172,28 +177,6 @@ elseif (isset($_POST['UploadWithVerification'])) {
 
                     }
                 }
-
-                //if there IS CVEs tehn mark the device as vulnerable
-                $sql = 'UPDATE device JOIN devicescan on device.deviceID= devicescan.deviceID SET device.deviceScanned = :NewStatus WHERE devicescan.ScanID = :scanID';
-                // prepare statement
-                $statement = $connection->prepare($sql);
-
-                if ($vulnCount != 0) {
-                    // bind params
-                    $NewStatus = "Yes: Vulnerable";
-
-                } else {
-                    $NewStatus = "Yes: Safe";
-                }
-
-                $statement->bindParam(':NewStatus', $NewStatus, PDO::PARAM_STR);
-                $statement->bindParam(':scanID', $ScanID);
-
-                if (!$statement->execute()) {
-                    echo "Unsuccessful";
-                    return;
-                };
-
                 foreach ($Vulns as $mydata) {
 
                     $vulnName = $mydata->VulnName;
@@ -217,10 +200,52 @@ elseif (isset($_POST['UploadWithVerification'])) {
 
                 }
 
+                //if there IS CVEs tehn mark the device as vulnerable
+                $sql = 'UPDATE device JOIN devicescan on device.deviceID= devicescan.deviceID SET device.deviceScanned = :NewStatus WHERE devicescan.ScanID = :scanID';
+                // prepare statement
+                $statement = $connection->prepare($sql);
 
-            } else {
-                echo "No Data Provided";
+                if ($vulnCount != 0) {
+                    // bind params
+                    $NewStatus = "Yes: Vulnerable";
+
+                } else {
+                    $NewStatus = "Yes: Safe";
+                }
+
+                $statement->bindParam(':NewStatus', $NewStatus, PDO::PARAM_STR);
+                $statement->bindParam(':scanID', $ScanID);
+
+                if (!$statement->execute()) {
+                    echo "Unsuccessful";
+                    return;
+                };
+
+            } else if ($Scan->scanType == 'NetDisc') {
+                echo "No Update";
+
+            }else{
+                $NewStatus = "Yes: Safe";
+
+                //if there IS CVEs tehn mark the device as vulnerable
+                $sql = 'UPDATE device JOIN devicescan on device.deviceID= devicescan.deviceID SET device.deviceScanned = :NewStatus WHERE devicescan.ScanID = :scanID';
+                // prepare statement
+                $statement = $connection->prepare($sql);
+
+                $statement->bindParam(':NewStatus', $NewStatus, PDO::PARAM_STR);
+                $statement->bindParam(':scanID', $ScanID);
+
+                if (!$statement->execute()) {
+                    echo "Unsuccessful";
+                    return;
+                };
+
             }
+
+
+
+            //update the device scanned area
+
         }
 
 

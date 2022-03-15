@@ -67,23 +67,33 @@ namespace NND_Agent.Data
                 currentUser.currentScan = currentScan;
                 currentUser.scannedVulns = null;
                 currentUser.scannedDevices = null;
-                try
+
+                bool tryAgain = true;
+                while (tryAgain)
                 {
-                    if (NMapScan(currentScan, userNONCE))
+                    try
                     {
-                        //Convert the scan to JSON
-                        currentScan.ScanStatus = "Finished";
+                        if (NMapScan(currentScan, userNONCE))
+                        {
+                            //Convert the scan to JSON
+                            currentScan.ScanStatus = "Finished";
+                            tryAgain = false;
+                        }
+                        else
+                        {
+                            //Convert the scan to JSON
+                            currentScan.ScanStatus = "Error";
+                            tryAgain = false;
+                        }
                     }
-                    else
+                    catch (System.IO.IOException ex)
                     {
-                        //Convert the scan to JSON
-                        currentScan.ScanStatus = "Error";
+                        form.PopUp("NMAP is using the file. Please close NMAP", "System will wait for 30 seconds and then try again", System.Windows.Forms.ToolTipIcon.Error);
+                        Thread.Sleep(30000);
                     }
                 }
-                catch (System.IO.IOException ex)
-                {
-                    Thread.Sleep(10000);
-                }
+
+                
                 
 
                 //get ready for item upload
@@ -170,13 +180,19 @@ namespace NND_Agent.Data
                     {
                         currentScan.ScanStatus = "Error";
                         Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
+                        //wait 10 seconds for the next scan, this gives the program chnace to finish (NMAP)
+                        Thread.Sleep(10000);
                         return false;
-                    };
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
                 
 
                 //upload the current device being scanned
-                 if (currentUser.scannedVulns == null || currentUser.scannedVulns.Count > 0)
+                if (currentUser.scannedVulns == null || currentUser.scannedVulns.Count > 0)
                 {
                     currentScan.ScanStatus = "Analysing";
                 }
@@ -520,7 +536,6 @@ namespace NND_Agent.Data
             {
 
                 form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
-                Thread.Sleep(10000);
                 return false;
             }
         }

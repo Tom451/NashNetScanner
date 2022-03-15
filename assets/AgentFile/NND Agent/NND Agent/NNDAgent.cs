@@ -261,9 +261,9 @@ namespace NND_Agent
             else
             {
                 timer1.Stop();
+                PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
                 await Task.Run(() => Scan.StartScan(userNONCE));
                 ScanStatus = true;
-                PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
                 PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
                 ScanStatus = false;
                 timer1.Start();
