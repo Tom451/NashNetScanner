@@ -69,17 +69,25 @@ function getNewestScan($deviceID, $scannedDevices){
 
 function getVulns($NeedsAttention, $Secure, $Other, $Scanning){
     //As long and the CVE list is not null then it will calculate
-    if(!empty($Scanning)){
-        if(count($Scanning) != 0){
+    if(!empty($Scanning)) {
+        if (count($Scanning) != 0) {
             //No issues found
             echo('<section class="highlight-blue" style="background: darkorange;"> <div class="container"> <div class="intro">
-                <h2 class="text-center"><i class="fa fa-smile-o" style="transform: scale(2);"></i></h2>
-                            <p class="text-center">There is a scan currently under way, there is <span id="scanProg">'.count($Scanning).'</span> devices left to scan 
+                <h2 class="text-center"><i class="fa fa-hourglass-2" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">There is a scan currently under way, please press this button bellow to see how many devices are left to scan
+                             <br><b><span id="scanProg">' . count($Scanning) . '</span> devices left to scan </b>
                              </p>
-                             <button style="padding: 10px" class="btn btn-secondary" id="new">test</button>
+                             <button style="padding: 10px " class="btn btn-secondary " id="new">Refresh <i class="fa fa-refresh" style="transform: scale(1);"></i></button>
                 </div></div></section>');
 
         }
+    }
+    elseif (is_null($NeedsAttention) AND is_null($Secure)){
+        echo('<section class="highlight-blue" style="background: dodgerblue;"> <div class="container"> <div class="intro">
+                <h2 class="text-center"> <i class="fa fa-birthday-cake" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">Congratulations on your network Scan! Now you currently have scanned no
+                             devices for vulnerabilities, please start a full scan from the menu section to begin!</p>
+               </div></div></section>');
     }
     else if(!is_null($NeedsAttention)){
         if (count($NeedsAttention) >= 5){
@@ -132,6 +140,8 @@ if (isset($_POST['callFunc1'])) {
 
 
     echo $countDevicesToScan;
+
+    header("Refresh:0");
 
     return;
 
@@ -234,6 +244,14 @@ if (isset($_POST['callFunc1'])) {
                             document.getElementById("scanProg").innerText = "There are: " + response + " left";
                         }
                     });
+                });
+                $.ajax({
+                    url: 'devices.php',
+                    type: 'post',
+                    data: { "callFunc1": "1"},
+                    success: function(response) {
+                        document.getElementById("scanProg").innerText = "There are: " + response + " left";
+                    }
                 });
             });
 

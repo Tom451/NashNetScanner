@@ -261,6 +261,10 @@ namespace NND_Agent
             else
             {
                 timer1.Stop();
+                if (!Scan.checkForScan(userNONCE))
+                {
+                    PopUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
+                }
                 PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
                 await Task.Run(() => Scan.StartScan(userNONCE));
                 ScanStatus = true;

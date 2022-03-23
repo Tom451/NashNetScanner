@@ -88,8 +88,23 @@ namespace NND_Agent.Data
                     }
                     catch (System.IO.IOException ex)
                     {
-                        form.PopUp("NMAP is using the file. Please close NMAP", "System will wait for 30 seconds and then try again", System.Windows.Forms.ToolTipIcon.Error);
-                        Thread.Sleep(30000);
+
+                        try
+                        {
+                            foreach (Process process in Process.GetProcessesByName("Nmap"))
+                            {
+                                process.Kill();
+                            }
+                            Thread.Sleep(5000);
+                        }
+                        catch
+                        {
+                            form.PopUp("NMAP is using the file. Attempting to close NMAP Failed.", "System will wait for 30 seconds, please try close NMAP from Task Manager ", System.Windows.Forms.ToolTipIcon.Error);
+                            Thread.Sleep(30000);
+                        }
+                        
+
+                        
                     }
                 }
 
