@@ -90,11 +90,11 @@ function getVulns($NeedsAttention, $Secure, $Other, $Scanning){
                </div></div></section>');
     }
     else if(!is_null($NeedsAttention)){
-        if (count($NeedsAttention) >= 5){
+        if (count($NeedsAttention) >= 2){
             //High ammount of issues found
             echo('<section class="highlight-blue" style="background: red;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
-                            <p class="text-center">Your Network contains '.count($NeedsAttention).' that will need attention they will 
+                            <p class="text-center">Your Network contains '.count($NeedsAttention).' devices that will need attention they will 
                              be listed bellow for your information</p>
                </div></div></section>');
         }
@@ -124,7 +124,7 @@ function getVulns($NeedsAttention, $Secure, $Other, $Scanning){
 }
 
 
-if (isset($_POST['callFunc1'])) {
+if (isset($_POST['RefreshPage'])) {
     //select all the devices that have been discovered by the loged in user
     $query = $connection->prepare("SELECT * FROM scan WHERE scan.userID = :userid AND ScanStatus = 'Pending'" );
     $query->bindParam("userid", $USERID, PDO::PARAM_STR);
@@ -140,6 +140,32 @@ if (isset($_POST['callFunc1'])) {
 
 
     echo $countDevicesToScan;
+
+    header("Refresh:0");
+
+    return;
+
+
+
+}
+
+if (isset($_POST['SetIgnore'])) {
+    //select all the devices that have been discovered by the loged in user
+    $storedProcedure = 'CALL setDeviceStatus(:inMacAddress, :inIPAddress, :inDeviceScanned)';
+
+    $statement = $connection->prepare($storedProcedure);
+
+    $deviceScanned = "Yes: Ignored";
+
+    $statement->bindParam(':inDeviceScanned', $deviceScanned, PDO::PARAM_STR);
+
+    $IP = "Null";
+    $statement->bindParam(':inMacAddress', $_POST['SetIgnore'], PDO::PARAM_STR);
+    $statement->bindParam(':inIPAddress', $IP, PDO::PARAM_STR);
+
+    if (!$statement->execute()) {
+        echo "Error";
+    }
 
     header("Refresh:0");
 
@@ -239,7 +265,7 @@ if (isset($_POST['callFunc1'])) {
                     $.ajax({
                         url: 'devices.php',
                         type: 'post',
-                        data: { "callFunc1": "1"},
+                        data: { "RefreshPage": "1"},
                         success: function(response) {
                             document.getElementById("scanProg").innerText = "There are: " + response + " left";
                         }
@@ -248,7 +274,7 @@ if (isset($_POST['callFunc1'])) {
                 $.ajax({
                     url: 'devices.php',
                     type: 'post',
-                    data: { "callFunc1": "1"},
+                    data: { "RefreshPage": "1"},
                     success: function(response) {
                         document.getElementById("scanProg").innerText = "There are: " + response + " left";
                     }
@@ -322,12 +348,18 @@ if (isset($_POST['callFunc1'])) {
                     echo '<h3 class="name">Device: '. $item['deviceName'] .'</h3>';
                     echo '<li><strong>Mac:</strong>'.$item['deviceMacAddress'].'</li>';
                     echo '<li><strong>IP:</strong>'.$item['deviceIP'].'</li>';
-                    echo '<li><strong>Scanned:</strong>'.$item['deviceScanned'].'</li>';
+                    echo '<li><strong>Scanned:</strong>'.$item['deviceScanned'].'</li></ul> ';
+
 
                     if ($item['deviceScanned'] != "No"){
-                        echo'<form action="/scan/viewScan.php" method="post">';
-                        echo '</ul><button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="'.getNewestScan($item['deviceID'], $scannedDevices).'">View Scan</button> </td>';
+                        echo'<div class="btn-group"><form action="/scan/viewScan.php" method="post">';
+                        echo '<button class="btn btn-primary bg-secondary" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="'.getNewestScan($item['deviceID'], $scannedDevices).'">View Scan</button> </td>';
                         echo'</form>';
+
+                        echo'<form action="devices.php" method="post">';
+                        echo'<button style="padding-left: 30%; background: none; border: none; color: red;" name = "SetIgnore" id="'.$item['deviceMacAddress'].'" value="'.$item['deviceMacAddress'].'"><u>Ignore</u></button>';
+                        echo'</form></div>';
+
                     }
 
                     else if($item['deviceScanned'] == "No"){
@@ -348,7 +380,7 @@ if (isset($_POST['callFunc1'])) {
                 echo '</div></div></div>';
             }
             else{
-                echo '<div><span>Nother to show</span></span></div></div></div></div>';
+                echo '<div><span>Nothing to show</span></span></div></div></div></div>';
             }
 
 
@@ -367,7 +399,7 @@ if (isset($_POST['callFunc1'])) {
 
                     if ($item['deviceScanned'] != "No") {
                         echo '<form action="/scan/viewScan.php" method="post">';
-                        echo '</ul><button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="' . getNewestScan($item['deviceID'], $scannedDevices) . '">View Scan</button> </td>';
+                        echo '<button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="' . getNewestScan($item['deviceID'], $scannedDevices) . '">View Scan</button> </td>';
                         echo '</form>';
                     } else if ($item['deviceScanned'] == "No") {
                         echo '<form action="/scan/createScan.php" method="post">';
@@ -403,7 +435,7 @@ if (isset($_POST['callFunc1'])) {
 
                 if (str_contains($item['deviceScanned'], "Yes")){
                     echo'<form action="/scan/viewScan.php" method="post">';
-                    echo '</ul><button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="'.getNewestScan($item['deviceID'], $scannedDevices).'">View Scan</button> </td>';
+                    echo '<button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="'.getNewestScan($item['deviceID'], $scannedDevices).'">View Scan</button> </td>';
                     echo'</form>';
                 }
 

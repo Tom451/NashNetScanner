@@ -156,8 +156,8 @@ namespace NND_Agent
             Scan = new DataClass();
 
 
-            scanChecker();
-            setAgent(1);
+            ScanChecker();
+            SetAgent(1);
                      
             SystemEvents.PowerModeChanged += OnPowerChange;
 
@@ -167,14 +167,14 @@ namespace NND_Agent
 
         }
 
-        private void scanChecker()
+        private void ScanChecker()
         {
             timer1 = new Timer();
-            timer1.Tick += new EventHandler(scanCheck_Tick);
+            timer1.Tick += new EventHandler(ScanCheck_Tick);
             timer1.Interval = 2000; // in miliseconds
             timer1.Start();
         }
-        private void setAgent(int value)
+        private void SetAgent(int value)
         {
             if(value != 0 && value != 1)
             {
@@ -185,7 +185,7 @@ namespace NND_Agent
             DataUpload setAgentOnline = new DataUpload();
             var agent = new
             {
-                userNONCE = userNONCE,
+                userNONCE,
                 agentStatus = value
             };
             //Tranform it to Json object
@@ -194,9 +194,9 @@ namespace NND_Agent
             setAgentOnline.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("AgentStatus={0}", jsonData));
         }
 
-        private async void scanCheck_Tick(object sender, EventArgs e)
+        private async void ScanCheck_Tick(object sender, EventArgs e)
         {
-            if (Scan.checkForScan(userNONCE))
+            if (Scan.CheckForScan(userNONCE))
             {
                 PopUp("AutoScan Found", "Starting your scan now", ToolTipIcon.Info);
                 timer1.Stop();
@@ -261,16 +261,20 @@ namespace NND_Agent
             else
             {
                 timer1.Stop();
-                if (!Scan.checkForScan(userNONCE))
+                if (!Scan.CheckForScan(userNONCE))
                 {
                     PopUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
                 }
-                PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
-                await Task.Run(() => Scan.StartScan(userNONCE));
-                ScanStatus = true;
-                PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
-                ScanStatus = false;
-                timer1.Start();
+                else
+                {
+                    PopUp("Scan Found", "Starting your scan now", ToolTipIcon.Info);
+                    await Task.Run(() => Scan.StartScan(userNONCE));
+                    ScanStatus = true;
+                    PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
+                    ScanStatus = false;
+                    timer1.Start();
+                }
+                
             }
             
 
@@ -288,16 +292,16 @@ namespace NND_Agent
             
         }
 
-        private void cancelScanToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CancelScanToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PopUp("Scan Cancled", "Ended", ToolTipIcon.Error);
             // WinForms app
-            setAgent(0);
+            SetAgent(0);
             System.Windows.Forms.Application.Exit();
 
         }
 
-        private void scanStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ScanStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             
             PopUp("There are", Scan.CheckProgress() + " Left to Go", ToolTipIcon.Info);
@@ -310,12 +314,12 @@ namespace NND_Agent
 
         private void NNDAgent_FormClosing(object sender, FormClosingEventArgs e)
         {
-            setAgent(0);
+            SetAgent(0);
         }
 
-        private void closeApplicationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CloseApplicationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            setAgent(0);
+            SetAgent(0);
             System.Windows.Forms.Application.Exit();
 
         }
@@ -324,7 +328,7 @@ namespace NND_Agent
         {
             if (e.Mode == PowerModes.Suspend)
             {
-                setAgent(0);
+                SetAgent(0);
             }
             else if (e.Mode == PowerModes.Resume)
             {

@@ -71,21 +71,21 @@
             this.cancelScanToolStripMenuItem.Name = "cancelScanToolStripMenuItem";
             this.cancelScanToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.cancelScanToolStripMenuItem.Text = "Cancel Scan";
-            this.cancelScanToolStripMenuItem.Click += new System.EventHandler(this.cancelScanToolStripMenuItem_Click);
+            this.cancelScanToolStripMenuItem.Click += new System.EventHandler(this.CancelScanToolStripMenuItem_Click);
             // 
             // scanStatusToolStripMenuItem
             // 
             this.scanStatusToolStripMenuItem.Name = "scanStatusToolStripMenuItem";
             this.scanStatusToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.scanStatusToolStripMenuItem.Text = "Scan Status";
-            this.scanStatusToolStripMenuItem.Click += new System.EventHandler(this.scanStatusToolStripMenuItem_Click);
+            this.scanStatusToolStripMenuItem.Click += new System.EventHandler(this.ScanStatusToolStripMenuItem_Click);
             // 
             // closeApplicationToolStripMenuItem
             // 
             this.closeApplicationToolStripMenuItem.Name = "closeApplicationToolStripMenuItem";
             this.closeApplicationToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.closeApplicationToolStripMenuItem.Text = "Close Application";
-            this.closeApplicationToolStripMenuItem.Click += new System.EventHandler(this.closeApplicationToolStripMenuItem_Click);
+            this.closeApplicationToolStripMenuItem.Click += new System.EventHandler(this.CloseApplicationToolStripMenuItem_Click);
             // 
             // NNDAgent
             // 

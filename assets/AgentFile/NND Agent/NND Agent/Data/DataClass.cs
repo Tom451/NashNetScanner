@@ -26,7 +26,7 @@ namespace NND_Agent.Data
         DataUpload Connection = new DataUpload();
         //current user scanned devices 
 
-        public bool checkForScan(long userNONCE)
+        public bool CheckForScan(long userNONCE)
         {
             if (Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE) == null)
             {
@@ -86,7 +86,7 @@ namespace NND_Agent.Data
                             tryAgain = false;
                         }
                     }
-                    catch (System.IO.IOException ex)
+                    catch (System.IO.IOException)
                     {
 
                         try
@@ -108,16 +108,18 @@ namespace NND_Agent.Data
                     }
                 }
 
-                
-                
+
+
 
                 //get ready for item upload
                 //create a temp upload object 
-                userModel tempUserModel = new userModel();
-                tempUserModel.currentScan = currentUser.currentScan;
-                tempUserModel.scannedVulns = currentUser.scannedVulns;
-                tempUserModel.scannedDevices = currentUser.scannedDevices;
-                tempUserModel.userName = currentUser.userName;
+                userModel tempUserModel = new userModel
+                {
+                    currentScan = currentUser.currentScan,
+                    scannedVulns = currentUser.scannedVulns,
+                    scannedDevices = currentUser.scannedDevices,
+                    userName = currentUser.userName
+                };
 
                 string uploadJSON = await Task.Run(() => Connection.ToJSON(tempUserModel));
 
@@ -165,9 +167,11 @@ namespace NND_Agent.Data
             else if (scan.scanType == "VulnScan")
             {
                 //upload the current device being scanned 
-                ScanModel currentScan = new ScanModel();
-                currentScan.userName = userNonce.ToString();
-                currentScan.ScanStatus = "Scan Pending";
+                ScanModel currentScan = new ScanModel
+                {
+                    userName = userNonce.ToString(),
+                    ScanStatus = "Scan Pending"
+                };
 
                 //start a network scan to get device mac address 
                 RunNetworkScan(scan, process, startInfo);
@@ -176,7 +180,6 @@ namespace NND_Agent.Data
                 if (currentUser.scannedDevices.Count == 0)
                 {
                     //if the host is down and there are no devices 
-                    ComputerModel hostDown = new ComputerModel();
                     currentScan.ScanStatus = "Host Down";
                     currentScan.scanID = currentUser.currentScan.scanID;
                     currentScan.scanType = "Return";
@@ -429,7 +432,7 @@ namespace NND_Agent.Data
                 string hostActualName;
 
                 //catch RTT issue 
-                int hostRTT = 0;
+                int hostRTT;
 
                 try
                 {
@@ -446,7 +449,7 @@ namespace NND_Agent.Data
                     
                     
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
                     hostRTT = 0;
                 }
@@ -496,7 +499,6 @@ namespace NND_Agent.Data
             //get gateway IP and Mac Address for scan 
             string gateway = GetNetworkGateway();
             string[] gatewayArray = gateway.Split('.');
-            IPAddress ip;
 
             if (scan.scanInfo == "N/A")
             {
@@ -506,15 +508,15 @@ namespace NND_Agent.Data
 
                 process.Start();
             }
-            else if(IPAddress.TryParse(scan.scanInfo, out ip))
+            else if (IPAddress.TryParse(scan.scanInfo, out IPAddress ip))
             {
-                startInfo.Arguments = String.Format("/C nmap -sn -oX C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml {0} --no-stylesheet ", ip.ToString() );
+                startInfo.Arguments = String.Format("/C nmap -sn -oX C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml {0} --no-stylesheet ", ip.ToString());
                 process.StartInfo = startInfo;
 
 
                 process.Start();
             }
-            
+
 
             //Read the output stream first and then wait.
             if (process.WaitForExit(180000))
