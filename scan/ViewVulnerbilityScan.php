@@ -1,14 +1,10 @@
 <?php
 
 //start the session
-session_start();
-if(!isset($_SESSION['user_id'])){
-    header('Location: index.php');
-    exit;
-} else {
-    require '..\assets\php\DBConfig.php';
-    $connection = getConnection();
-}
+require '..\assets\php\sessionChecker.php';
+
+require '..\assets\php\DBConfig.php';
+$connection = getConnection();
 
 //when the user selects the scan, get the post request from that
 if (isset($_POST['DiscoverySelected'])) {

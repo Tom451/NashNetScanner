@@ -19,5 +19,7 @@ namespace NND_Agent.Items
 
         public string lastSeen { get; set; }
         public int ScanID { get; set; }
+
+        public string deviceScanned { get; set; }
     }
 }

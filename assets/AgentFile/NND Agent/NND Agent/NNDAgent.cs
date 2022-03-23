@@ -1,4 +1,6 @@
-﻿using NND_Agent.Data;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
+using NND_Agent.Data;
 using NND_Agent.Items;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace NND_Agent
 {
@@ -21,6 +24,13 @@ namespace NND_Agent
         public static NNDAgent NNDForm = null;
 
         public long userNONCE = 0;
+
+        //create a timer
+        private Timer timer1;
+        DataClass Scan;
+        bool ScanStatus;
+
+        //tell the user scan has started
         public NNDAgent()
         {
 
@@ -142,11 +152,76 @@ namespace NND_Agent
                 Application.Exit();
 
             }
-            
 
-           
+            Scan = new DataClass();
+
+
+            scanChecker();
+            setAgent(1);
+                     
+            SystemEvents.PowerModeChanged += OnPowerChange;
+
+
+
+
+
         }
-        
+
+        private void scanChecker()
+        {
+            timer1 = new Timer();
+            timer1.Tick += new EventHandler(scanCheck_Tick);
+            timer1.Interval = 2000; // in miliseconds
+            timer1.Start();
+        }
+        private void setAgent(int value)
+        {
+            if(value != 0 && value != 1)
+            {
+                return;
+            }
+            
+            //check for scan on load 
+            DataUpload setAgentOnline = new DataUpload();
+            var agent = new
+            {
+                userNONCE = userNONCE,
+                agentStatus = value
+            };
+            //Tranform it to Json object
+            string jsonData = JsonConvert.SerializeObject(agent);
+
+            setAgentOnline.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("AgentStatus={0}", jsonData));
+        }
+
+        private async void scanCheck_Tick(object sender, EventArgs e)
+        {
+            if (Scan.checkForScan(userNONCE))
+            {
+                PopUp("AutoScan Found", "Starting your scan now", ToolTipIcon.Info);
+                timer1.Stop();
+                ScanStatus = true;
+
+                await Task.Run(() => Scan.StartScan(userNONCE));
+
+                PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
+                timer1.Start();
+                ScanStatus = false;
+            }
+            else
+            {
+                
+                if (timer1.Interval > 60000)
+                {
+                    timer1.Interval = 60000;
+                }
+                else
+                {
+                    timer1.Interval = (int)(timer1.Interval * 1.5);
+                }
+            }
+        }
+
 
 
         private void NNDAgent_Resize(object sender, EventArgs e)
@@ -176,14 +251,28 @@ namespace NND_Agent
             NNDToolBarIcon.Visible = true;
         }
 
-        private void RunScanToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void RunScanToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+            if (ScanStatus)
+            {
+                PopUp("Scan Already Started","No need to start", ToolTipIcon.Warning);
+            }
+            else
+            {
+                timer1.Stop();
+                if (!Scan.checkForScan(userNONCE))
+                {
+                    PopUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
+                }
+                PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
+                await Task.Run(() => Scan.StartScan(userNONCE));
+                ScanStatus = true;
+                PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
+                ScanStatus = false;
+                timer1.Start();
+            }
             
-            DataClass Scan = new DataClass();
-            //tell the user scan has started
-            PopUp("Starting Scan", "Starting your scan now", ToolTipIcon.Info);
-            Scan.StartScan(userNONCE);
-            PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
 
         }
 
@@ -199,6 +288,54 @@ namespace NND_Agent
             
         }
 
+        private void cancelScanToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PopUp("Scan Cancled", "Ended", ToolTipIcon.Error);
+            // WinForms app
+            setAgent(0);
+            System.Windows.Forms.Application.Exit();
 
+        }
+
+        private void scanStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            PopUp("There are", Scan.CheckProgress() + " Left to Go", ToolTipIcon.Info);
+        }
+
+        private void NNDAgent_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void NNDAgent_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            setAgent(0);
+        }
+
+        private void closeApplicationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            setAgent(0);
+            System.Windows.Forms.Application.Exit();
+
+        }
+
+        void OnPowerChange(Object sender, PowerModeChangedEventArgs e)
+        {
+            if (e.Mode == PowerModes.Suspend)
+            {
+                setAgent(0);
+            }
+            else if (e.Mode == PowerModes.Resume)
+            {
+                //setAgent(1);
+            }
+
+
+        }
+            
+            
+                
+        
     }
 }

@@ -12,7 +12,6 @@ if(isset($_SESSION['user_id'])){
 
 require 'assets\php\DBConfig.php';
 
-
 if (isset($_POST['login'])) {
 
     //Get PDO connection string
@@ -30,6 +29,8 @@ if (isset($_POST['login'])) {
     //get the result
     $result = $query->fetch(PDO::FETCH_ASSOC);
 
+
+
     //if there is no results then show incorrect credentials
     if (!$result) {
         echo '<script>IncorrectCredentials()</script>';
@@ -42,6 +43,12 @@ if (isset($_POST['login'])) {
             $_SESSION['nonce'] = $result['userNonce'];
             $_SESSION['user_id'] = $result['UserID'];
             $_SESSION['userName'] = $username;
+            $_SESSION['timestamp'] = time();
+
+
+            agentChecker();
+
+            //set the users last seen
             // send the user to the home page
             header('Location: homepage.php');
         } else {
