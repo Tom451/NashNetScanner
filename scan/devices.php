@@ -175,6 +175,12 @@ if (isset($_POST['SetIgnore'])) {
 
 }
 
+if(isset($_POST['GetNewestScanForVIS'])){
+
+    echo getNewestScan($_POST['GetNewestScanForVIS'], $scannedDevices);
+    return;
+}
+
 
 ?>
 
@@ -203,7 +209,6 @@ if (isset($_POST['SetIgnore'])) {
 <body>
 
 <?php require '../assets/php/navBarLoggedIn.php' ?>
-
 
 <!-- The overlay -->
 <div id="myNav" class="overlay">
@@ -238,10 +243,12 @@ if (isset($_POST['SetIgnore'])) {
                 </div>
                 <div class="col-sm-6 col-md-5 col-lg-4 item">
                     <div class="box"><i class="fa fa-history icon"></i>
-                        <h3 class="name">History</h3>
-                        <p class="description">View your latest and your oldest scans all in one area!&nbsp;</p>
+                        <h3 class="name">Change View</h3>
+                        <p class="description">Change the current View of the page &nbsp;</p>
 
-                        <form method="post"><button class="btn btn-primary" type="submit" name="previousScans" value="PrevScan">View Scans</button></form>
+                        <button class="btn btn-primary" name="switch" onclick="switchView()">Switch</button>
+
+
                     </div>
                 </div>
             </div>
@@ -252,7 +259,75 @@ if (isset($_POST['SetIgnore'])) {
 </div>
 
 
-<section class="features-clean">
+<div id="visView" class="container" style="display: none">
+
+    <div class="row">
+        <div class="col-md-3">
+
+            <h2>Legend: </h2>
+
+            <dl style="font-size: large; list-style: none">
+                <dt style="padding-top: 20px;"><i class="fa fa-desktop" style="color: red;" size=""></i> Device is Vulnerable</dt>
+                <dt style="padding-top: 20px"><i class="fa fa-desktop" style="color: grey;" size=""></i> Device is Unscanned</dt>
+                <dt style="padding-top: 20px"><i class="fa fa-desktop" style="color: green;" size=""></i> Device is Safe</dt>
+                <dt style="padding-top: 20px"><i class="fa fa-desktop" style="color: Orange;" size=""></i> Device is Being Scanned</dt>
+            </dl>
+        </div>
+        <div class="col-md-9">
+
+
+
+            <script src="../assets/js/visDrawing.js"></script>
+            <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+            <script>
+
+                function convert(){
+                    <?php
+
+                    $js_array = json_encode($devices);
+
+                    echo "var javascript_array = ". $js_array . ";";
+                    ?>
+
+                    return javascript_array;
+
+                }
+                window.addEventListener(
+
+                    "load", () =>
+                    {
+                        var items = convert();
+
+                        draw(items);
+
+
+                    }
+
+
+                );
+
+
+            </script>
+
+            <div style="height: 100vh" id="mynetwork"></div>
+
+            <div id="menuBox">
+                <a onclick="openNav()">Menu</a>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="container" style="display: Flex">
+
+
+
+</div>
+
+<section id="normalView" class="features-clean" style="display: flex">
     <div class="container">
         <div class="intro">
             <h2 class="text-center">Devices</h2>
@@ -479,6 +554,22 @@ if (isset($_POST['SetIgnore'])) {
 
     function closeNav() {
         document.getElementById("myNav").style.width = "0%";
+    }
+
+    function switchView(){
+
+        var vis = document.getElementById('visView')
+        var normal = document.getElementById('normalView')
+        console.log(vis.style.display)
+        if (normal.style.display === "none"){
+            normal.style.display = "flex"
+            vis.style.display = "none"
+        }
+        else if (normal.style.display === "flex"){
+            normal.style.display = "none"
+            vis.style.display = "flex"
+        }
+
     }
 
 
