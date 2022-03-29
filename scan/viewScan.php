@@ -7,7 +7,13 @@ require_once '..\assets\php\DBConfig.php';
 require "loading.php";
 
 $connection = getConnection();
+$scanID = null;
+
 //when the user selects the scan, get the post request from that
+if (isset($_POST['refresh'])) {
+    echo $_POST['refresh'];
+}
+
 if (isset($_POST['scanSelected'])) {
 
     $scanID = $_POST['scanSelected'];
@@ -20,11 +26,11 @@ if (isset($_POST['scanSelected'])) {
 
 }
 else {
+
     header('Location: previousScans.php');
 }
 
-
-//select all the devices with the ip and mac address with scan ID
+//
 $query = $connection->prepare("SELECT * FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
 JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
 $query->bindParam("scanID", $scanID, PDO::PARAM_STR);
@@ -37,6 +43,8 @@ $devices = $query->fetchAll(PDO::FETCH_ASSOC);
 if (count($devices) == 1 ){
     $device = $devices[0];
 }
+
+
 
 //select all the vulnerbilities
 $query = $connection->prepare("SELECT * FROM vulnerabilities JOIN vulnscan ON vulnerabilities.VulnID = vulnscan.VulnID JOIN scan ON vulnscan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
@@ -171,11 +179,33 @@ if (isset($JSONObject)){
 
 }
 
+$devicesScans = getOtherScans($device['deviceID']);
+$countOfScans = count($devicesScans);
+
+$value = max($devicesScans);
+$key = array_search($value, $devicesScans);
+
+$currentScan = true;
+
+if($devicesScans[$key]['ScanID'] != $scanID){
+    $currentScan = false;
+}
+
 //this fucntion is called bt the page to show the banner at the top to give the user a quick overview on their currrent
 // Security status
-function getSecurity($device, $CVEList){
+function getSecurity($device, $CVEList, $currentScan){
     //As long and the CVE list is not null then it will calculate
+    if (!$currentScan){
+        //High ammount of issues found
+        echo('<section class="highlight-blue" style="background: grey;"> <div class="container"> <div class="intro">
+                <h2 class="text-center"> <i class="fa fa-warning" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">You are viewing an historical record of ' . $device['deviceName'] . ',
+                                to view more up to date information please visit the "Devices" Page </p>
+               </div></div></section>');
+    }
+
     if(!is_null($CVEList)){
+
         if (count($CVEList) >= 5){
             //High ammount of issues found
             echo('<section class="highlight-blue" style="background: red;"> <div class="container"> <div class="intro">
@@ -208,6 +238,24 @@ function getSecurity($device, $CVEList){
 
     }
 
+}
+
+function getOtherScans($deviceID)
+{
+
+
+    $connection = getConnection();
+
+    $query = $connection->prepare("SELECT * FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
+    JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE device.deviceID = :deviceID AND scan.ScanType = 'VulnScan'");
+    $query->bindParam("deviceID", $deviceID, PDO::PARAM_STR);
+
+    $query->execute();
+
+    //get the result
+    $devices = $query->fetchAll(PDO::FETCH_ASSOC);
+
+    return $devices;
 }
 
 require '../assets/php/VulnHelp.php';
@@ -323,13 +371,12 @@ require '../assets/php/VulnHelp.php';
     //If the scan type is vulnerability then:
     if($scan['ScanType'] != "VulnScan")
         echo'style="display: none" ';
-
     ?>
     >
         <div class="row">
             <div class="col" style="padding-top: 10px;">
                 <h1>Vulnerability Scan for Device:&nbsp;</h1>
-                <?php getSecurity($device, $CVEList); ?>
+                <?php getSecurity($device, $CVEList, $currentScan); ?>
 
             </div>
 
@@ -340,6 +387,21 @@ require '../assets/php/VulnHelp.php';
                     <li class="list-group-item"><span>Device Name: <?php echo $device['deviceName']?></span></li>
                     <li class="list-group-item"><span>Mac Address: <?php echo $device['deviceMacAddress']?></span></li>
                     <li class="list-group-item"><span>IP: <?php echo $device['deviceIP']?></span></li>
+                    <li class="list-group-item"><span>History: </span>
+                        <form name="scanSelected" action="viewScan.php" method="post">
+                            <select name="scanSelected" id="scans" onchange="this.form.submit()">
+                                    <?php
+
+                                    foreach ($devicesScans as $scans){
+                                        echo '<option name="scanSelected" value="'.$scans['ScanID'].'">'.$scans['ScanTime'].'</option>';
+                                    }
+
+                                    ?>
+                            </select>
+                            <button class="btn btn-primary" type="submit" onclick="this.form.submit()">Submit</button>
+                        </form>
+
+                    </li>
                 </ul>
             </div>
             <div class="col-md-8">
