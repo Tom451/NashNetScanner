@@ -1,8 +1,11 @@
 <?php
+
 //start the session
 require '..\assets\php\sessionChecker.php';
+require_once '..\assets\php\DBConfig.php';
 
-require '..\assets\php\DBConfig.php';
+require "loading.php";
+
 $connection = getConnection();
 //when the user selects the scan, get the post request from that
 if (isset($_POST['scanSelected'])) {
@@ -120,10 +123,10 @@ if (isset($JSONObject)){
         foreach($CVEList as $CVEItem){
             $count = null;
 
+            if (!empty($CVEItem->impact->baseMetricV3->cvssV3)) {
 
-            if (!empty($CVEItems -> impact->baseMetricV3->cvssV3)) {
                 $count = $CVEItem->impact->baseMetricV3->cvssV3->baseSeverity;
-                if ($count == "HIGH") {
+                if ($count == "HIGH" || $count == "CRITICAL") {
                     $High = $High + 1;
                 } elseif ($count == "MEDIUM") {
                     $Medium = $Medium + 1;
@@ -155,10 +158,10 @@ if (isset($JSONObject)){
         }
 
         //get the percentages
-        $HighPercentage = round($High / count($CVEList)* 100);
-        $MedPercentage = round($Medium / count($CVEList) * 100);
-        $LowPercentage = round($Low / count($CVEList) * 100);
-        $UnknownPercentage = round($Unknown / count($CVEList) * 100);
+        $HighPercentage = round($High / count($CVEList)* 100, 2);
+        $MedPercentage = round($Medium / count($CVEList) * 100, 2);
+        $LowPercentage = round($Low / count($CVEList) * 100, 2);
+        $UnknownPercentage = round($Unknown / count($CVEList) * 100, 2);
 
     }
 
@@ -173,7 +176,7 @@ if (isset($JSONObject)){
 function getSecurity($device, $CVEList){
     //As long and the CVE list is not null then it will calculate
     if(!is_null($CVEList)){
-        if (count($CVEList) >= 15){
+        if (count($CVEList) >= 5){
             //High ammount of issues found
             echo('<section class="highlight-blue" style="background: red;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
@@ -214,6 +217,83 @@ require '../assets/php/VulnHelp.php';
 
 <!DOCTYPE html>
 <html lang="en">
+
+<script>
+    window.onload = function() {
+        document.getElementById('loading').style.display = "none";
+    }
+</script>
+
+<style>
+    figure {
+        margin: 0 auto;
+        position: relative;
+    }
+    .graphic {
+        padding-left: 30px;
+    }
+    .row {
+        margin-bottom: 1.5em;
+    }
+    @keyframes expand {
+        from {width: 0%;}
+        to {width: 98%;}
+    }
+
+    .chart {
+        overflow: hidden;
+        width: 0%;
+        animation: expand 1.5s ease forwards;
+    }
+    .row + .row .chart {
+        animation-delay: .2s;
+    }
+    .row + .row + .row .chart {
+        animation-delay: .4s;
+    }
+    .block {
+        display: block;
+        height: 100px;
+        color: #fff;
+        font-size: .75em;
+        float: left;
+        background-color: #334D5C;
+        position: relative;
+        overflow: hidden;
+        opacity: 1;
+        transition: opacity, .3s ease;
+        cursor: pointer;
+    }
+    .block:hover {
+        opacity: .65;
+    }
+    .value {
+        display: block;
+        line-height: 1em;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    .x-axis {
+        text-align: center;
+        padding: .5em 0 2em;
+    }
+    .y-axis {
+        height: 20px;
+        transform: translate(-32px,170px) rotate(270deg);
+        position: absolute;
+        left: 0;
+    }
+    @media screen and (min-width: 768px) {
+        .block {
+            font-size: 1em;
+        }
+        .legend {
+            width: 50%;
+        }
+    }
+</style>
 
 <head>
     <meta charset="utf-8">
@@ -264,195 +344,42 @@ require '../assets/php/VulnHelp.php';
             </div>
             <div class="col-md-8">
                 <h2>Overview:</h2>
-                <p>Over View of your current security posture.&nbsp;</p><table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                    <tr>
-                        <th>High</th>
-                        <th>Medium</th>
-                        <th>Low</th>
-                        <th>Unknown</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td style="width: 25%">
-                            <!-- Chart 2 -->
-                            <svg viewBox="0 0 36 36" class="circular-chart" >
-                                <path class="circle"
+                <p>Over View of your current security posture.&nbsp;</p>
+                <p>Here is a break down of the vulnerbilties on the device.&nbsp;</p>
 
-                                      stroke-dasharray="<?php echo ''.$HighPercentage.',100' ?>"
-                                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                      stroke = 'red'
+                <figure><div class="graphic"><div class="row">
+                            <div class="chart" style="border-radius: 5px; border-color: grey">
+                                <span class="block" title="High" style="width: <?php echo $HighPercentage?>%; background-color: red">
+                                    <span class="value"><?php echo $HighPercentage?>%</span>
+                                    <span class="value" style="top: 10px ">High/Critical Severity</span>
+                                </span>
+                                <span class="block" title="Medium" style="width: <?php echo $MedPercentage?>%; background-color: orange">
+                                    <span class="value"><?php echo $MedPercentage?>%</span>
+                                    <span class="value" style="top: 10px ">Medium Severity</span>
+                                </span>
+                                <span class="block" title="Low" style="width: <?php echo $LowPercentage?>%; background-color: green">
+                                    <span class="value"><?php echo $LowPercentage?>%</span>
+                                    <span class="value" style="top: 10px ">Low Severity</span>
+                                </span>
+                                <span class="block" title="Safe" style="width: <?php if($Low == 0 AND $Medium == 0 AND $Low == 0){echo '100%';}else{echo'0%';}?>; background-color: dodgerblue">
+                                    <span class="value">No Vulnerabilities</span>
+                                </span>
 
+                            </div>
+                        </div>
+                    </div>
 
-                                />
-                                <text x="18" y="20.35" class="percentage"><?php echo ''.$High ?></text>
-                            </svg>
-
-                        </td>
-                        <td style="width: 25%">
-                            <!-- Chart 3 -->
-                            <svg viewBox="0 0 36 36" class="circular-chart" >
-                                <path class="circle"
-
-                                      stroke-dasharray="<?php echo ''.$MedPercentage.',100' ?>"
-                                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                      stroke = 'Orange'
-
-                                />
-                                <text x="18" y="20.35" class="percentage"><?php echo ''.$Medium ?></text>
-                            </svg></td>
-                        <td><!-- Chart 2 -->
-                            <svg viewBox="0 0 36 36" class="circular-chart" >
-                                <path class="circle"
-
-                                      stroke-dasharray="<?php echo ''.$LowPercentage.',100' ?>"
-                                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                      stroke = 'Green'
-
-                                />
-                                <text x="18" y="20.35" class="percentage"><?php echo ''.$Low ?></text>
-                            </svg></td>
-                        <td style="width: 25%"><!-- Chart 2 -->
-                            <svg viewBox="0 0 36 36" class="circular-chart" >
-                                <path class="circle"
-
-                                      stroke-dasharray="<?php echo ''.$UnknownPercentage.',100' ?>"
-                                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                      stroke = 'Grey'
-
-                                />
-                                <text x="18" y="20.35" class="percentage"><?php echo ''.$Unknown ?></text>
-                            </svg></td>
-                    </tr>
-
-                    </tbody>
-                </table>
+                </figure>
             </div>
 
             <div class="col-md-12">
-                <h2>Vulnerbilities</h2>
+                <h2>Vulnerbilities</h2><button name="showData"></button>
 
-                <table class="table table-hover table table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Vulnerbility Name</th>
-                        <th>Type Of Vulnerbility</th>
-                        <th>Port Name</th>
-                        <th>Serverty</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
+                <?php
 
-                    $CommonClassification = array(
-                            "misconfiguration", "default installations", "buffer overflow", "unpatched", "flaw",
-                         "application flaws", "default password");
+                require "VulnerbilitySection.php";
 
-                    if ($CVEList != null){
-                        //$CVEItems = $JSONObject -> result ->CVE_Items;
-
-                        if (!empty($CVEList -> impact->baseMetricV3->cvssV3)){
-                            foreach ($CVEList as $CVE) {
-                                $ID = $CVE -> cve -> CVE_data_meta -> ID;
-                                $Description = null;
-                                $Links = array();
-
-                                foreach ($CVE -> cve -> description -> description_data as $descriptionList) {
-                                    $Description = $descriptionList -> value;
-                                }
-
-                                foreach ($CVE -> cve -> references -> reference_data as $URLItem) {
-                                    $Links[] = $URLItem -> url;
-                                }
-
-                                $Type = "Unknown";
-
-                                foreach($CommonClassification as $a) {
-                                    if (stripos(strtolower($Description),$a) !== false)
-                                        $Type = $a;
-                                }
-
-
-                                echo '<tr data-toggle="collapse" data-target="#'.$ID.'" class="clickable">';
-                                echo '<td>' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
-                                echo '<td>' . $Type . '</td>';
-                                echo '<td>' . $item['VulnName'] . '</td>';
-                                echo '<td>' . $CVE ->impact->baseMetricV3->cvssV3->baseSeverity . '</td>';
-                                echo '<tr>';
-                                //Data area
-
-                                echo '<tr><td id="'.$ID.'" class="collapse" colspan="4"><div ">';
-                                echo '<h3>Description</h3>';
-                                echo $Description . '<br>';
-                                echo '<h3>How to fix</h3>';
-                                echo getHelp($Type) . '<br>';
-                                echo '<h3>Relevant Links</h3>';
-                                foreach ($Links as $link){
-                                    echo'<a href="'.$link.'">'. $link .'</a><br>';
-
-                                }
-                                echo '</div></td></tr>';
-                            }
-                        }
-                        else{
-                            foreach ($CVEList as $CVE) {
-                                $ID = $CVE -> cve -> CVE_data_meta -> ID;
-                                $Description = null;
-                                $Links = array();
-
-                                foreach ($CVE -> cve -> description -> description_data as $descriptionList) {
-                                    $Description = $descriptionList -> value;
-                                }
-
-                                foreach ($CVE -> cve -> references -> reference_data as $URLItem) {
-                                    $Links[] = $URLItem -> url;
-                                }
-
-                                $Type = "Unknown";
-
-                                foreach($CommonClassification as $a) {
-                                    if (stripos(strtolower($Description),$a) !== false)
-                                        $Type = $a;
-                                }
-
-                                echo '<tr data-toggle="collapse" data-target="#'.$ID.'" class="clickable">';
-                                echo '<td>' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
-                                echo '<td>' . $Type . '</td>';
-                                echo '<td>' . $item['VulnName'] . '</td>';
-                                echo '<td>' . $CVE ->impact->baseMetricV2->severity . '</td>';
-                                echo '<tr>';
-
-                                //Data area
-                                echo '<tr><td id="'.$ID.'" class="collapse" colspan="4"><div ">';
-                                echo '<h3>Description</h3>';
-                                echo $Description . '<br>';
-                                echo '<h3>How to fix</h3>';
-                                echo getHelp($Type) . '<br>';
-                                echo '<h3>Relevant Links</h3>';
-                                foreach ($Links as $link){
-                                    echo'<a href="'.$link.'">'. $link .'</a><br>';
-
-                                }
-
-                                echo '</div></td></tr>';
-
-
-                            }
-                        }
-                    }
-
-                    else{
-                        echo '<tr>';
-                        echo '<td colspan="4"> No Vulnerabilities! </td>';
-                        echo '<tr>';
-                    }
-
-
-
-                    ?>
-
-                </table>
+                ?>
             </div>
         </div>
 
@@ -484,7 +411,7 @@ require '../assets/php/VulnHelp.php';
             </div>
             <div class="col-md-8">
                 <h2>Overview:</h2>
-                <p>Current Devices Attached to Given Network&nbsp;</p><table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <p>Current Devices Attached to Given Network&nbsp;</p><table id="example" class="table table-striped table-bordered"  >
                     <thead>
                     <tr>
                         <th>Name</th>
@@ -518,6 +445,8 @@ require '../assets/php/VulnHelp.php';
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+
+
 </body>
 
 </html>

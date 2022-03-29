@@ -3,7 +3,7 @@ require '..\assets\php\sessionChecker.php';
 
 
 
-require '..\assets\php\DBConfig.php';
+require_once '..\assets\php\DBConfig.php';
 
 $USERID = $_SESSION['user_id'];
 $connection = getConnection();

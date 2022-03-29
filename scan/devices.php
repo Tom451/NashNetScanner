@@ -1,9 +1,9 @@
 <?php
 
 require '..\assets\php\sessionChecker.php';
-require '..\assets\php\DBConfig.php';
 
 $USERID = $_SESSION['user_id'];
+
 $connection = getConnection();
 
 //select all the devices that have been discovered by the loged in user
@@ -30,6 +30,19 @@ $query->execute();
 
 //get the result
 $scannedDevices = $query->fetchAll(PDO::FETCH_ASSOC);
+
+//select all the devices that have been discovered by the loged in user
+$query = $connection->prepare("SELECT * FROM scan WHERE scan.userID = :userid AND ScanStatus = 'Pending'" );
+$query->bindParam("userid", $USERID, PDO::PARAM_STR);
+$query->execute();
+
+//get the result
+$devicesToScan = $query->fetchAll(PDO::FETCH_ASSOC);
+$countDevicesToScan = count($devicesToScan);
+if ($countDevicesToScan == 0){
+
+    $countDevicesToScan = 1;
+}
 
 function getNewestScan($deviceID, $scannedDevices){
 
@@ -67,7 +80,8 @@ function getNewestScan($deviceID, $scannedDevices){
 
 }
 
-function getVulns($NeedsAttention, $Secure, $Other, $Scanning){
+function getVulns($NeedsAttention, $Secure, $Other, $Scanning, $countDevicesToScan){
+
     //As long and the CVE list is not null then it will calculate
     if(!empty($Scanning)) {
         if (count($Scanning) != 0) {
@@ -75,9 +89,9 @@ function getVulns($NeedsAttention, $Secure, $Other, $Scanning){
             echo('<section class="highlight-blue" style="background: darkorange;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"><i class="fa fa-hourglass-2" style="transform: scale(2);"></i></h2>
                             <p class="text-center">There is a scan currently under way, please press this button bellow to see how many devices are left to scan
-                             <br><b><span id="scanProg">' . count($Scanning) . '</span> devices left to scan </b>
+                             <br><b><span id="scanProg">' . $countDevicesToScan . '</span> devices left to scan </b>
                              </p>
-                             <button style="padding: 10px " class="btn btn-secondary " id="new">Refresh <i class="fa fa-refresh" style="transform: scale(1);"></i></button>
+                             <div style="padding-left: 40%"><button style="padding: 10px;  " class="btn btn-secondary " onclick="window.location.reload();">Refresh <i class="fa fa-refresh" style="transform: scale(1);"></i></button></div>
                 </div></div></section>');
 
         }
@@ -90,12 +104,12 @@ function getVulns($NeedsAttention, $Secure, $Other, $Scanning){
                </div></div></section>');
     }
     else if(!is_null($NeedsAttention)){
-        if (count($NeedsAttention) >= 2){
+        if (count($NeedsAttention) >= 0){
             //High ammount of issues found
             echo('<section class="highlight-blue" style="background: red;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
                             <p class="text-center">Your Network contains '.count($NeedsAttention).' devices that will need attention they will 
-                             be listed bellow for your information</p>
+                             be listed bellow for your information, please start by reviewing them</p>
                </div></div></section>');
         }
         else {
@@ -123,39 +137,17 @@ function getVulns($NeedsAttention, $Secure, $Other, $Scanning){
 
 }
 
-
-if (isset($_POST['RefreshPage'])) {
-    //select all the devices that have been discovered by the loged in user
-    $query = $connection->prepare("SELECT * FROM scan WHERE scan.userID = :userid AND ScanStatus = 'Pending'" );
-    $query->bindParam("userid", $USERID, PDO::PARAM_STR);
-    $query->execute();
-
-    //get the result
-    $devicesToScan = $query->fetchAll(PDO::FETCH_ASSOC);
-    $countDevicesToScan = count($devicesToScan);
-    if ($countDevicesToScan == 0){
-
-        $countDevicesToScan = 1;
-    }
-
-
-    echo $countDevicesToScan;
-
-    header("Refresh:0");
-
-    return;
-
-
-
-}
-
 if (isset($_POST['SetIgnore'])) {
     //select all the devices that have been discovered by the loged in user
     $storedProcedure = 'CALL setDeviceStatus(:inMacAddress, :inIPAddress, :inDeviceScanned)';
 
+    $JSONObject = json_decode($_POST['SetIgnore']);
+
+
     $statement = $connection->prepare($storedProcedure);
 
     $deviceScanned = "Yes: Ignored";
+
 
     $statement->bindParam(':inDeviceScanned', $deviceScanned, PDO::PARAM_STR);
 
@@ -233,7 +225,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
                     <div class="box"><i class="fa fa-laptop icon"></i>
                         <h3 class="name">Full Scan</h3>
                         <p class="description">Scan All the currently known devices on the network. Note this will not find new devices but
-                            rather scan the ones currently known&nbsp;</p>
+                            rather scan the ones currently known</p>
 
                         <form action="/scan/createScan.php" method="post">';
                             <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="FULLSCAN" id="FULLSCAN">Start Scan</button>
@@ -334,31 +326,6 @@ if(isset($_POST['GetNewestScanForVIS'])){
         </div>
 
 
-        <script>
-            $(document).ready(function(){
-                $("#new").click(function(){
-                    $.ajax({
-                        url: 'devices.php',
-                        type: 'post',
-                        data: { "RefreshPage": "1"},
-                        success: function(response) {
-                            document.getElementById("scanProg").innerText = "There are: " + response + " left";
-                        }
-                    });
-                });
-                $.ajax({
-                    url: 'devices.php',
-                    type: 'post',
-                    data: { "RefreshPage": "1"},
-                    success: function(response) {
-                        document.getElementById("scanProg").innerText = "There are: " + response + " left";
-                    }
-                });
-            });
-
-        </script>
-
-
 
         <div id="menuBox">
             <a onclick="openNav()">Menu</a>
@@ -390,7 +357,8 @@ if(isset($_POST['GetNewestScanForVIS'])){
                 }
             }
 
-            getVulns($NeedsAttention, $Secure, $Other, $Scanning);
+            getVulns($NeedsAttention, $Secure, $Other, $Scanning, $countDevicesToScan);
+
             if (!empty($Scanning) ){
                 echo'<div id="scanning"><button class="accordion" data-toggle="collapse" data-target="#scanningdata">Currently Scanning: <span id="scanProg"></span></button>';
                 echo '<div id = "scanningdata" class="collapse show"><div class="row features" style="padding-top: 10px;">';
@@ -435,6 +403,10 @@ if(isset($_POST['GetNewestScanForVIS'])){
                         echo'<button style="padding-left: 30%; background: none; border: none; color: red;" name = "SetIgnore" id="'.$item['deviceMacAddress'].'" value="'.$item['deviceMacAddress'].'"><u>Ignore</u></button>';
                         echo'</form></div>';
 
+
+
+
+
                     }
 
                     else if($item['deviceScanned'] == "No"){
@@ -455,7 +427,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
                 echo '</div></div></div>';
             }
             else{
-                echo '<div><span>Nothing to show</span></span></div></div></div></div>';
+                echo '<span style="padding-left: 45%"><b>Nothing to show</b></span></div></div></div>';
             }
 
 
@@ -492,14 +464,16 @@ if(isset($_POST['GetNewestScanForVIS'])){
                 echo '</div></div></div>';
             }
             else{
-                echo '<div><span>Nother to show</span></span></div></div></div></div>';
+                echo '<span style="padding-left: 45%"><b>Nothing to show</b></span></div></div></div>';
             }
 
 
             echo'<div id="other"><button class="accordion collapsed" data-toggle="collapse" data-target="#otherdata">Other:</button>';
             echo '<div id="otherdata" class="collapse"><div  class="row features">';
             if (!empty($Other) ){
+
             foreach ($Other as $item){
+
                 echo'<div class="col-sm-6 col-lg-4 item"><i class="fa fa-desktop icon" style="color: grey"></i>';
 
                 echo'<ul class="list-unstyled">';
@@ -513,6 +487,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
                     echo '<button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="'.getNewestScan($item['deviceID'], $scannedDevices).'">View Scan</button> </td>';
                     echo'</form>';
                 }
+
 
                 else if($item['deviceScanned'] == "No" | $item['deviceScanned'] == "Host Down" ){
                     echo '<form action="/scan/createScan.php" method="post">';
@@ -530,11 +505,8 @@ if(isset($_POST['GetNewestScanForVIS'])){
 
                 echo'</div>';
             }
-            echo '<div><span>Nother to show</span></span></div></div></div></div>';
+                echo '<span style="padding-left: 45%"><b>Nothing to show</b></span></div></div></div>';
             }
-
-
-
 
             echo'</div>';
             echo'</div>';
@@ -555,6 +527,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
     function closeNav() {
         document.getElementById("myNav").style.width = "0%";
     }
+
 
     function switchView(){
 

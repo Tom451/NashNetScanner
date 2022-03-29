@@ -54,14 +54,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NND Agent.exe" size="464384">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NND Agent.exe" size="464896">
       <assemblyIdentity name="NND Agent" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>WCLiZERxqpcof7ViefLx7EX5ddRh77zweje0T6nmZeU=</dsig:DigestValue>
+        <dsig:DigestValue>uVBf+EkwJwHa7+f9CdjK2h1liPnuJlNzhdTbXwr3PSY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

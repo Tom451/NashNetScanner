@@ -3,7 +3,7 @@
 //start the session
 require '..\assets\php\sessionChecker.php';
 
-require '..\assets\php\DBConfig.php';
+require_once '..\assets\php\DBConfig.php';
 $connection = getConnection();
 
 //when the user selects the scan, get the post request from that

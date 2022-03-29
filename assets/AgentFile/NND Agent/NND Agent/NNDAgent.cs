@@ -21,6 +21,7 @@ namespace NND_Agent
 {
     public partial class NNDAgent : Form
     {
+        public static string WebpageAddress = "10.0.1.154";
         public static NNDAgent NNDForm = null;
 
         public long userNONCE = 0;
@@ -191,7 +192,7 @@ namespace NND_Agent
             //Tranform it to Json object
             string jsonData = JsonConvert.SerializeObject(agent);
 
-            setAgentOnline.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("AgentStatus={0}", jsonData));
+            setAgentOnline.SendPost("http://"+ WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("AgentStatus={0}", jsonData));
         }
 
         private async void ScanCheck_Tick(object sender, EventArgs e)

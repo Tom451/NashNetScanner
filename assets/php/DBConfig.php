@@ -1,10 +1,19 @@
 <?php
 
 function getConnection(){
-    define("USER", 'root');
-    define("PASSWORD", 'Z5H&Qc^z!Fz9');
-    define("HOST", 'localhost:3306');
-    define("DATABASE", 'nashnetworkdatabase');
+
+    if (!defined('USER')){
+        define("USER", 'root');
+    }
+    if (!defined('PASSWORD')){
+        define("PASSWORD", 'Z5H&Qc^z!Fz9');
+    }
+    if (!defined('HOST')){
+        define("HOST", 'localhost:3306');
+    }
+    if (!defined('DATABASE')){
+        define("DATABASE", 'nashnetworkdatabase');
+    }
 
     $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 
