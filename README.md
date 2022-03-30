@@ -32,6 +32,10 @@ and any other tasks I feel appropriate.
 ![image](https://user-images.githubusercontent.com/57364342/160834537-ca5a0f2c-74f2-4e78-b262-88b8b0e6ea91.png)
 
 
+## How to run the program? 
+Their is two parts, one is the web interface which is accessed by a browser hosted externally, the second is a windows based agent that allows for scanning.
+
+
 # References 
 
 https://nmap.org/dist/nmap-7.92-setup.exe
