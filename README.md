@@ -1,5 +1,4 @@
-# COMP3000-Repo
-# NashNetworkScanner
+# COMP3000-Repo: NashNetworkScanner
 ![alt text](https://github.com/Tom451/COMP3000-Repo/blob/main/assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png)
 
 
@@ -24,9 +23,13 @@ a) Where they are going wrong.
 b) What they need to do to improve it. 
 
 # Technology used for this project. 
-I will be using visual studio and PHPStorm for the programming on this project, along side this I will be using 
+## IDEs and Planning
+I will be using Visual Studio and PHPStorm for the programming on this project, along side this I will be using 
 Microsoft planner for my organsiation this will help me to keep a track on my current jobs, the jobs that need doing, 
 and any other tasks I feel appropriate.
+
+## Languages 
+![image](https://user-images.githubusercontent.com/57364342/160834537-ca5a0f2c-74f2-4e78-b262-88b8b0e6ea91.png)
 
 
 # References 
