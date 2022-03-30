@@ -97,9 +97,6 @@ foreach ($vulns as $item) {
 
                 }
             }
-            else{
-
-            }
 
 
         }
@@ -240,7 +237,7 @@ function getSecurity($device, $CVEList, $currentScan){
 
 }
 
-function getOtherScans($deviceID)
+function getOtherScans($deviceID): bool|array
 {
 
 
@@ -252,10 +249,8 @@ function getOtherScans($deviceID)
 
     $query->execute();
 
-    //get the result
-    $devices = $query->fetchAll(PDO::FETCH_ASSOC);
-
-    return $devices;
+    //return the result get the result
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 require '../assets/php/VulnHelp.php';
@@ -284,13 +279,13 @@ require '../assets/php/VulnHelp.php';
         margin-bottom: 1.5em;
     }
     @keyframes expand {
-        from {width: 0%;}
+        from {width: 0;}
         to {width: 98%;}
     }
 
     .chart {
         overflow: hidden;
-        width: 0%;
+        width: 0;
         animation: expand 1.5s ease forwards;
     }
     .row + .row .chart {
@@ -382,14 +377,14 @@ require '../assets/php/VulnHelp.php';
 
         </div>
         <div class="row" style="padding-top: 10px;">
-            <div class="col-md-4"><img class="d-lg-flex justify-content-center m-auto" style="padding-bottom: 5px;" src="https://media.istockphoto.com/photos/iphone-11-pro-max-in-silver-color-template-front-view-with-blank-for-picture-id1202959585?k=20&amp;m=1202959585&amp;s=612x612&amp;w=0&amp;h=8DsZSdfyxdzg9OaFS3gOHITfJxjE2gQr6mCJP7ghPiA=" width="100pxpx">
+            <div class="col-md-4"><img class="d-lg-flex justify-content-center m-auto" style="padding-bottom: 5px;" src="https://media.istockphoto.com/photos/iphone-11-pro-max-in-silver-color-template-front-view-with-blank-for-picture-id1202959585?k=20&amp;m=1202959585&amp;s=612x612&amp;w=0&amp;h=8DsZSdfyxdzg9OaFS3gOHITfJxjE2gQr6mCJP7ghPiA=" width="100pxpx" alt="iPhone">
                 <ul class="list-group" style="padding-top: 5px;">
                     <li class="list-group-item"><span>Device Name: <?php echo $device['deviceName']?></span></li>
                     <li class="list-group-item"><span>Mac Address: <?php echo $device['deviceMacAddress']?></span></li>
                     <li class="list-group-item"><span>IP: <?php echo $device['deviceIP']?></span></li>
                     <li class="list-group-item"><span>History: </span>
                         <form name="scanSelected" action="viewScan.php" method="post">
-                            <select name="scanSelected" id="scans" onchange="this.form.submit()">
+                            <label for="scans"><select name="scanSelected" id="scans" onchange="this.form.submit()">
                                     <?php
 
                                     foreach ($devicesScans as $scans){
@@ -397,7 +392,7 @@ require '../assets/php/VulnHelp.php';
                                     }
 
                                     ?>
-                            </select>
+                            </select></label>
                             <button class="btn btn-primary" type="submit" onclick="this.form.submit()">Submit</button>
                         </form>
 
@@ -423,7 +418,7 @@ require '../assets/php/VulnHelp.php';
                                     <span class="value"><?php echo $LowPercentage?>%</span>
                                     <span class="value" style="top: 10px ">Low Severity</span>
                                 </span>
-                                <span class="block" title="Safe" style="width: <?php if($Low == 0 AND $Medium == 0 AND $Low == 0){echo '100%';}else{echo'0%';}?>; background-color: dodgerblue">
+                                <span class="block" title="Safe" style="width: <?php if($Low == 0 AND $Medium == 0 AND $High == 0){echo '100%';}else{echo'0%';}?>; background-color: dodgerblue">
                                     <span class="value">No Vulnerabilities</span>
                                 </span>
 
@@ -464,7 +459,7 @@ require '../assets/php/VulnHelp.php';
             </div>
         </div>
         <div class="row" style="padding-top: 10px;">
-            <div class="col-md-4"><img class="d-lg-flex justify-content-center m-auto" style="padding-bottom: 5px;" src="https://cdn-icons-png.flaticon.com/512/73/73400.png" width="100pxpx">
+            <div class="col-md-4"><img class="d-lg-flex justify-content-center m-auto" style="padding-bottom: 5px;" src="https://cdn-icons-png.flaticon.com/512/73/73400.png" width="100pxpx" alt="Icon">
                 <ul class="list-group" style="padding-top: 5px;">
                     <li class="list-group-item"><span>Number Of Devices: <?php echo count($devices)?></span> </li>
                     <li class="list-group-item"><span>ScanID:&nbsp;<?php echo $scan['ScanID']?></span></li>

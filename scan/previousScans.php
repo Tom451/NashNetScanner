@@ -75,7 +75,7 @@ $devices = $query->fetchAll(PDO::FETCH_ASSOC);
 
             "load", () =>
             {
-                var items = convert();
+                let items = convert();
 
                 draw(items);
 
@@ -136,9 +136,6 @@ $devices = $query->fetchAll(PDO::FETCH_ASSOC);
                         echo'<li></li>';
                     }
                     else {
-                        if ($item['ScanType'] == "NetDisc"){
-
-                        }
                         echo '</ul><button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . $item['ScanID'] . '" id="'.$item['ScanID'].'">View Scan</button>';
                     }
                     echo'</div>';

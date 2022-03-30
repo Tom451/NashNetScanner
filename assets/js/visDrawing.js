@@ -1,8 +1,6 @@
-var DIR = "img/soft-scraps-icons/";
-
-var nodes = null;
-var edges = null;
-var network = null;
+let nodes = null;
+let edges = null;
+let network = null;
 
 // Called when the Visualization API is loaded.
 function draw(items) {
@@ -15,8 +13,9 @@ function draw(items) {
     nodes = [];
 
     edges = []
-    console.log(items)
-    for (index = 0; index < items.length; index++) {
+
+    for (let index = 0; index < items.length; index++) {
+
         var colour;
         var image;
         var router;

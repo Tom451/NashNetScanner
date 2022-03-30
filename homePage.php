@@ -54,7 +54,7 @@ require 'assets\php\sessionChecker.php';
 
 </html>
 <script type="text/javascript">
-        var userName = "<?php echo ucfirst($_SESSION['userName']);?>"
-        var doc = document.getElementById("NameHolder")
+        let userName = "<?php echo ucfirst($_SESSION['userName']);?>"
+        let doc = document.getElementById("NameHolder")
         doc.innerText ="Welcome, " + userName;
 </script>

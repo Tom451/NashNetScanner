@@ -1,4 +1,5 @@
 <?php
+
 ?>
 <table class="table table-hover table table-striped table-bordered">
     <thead>
@@ -16,6 +17,7 @@
     $CommonClassification = array(
         "misconfiguration", "installations", "buffer overflow", "unpatched", "flaw",
         "application flaws", "password", "user", "program", "integer overflow", "memory", "SQL injection");
+
 
     if ($CVEList != null){
         //new layout

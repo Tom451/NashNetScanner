@@ -1,6 +1,7 @@
 <?php
 
-function getConnection(){
+function getConnection(): PDO
+{
 
     if (!defined('USER')){
         define("USER", 'root');
@@ -15,9 +16,7 @@ function getConnection(){
         define("DATABASE", 'nashnetworkdatabase');
     }
 
-    $connection = new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
-
-    return $connection;
+    return new PDO("mysql:host=".HOST.";dbname=".DATABASE, USER, PASSWORD);
 }
 
 function agentChecker(){

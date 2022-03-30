@@ -80,11 +80,11 @@
         <div class="bar bar8"></div>
     </div>
 
-    <div class="middle" style="top: 60%"><p style="font-family: 'Microsoft Sans Serif'; font-size: large"><b>Loading, Please Wait</b></p></div>
+    <div class="middle" style="top: 60%"><p style="font-family: 'Microsoft Sans Serif',sans-serif; font-size: large"><b>Loading, Please Wait</b></p></div>
 
-    <div class="middle" style="top: 70%"><p style="font-family: 'Microsoft Sans Serif'; font-size: medium"><b>Did you know?</b></p></div>
+    <div class="middle" style="top: 70%"><p style="font-family: 'Microsoft Sans Serif',sans-serif; font-size: medium"><b>Did you know?</b></p></div>
 
-    <div class="middle" style="top: 75%"><p style="font-family: 'Microsoft Sans Serif'; font-size: medium">You can do a full scan anytime from the devices section</b></p></div>
+    <div class="middle" style="top: 75%"><p style="font-family: 'Microsoft Sans Serif',sans-serif; font-size: medium">You can do a full scan anytime from the devices section</b></p></div>
 
 
 </div>

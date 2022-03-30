@@ -3,8 +3,6 @@ session_start();
 if(!isset($_SESSION['user_id'])){
     header('Location: ../../../index.php');
     exit;
-} else {
-
 }
 
 // Get real path for our folder
@@ -80,7 +78,5 @@ header('Location: ../../../homePage.php');
 //delete the download and the new nonce file once downloaded
 unlink($fileName);
 unlink($_SESSION['user_id']."NonceFile.txt");
-
-?>
 
 

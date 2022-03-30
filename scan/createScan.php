@@ -10,11 +10,16 @@ if(isset($_POST['previousScans'])){
 
 if (isset($_POST['createScan'])) {
 
-
+    //get the dbconfig file
     require_once '..\assets\php\DBConfig.php';
 
+    //get the user ID from the session
     $USERID = $_SESSION['user_id'];
+
+    //set the scan status as pending
     $ScanStatus = "Pending";
+
+    //get the PDO connection
     $connection = getConnection();
 
 
@@ -32,6 +37,7 @@ if (isset($_POST['createScan'])) {
         $username = $_SESSION['user_id'];
 
 
+        // if the post is a network disc then add the info for that
         if ($_POST['createScan'] == "NetDisc"){
             $SessionID = date('d-m-y h:i:s:u') ."-". rand(0,1000);
             $scanInfo = "N/A";
@@ -40,6 +46,7 @@ if (isset($_POST['createScan'])) {
             $groupID = "Pending";
 
         }
+        //else if it is a vulnerability scan then
         elseif($_POST['createScan'] == "VulnScan"){
             $SessionID = date('d-m-y h:i:s:u') ."-". rand(0,1000);
             $scanInfo = $_POST['IPADDRESS'];

@@ -4,33 +4,8 @@ function getHelp($type, $cwe): ?array
 {
 
 
-    $Help = inputCWE($cwe);
+    return inputCWE($cwe);
 
-    return $Help;
-    if ($type == "misconfiguration"){
-        $Help = "This vulnerbility is caused by a missconfiguration of the appication or program, Ensure that you check your configurations on the current device";
-
-    }
-    else if($type == "default installations"){
-
-    }
-    else if($type == "buffer overflow"){
-
-        $Help = "This is a buffer overflow issue which ";
-
-    }
-    else if($type == "unpatched"){
-
-    }
-    else if($type == "flaw"){
-        $Help = "This vulnerbility is caused by a flaw in the application or program mentioned, these can be fixed by ensuring that the 
-        device/program is updated to the latest patches and also ensure that if this program is not used then it is removed off the system
-        ";
-    }
-    else if($type == "default password"){
-
-    }
-    return $Help;
 }
 
 function inputCWE($CWE): ?array

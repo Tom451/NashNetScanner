@@ -134,7 +134,7 @@ else{
                           if ($vulnScore >= 70){
                               echo 'green';
                           }
-                          else if($vulnScore < 70 and $vulnScore >=40){
+                          else if($vulnScore >=40){
                               echo 'orange';
                           }
                           else{
@@ -159,7 +159,7 @@ else{
     <div class="row">
         <div class="col-md-6">
             <div class="row">
-                <div class="col"><img class="d-lg-flex m-auto align-items-lg-center" src="/assets/images/NND.png" style="height: 20px"></div>
+                <div class="col"><img class="d-lg-flex m-auto align-items-lg-center" src="/assets/images/NND.png" style="height: 20px" alt="Logo"></div>
             </div>
             <div class="row">
                 <div class="col">
@@ -200,7 +200,7 @@ else{
                               if ($vulnScore >= 70){
                                   echo 'green';
                               }
-                              else if($vulnScore < 70 and $vulnScore >=40){
+                              else if($vulnScore >=40){
                                   echo 'orange';
                               }
                               else{
@@ -232,7 +232,7 @@ else{
 
                     <h2>Devices</h2>
 
-                    <table id="devices" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <table id="devices" class="table table-striped table-bordered">
                         <thead>
                         <tr>
                             <th>Device Name</th>
@@ -267,7 +267,7 @@ else{
                 <div class="collapse hide" id="collapse-2">
                     <h2>Ports</h2>
 
-                    <table id="vuln" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <table id="vuln" class="table table-striped table-bordered">
                         <thead>
                         <tr>
                             <th>Name and Number</th>
@@ -307,7 +307,7 @@ else{
 
                     <h2>Vulnerbilities</h2>
 
-                    <table id="Vulnerbilities" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <table id="Vulnerbilities" class="table table-striped table-bordered">
                         <thead>
                         <tr>
                             <th>Vulnerbility Name</th>
@@ -321,10 +321,7 @@ else{
 
                         foreach ($vulns as $item) {
 
-                            if ($item['VulnCPE'] == "NO CPE"){
-
-                            }
-                            else{
+                            if (!$item['VulnCPE'] == "NO CPE"){
 
                                 //check if the cpe is for the application or if it is for the operating system
 
@@ -373,9 +370,6 @@ else{
 
 
 
-
-                                    }
-                                    else{
 
                                     }
 

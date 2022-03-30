@@ -10,13 +10,7 @@ require '..\assets\php\sessionChecker.php';
     <title>Get Started</title>
     <?php require "../assets/php/headerData.php"?>
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="../assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="../assets/fonts/fontawesome5-overrides.min.css">
-    <link rel="stylesheet" href="../assets/css/Article-List.css">
-    <link rel="stylesheet" href="../assets/css/Data-Table-1.css">
-    <link rel="stylesheet" href="../assets/css/Data-Table.css">
-    <link rel="stylesheet" href="../assets/css/Features-Boxed-1.css">
     <link rel="stylesheet" href="../assets/css/Features-Boxed.css">
     <link rel="stylesheet" href="../assets/css/Features-Clean.css">
     <link rel="stylesheet" href="../assets/css/Highlight-Blue.css">
@@ -50,7 +44,7 @@ require '..\assets\php\sessionChecker.php';
                                 <p>Firstly, we are going to begin by downloading the simple little agent to you're computer, this will be a simple zip file which can be placed anywhere on your computer.&nbsp;</p>
                                 <p>Please do note however, due to windows limitations, this has to be on an internal hard drive, so for the time being no memory sticks please!</p><button class="btn btn-secondary" type="button">Download</button>
                             </div>
-                            <div class="col-md-6"><iframe allowfullscreen="" frameborder="0" width="90%" height="100%"></iframe></div>
+                            <div class="col-md-6"><iframe allowfullscreen="" width="90%" height="100%"></iframe></div>
                         </div>
                     </div>
                 </div>
@@ -92,12 +86,11 @@ require '..\assets\php\sessionChecker.php';
         </div>
     </div>
 </section>
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.1/js/swiper.jquery.min.js"></script>
-<script src="assets/js/Simple-Slider.js"></script>
 </body>
 
 </html>

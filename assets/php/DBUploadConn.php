@@ -58,7 +58,7 @@ elseif (isset($_POST['UploadWithVerification'])) {
 
     $JSONObject = json_decode($_POST['UploadWithVerification']);
 
-    //check if user if varified
+    //check if user is verified
     if (empty($JSONObject->userName)) {
         echo "Not Verified";
     } else {
@@ -219,7 +219,7 @@ elseif (isset($_POST['UploadWithVerification'])) {
                 if (!$statement->execute()) {
                     echo "Unsuccessful";
                     return;
-                };
+                }
 
             } else if ($Scan->scanType == 'NetDisc') {
                 echo "No Update";
@@ -238,7 +238,7 @@ elseif (isset($_POST['UploadWithVerification'])) {
                 if (!$statement->execute()) {
                     echo "Unsuccessful";
                     return;
-                };
+                }
 
             }
 
@@ -277,7 +277,7 @@ elseif (isset($_POST['UploadWithVerification'])) {
 elseif(isset($_POST['AgentStatus'])){
     $JSONObject = json_decode($_POST['AgentStatus']);
 
-    //check if user if verified
+    //check if user is verified
     if (empty($JSONObject->userNONCE)) {
         echo "Not Verified";
     } else {
@@ -296,7 +296,3 @@ elseif(isset($_POST['AgentStatus'])){
     }
 
 }
-
-
-
-?>

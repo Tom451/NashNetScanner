@@ -2,16 +2,16 @@
 <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon"/>
 
 <?php
+//start the session
 session_start();
 if(isset($_SESSION['user_id'])){
     header('Location: homepage.php');
     exit;
-} else {
-
 }
 
 require 'assets\php\DBConfig.php';
 
+//if the login is complete then log the user in
 if (isset($_POST['login'])) {
 
     //Get PDO connection string
@@ -82,9 +82,9 @@ if (isset($_POST['login'])) {
     <section class="login-clean">
         <form method="post">
             <h2 class="sr-only">Login Form</h2>
-            <div class="illustration"><img src="assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>
-            <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
-            <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
+            <div class="illustration"><img src="assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="170" alt="Logo"></div>
+            <div class="form-group"><label><input class="form-control" type="text" name="username" placeholder="Username"></label></div>
+            <div class="form-group"><label><input class="form-control" type="password" name="password" placeholder="Password"></label></div>
             <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background: var(--blue);" value="login" name="login">Login</button></div><a class="forgot" href="#"></a>
         </form>
     </section>

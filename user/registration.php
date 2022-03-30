@@ -1,6 +1,7 @@
 <script src="../assets/js/loginAndRegistrationJS.js"></script>
 
 <?php
+
 session_start();
 include('../assets/php/DBConfig.php');
 
@@ -15,7 +16,12 @@ if (isset($_POST['register'])) {
     $firstName =$_POST['firstName'];
     $lastName =$_POST['lastName'];
     $lastSeen = date("Y-m-d H:i:s");
-    $LoginNONCE = random_int(0, PHP_INT_MAX);
+    try {
+        $LoginNONCE = random_int(0, PHP_INT_MAX);
+    } catch (Exception $e) {
+        echo '<script>errorMessagePopUp("Un unexpected error occurred please try again later")</script>';
+        header("Location: index.php");
+    }
 
     //get the password hash
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
@@ -26,7 +32,7 @@ if (isset($_POST['register'])) {
     $query->execute();
 
     if ($query->rowCount() > 0) {
-        echo '<script>usernameInUse()</script>';;
+        echo '<script>usernameInUse()</script>';
     }
     if ($query->rowCount() == 0) {
 
@@ -56,9 +62,9 @@ if (isset($_POST['register'])) {
         $result = $query->execute();
 
         if ($result) {
-            echo '<script></script>';;
+            header('Location: index.php');
         } else {
-            echo '<script>ErrorWithForm()</script>';;
+            echo '<script>ErrorWithForm()</script>';
         }
     }
 }
@@ -84,11 +90,11 @@ if (isset($_POST['register'])) {
     <form  method="post">
         <h2 class="sr-only">Login Form</h2>
         <div class="illustration"><img src="../assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>
-        <div class="form-group"><input class="form-control" type="text" name="firstName" placeholder="First Name"></div>
-        <div class="form-group"><input class="form-control" type="text" name="lastName" placeholder="Last Name"></div>
-        <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
-        <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email"></div>
-        <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
+        <div class="form-group"><label><input class="form-control" type="text" name="firstName" placeholder="First Name"></label></div>
+        <div class="form-group"><label><input class="form-control" type="text" name="lastName" placeholder="Last Name"></label></div>
+        <div class="form-group"><label><input class="form-control" type="text" name="username" placeholder="Username"></label></div>
+        <div class="form-group"><label><input class="form-control" type="email" name="email" placeholder="Email"></label></div>
+        <div class="form-group"><label><input class="form-control" type="password" name="password" placeholder="Password"></label></div>
         <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background: var(--blue);" name="register">Register</button></div><a class="forgot" href="#"></a>
     </form>
 </section>
