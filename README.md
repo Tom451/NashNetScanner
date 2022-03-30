@@ -1,4 +1,7 @@
 # COMP3000-Repo
+# NashNetworkScanner
+![alt text](https://github.com/Tom451/COMP3000-Repo/blob/main/assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png)
+
 
 ## Planner Link: 
 https://tasks.office.com/live.plymouth.ac.uk/Home/PlanViews/0nEF1BdjDEyxpqztD3wAf5YAGSwS?Type=PlanLink&Channel=Link&CreatedTime=637686069835470000
