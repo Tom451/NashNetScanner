@@ -59,6 +59,9 @@ function getNewestScan($deviceID, $scannedDevices){
         }
 
     }
+    if ($scans == null){
+        return 0;
+    }
 
     if (count($scans) == 1){
 
@@ -489,14 +492,31 @@ if(isset($_POST['GetNewestScanForVIS'])){
                 }
 
 
-                else if($item['deviceScanned'] == "No" | $item['deviceScanned'] == "Host Down" ){
+                else if($item['deviceScanned'] == "Host Down" ){
+
+                    $newestScan = getNewestScan($item['deviceID'], $scannedDevices);
+
+                    if ($newestScan != 0){
+                        echo '<form action="/scan/viewScan.php" method="post">';
+                        echo '<td> <button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . $newestScan . '" id="'.$newestScan.'">View Device</button> </td>';
+                        echo '</form>';
+                    }
+                    else{
+                        echo '<form action="/scan/createScan.php" method="post">';
+                        echo '<td> <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="' . $item['deviceIP'] . '" id="'.$item['deviceIP'].'">Start Scan</button> </td>';
+                        echo '</form>';
+                    }
+
+
+                }
+                elseif ($item['deviceScanned'] == "No"){
                     echo '<form action="/scan/createScan.php" method="post">';
                     echo '<td> <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="' . $item['deviceIP'] . '" id="'.$item['deviceIP'].'">Start Scan</button> </td>';
                     echo '</form>';
-                }
-                elseif ($item['deviceScanned'] != "Scanning"){
-                    echo '';
 
+                }
+                else{
+                    echo '';
                 }
 
 

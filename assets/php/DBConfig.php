@@ -30,8 +30,6 @@ function agentChecker(){
     //get the result
     $result = $query->fetch(PDO::FETCH_ASSOC);
 
-
-
     $_SESSION['agentStatus'] = $result['agentOnline'];
 
     header("index.php");
