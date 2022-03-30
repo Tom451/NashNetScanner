@@ -1,5 +1,5 @@
 <?php
-require 'DBConfig.php';
+require_once 'DBConfig.php';
 
 //Get PDO connection string
 $connection = getConnection();

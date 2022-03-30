@@ -14,6 +14,9 @@ if(!isset($_SESSION['user_id'])){
         exit;
     } else {
         $_SESSION['timestamp'] = time(); //set new timestamp
+        require_once "DBConfig.php";
+        agentChecker();
+
     }
 
 }

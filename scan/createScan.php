@@ -11,7 +11,7 @@ if(isset($_POST['previousScans'])){
 if (isset($_POST['createScan'])) {
 
 
-    require '..\assets\php\DBConfig.php';
+    require_once '..\assets\php\DBConfig.php';
 
     $USERID = $_SESSION['user_id'];
     $ScanStatus = "Pending";

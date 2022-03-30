@@ -28,7 +28,7 @@ namespace NND_Agent.Data
 
         public bool CheckForScan(long userNONCE)
         {
-            if (Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE) == null)
+            if (Connection.SendGet("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php?USERID=" + userNONCE) == null)
             {
                 return false;
             }
@@ -48,7 +48,7 @@ namespace NND_Agent.Data
  
 
             //get the scan
-            currentUser.listScans = Connection.SendGet("http://localhost/assets/php/DBUploadConn.php?USERID=" + userNONCE);
+            currentUser.listScans = Connection.SendGet("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php?USERID=" + userNONCE);
 
             
             
@@ -126,7 +126,7 @@ namespace NND_Agent.Data
                 //upload the devices
                 try
                 {
-                    Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
+                    Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
 
                 }
                 catch
@@ -185,19 +185,19 @@ namespace NND_Agent.Data
                     currentScan.scanType = "Return";
                     currentScan.scanInfo = currentUser.currentScan.scanInfo;
                     
-                    Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
+                    Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
                     return false;
                 }
                 else
                 {
                     currentScan.scanInfo = currentUser.scannedDevices[0].macAddress;
                     currentScan.ScanStatus = "Scanning";
-                    Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
+                    Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
 
                     if(!RunVulnScan(scan, process, startInfo))
                     {
                         currentScan.ScanStatus = "Error";
-                        Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
+                        Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
                         //wait 10 seconds for the next scan, this gives the program chnace to finish (NMAP)
                         Thread.Sleep(10000);
                         return false;
@@ -219,7 +219,7 @@ namespace NND_Agent.Data
                     currentScan.ScanStatus = "Yes: Safe";
                 }
                 
-                Connection.SendPost("http://localhost/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
+                Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
 
                 return true;
 
@@ -585,13 +585,19 @@ namespace NND_Agent.Data
         public int CheckProgress()
         {
             int scanCount = 0;
-
-            foreach (var item in currentUser.listScans)
+            try
             {
-                if(item.ScanStatus == "Pending")
+                foreach (var item in currentUser.listScans)
                 {
-                    scanCount++;
+                    if (item.ScanStatus == "Pending")
+                    {
+                        scanCount++;
+                    }
                 }
+            }
+            catch (NullReferenceException)
+            {
+                scanCount = 0;
             }
 
             return scanCount;

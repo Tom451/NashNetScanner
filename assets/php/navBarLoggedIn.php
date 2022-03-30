@@ -1,7 +1,6 @@
 <?php
 
 
-
 ?>
 <style>
     .blink_me {
@@ -14,6 +13,8 @@
         }
     }
 </style>
+
+
 
 <nav class="navbar navbar-light navbar-expand-md navigation-clean-button" style="margin-bottom: 21px;box-shadow: 0px 2px 7px var(--secondary);padding: 10px;background: white;">
 
@@ -40,7 +41,6 @@
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="/assets/AgentFile/DownloadSection/download.php">Download</a>
-                        <a id="AgentRefresh" role="button" class="dropdown-item" onclick="console.log('Clicked')">Refresh</a>
                     </div>
                 </li>
             </ul>
@@ -52,18 +52,5 @@
     </div>
 </nav>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
-
-    $(document).ready(function () {
-        $('#AgentRefresh').click(function() {
-            $.ajax({
-                type: "POST",
-                url: "/assets/php/DBConfig.php",
-                data: { "checkAgentStatus" : "1" }
-            })
-        });
-    });
 
 
-
-</script>
