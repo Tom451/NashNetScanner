@@ -84,7 +84,7 @@
 
     <div class="middle" style="top: 70%"><p style="font-family: 'Microsoft Sans Serif',sans-serif; font-size: medium"><b>Did you know?</b></p></div>
 
-    <div class="middle" style="top: 75%"><p style="font-family: 'Microsoft Sans Serif',sans-serif; font-size: medium">You can do a full scan anytime from the devices section</b></p></div>
+    <div class="middle" style="top: 75%"><p style="font-family: 'Microsoft Sans Serif',sans-serif; font-size: medium">You can view your scans on a mobile device! Just visit this site from your phoneor tablet</b></p></div>
 
 
 </div>

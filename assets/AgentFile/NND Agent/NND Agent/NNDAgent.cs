@@ -338,9 +338,10 @@ namespace NND_Agent
 
 
         }
-            
-            
-                
-        
+
+        private void btnSubmitChange_Click(object sender, EventArgs e)
+        {
+            WebpageAddress = txtIp.Text;
+        }
     }
 }

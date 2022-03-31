@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -21,7 +22,18 @@ namespace NND_Agent
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new NNDAgent());
+            try
+            {
+                Application.Run(new NNDAgent());
+            }
+            catch (System.Reflection.TargetInvocationException ex)
+            {
+                File.Delete(@"C:\Users\Public\Documents\NMAPNetworkScan.xml");
+                File.Delete(@"C:\Users\Public\Documents\NMAPVulnScan.xml");
+                Application.Run(new NNDAgent());
+
+            }
+            
 
             
 
