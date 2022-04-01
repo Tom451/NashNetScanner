@@ -9,7 +9,7 @@ if(!isset($_SESSION['user_id'])){
         echo"<script>alert('In accordance to OWASP guidelines, You have been signed out due to inactivity');</script>";
         unset($_SESSION['nonce'], $_SESSION['user_id'], $_SESSION['timestamp'], $_SESSION['userName']);
         $_SESSION['logged_in'] = false;
-        header("Location: ../index.php");
+        header("Location: ../index.php?timeout=true");
          //redirect to index.php
         exit;
     } else {
