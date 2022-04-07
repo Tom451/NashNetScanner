@@ -34,5 +34,72 @@
     display: none;
 }
 
+/* This is the CSS for the bar for the view scan section */
+figure {
+    margin: 0 auto;
+    position: relative;
+}
+.graphic {
+    padding-left: 30px;
+}
+.row {
+    margin-bottom: 1.5em;
+}
+@keyframes expand {
+    from {width: 0;}
+    to {width: 98%;}
+}
 
-
+.chart {
+    overflow: hidden;
+    width: 0;
+    animation: expand 1.5s ease forwards;
+}
+.row + .row .chart {
+    animation-delay: .2s;
+}
+.row + .row + .row .chart {
+    animation-delay: .4s;
+}
+.block {
+    display: block;
+    height: 100px;
+    color: #fff;
+    font-size: .75em;
+    float: left;
+    background-color: #334D5C;
+    position: relative;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity, .3s ease;
+    cursor: pointer;
+}
+.block:hover {
+    opacity: .65;
+}
+.value {
+    display: block;
+    line-height: 1em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%);
+}
+.x-axis {
+    text-align: center;
+    padding: .5em 0 2em;
+}
+.y-axis {
+    height: 20px;
+    transform: translate(-32px,170px) rotate(270deg);
+    position: absolute;
+    left: 0;
+}
+@media screen and (min-width: 768px) {
+    .block {
+        font-size: 1em;
+    }
+    .legend {
+        width: 50%;
+    }
+}

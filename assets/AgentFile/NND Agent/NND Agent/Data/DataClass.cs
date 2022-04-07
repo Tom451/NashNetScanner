@@ -22,9 +22,10 @@ namespace NND_Agent.Data
         
         //current form
         NNDAgent form = NNDAgent.NNDForm;
+
         //data connection 
         DataUpload Connection = new DataUpload();
-        //current user scanned devices 
+
 
         public bool CheckForScan(long userNONCE)
         {
@@ -268,16 +269,18 @@ namespace NND_Agent.Data
                 var service = port.SelectSingleNode("service");
 
 
-
+                //if there is a name then set 
                 if (service.Attributes.GetNamedItem("name") != null)
                 {
                     tempModel.VulnName = service.Attributes.GetNamedItem("name").InnerText;
                 }
                 else
                 {
+                    //else set it as null
                     tempModel.VulnName = null;
                 }
 
+                //same as number 1 
                 if (service.Attributes.GetNamedItem("version") != null)
                 {
                     tempModel.VulnVersion = service.Attributes.GetNamedItem("version").InnerText;
@@ -287,7 +290,7 @@ namespace NND_Agent.Data
                     tempModel.VulnVersion = "No Value Found";
                 }
 
-
+                //same as number 1 
                 if (service.Attributes.GetNamedItem("product") != null)
                 {
                     tempModel.VulnProduct = service.Attributes.GetNamedItem("product").InnerText;
@@ -297,6 +300,7 @@ namespace NND_Agent.Data
                     tempModel.VulnProduct = "No Value Found";
                 }
 
+                //same as number 1 
                 if (service.Attributes.GetNamedItem("extrainfo") != null)
                 {
                     tempModel.VulnProduct = service.Attributes.GetNamedItem("extrainfo").InnerText;
@@ -309,6 +313,7 @@ namespace NND_Agent.Data
                 {
                     tempModel.VulnCPE = service.Attributes.GetNamedItem("cpe").InnerText;
                 }
+
                 //if cpe is nested 
                 else
                 {
@@ -548,8 +553,7 @@ namespace NND_Agent.Data
             process.Start();
 
             //Read the output stream first and then wait.
-            //Wait 3 mins 
-
+            //Wait 3 mins
 
             if (process.WaitForExit(180000))
             {
@@ -557,7 +561,7 @@ namespace NND_Agent.Data
             }
             else
             {
-
+                //if the scan takes longer then 3 minutes inform the user and then go to the next scan 
                 form.PopUp("Scan took longer then 3 mins", "Scan canceled for exceeding length", System.Windows.Forms.ToolTipIcon.Error);
                 return false;
             }
@@ -590,17 +594,21 @@ namespace NND_Agent.Data
 
         #endregion
 
+        //progress check method 
         public int CheckProgress()
         {
+            // set the scan count initial value of 0 
             int scanCount = 0;
             try
             {
+                // if the current user doesnt have a lsit of scans then that means no scans 
                 if (currentUser.listScans is null)
                 {
                     scanCount = 0;
                 }
                 else
                 {
+                    // go through the items and if it is set as pending then incremet the count
                     foreach (var item in currentUser.listScans)
                     {
                         if (item.ScanStatus == "Pending")
@@ -613,9 +621,11 @@ namespace NND_Agent.Data
             }
             catch (NullReferenceException)
             {
+                // if the null refernece is thrown then there will be 0 scans 
                 scanCount = 0;
             }
 
+            // return the count 
             return scanCount;
         }
 

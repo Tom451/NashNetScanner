@@ -16,7 +16,7 @@ function inputCWE($CWE): ?array
 
     $str2 = substr($CWE, 4);
 
-    $xml = file_get_contents("MitreLookup.xml");
+    $xml = file_get_contents("../Lookup/MitreLookup.xml");
 
     $xmlObject = simplexml_load_string($xml);
 
