@@ -141,6 +141,7 @@ namespace NND_Agent.Data
            
         }
 
+
         //returns true on success and false on error 
         public bool NMapScan(ScanModel scan, long userNonce)
         {
@@ -229,7 +230,8 @@ namespace NND_Agent.Data
 
 
         }
-        
+
+        #region Parse Data Area
         private Boolean ParseVulnerbilityData(ScanModel scan)
         {
 
@@ -494,6 +496,10 @@ namespace NND_Agent.Data
 
         }
 
+        #endregion
+
+        #region Run Scan Area
+
         public Boolean RunNetworkScan(ScanModel scan, Process process, ProcessStartInfo startInfo)
         {
             //get gateway IP and Mac Address for scan 
@@ -582,18 +588,28 @@ namespace NND_Agent.Data
             return ip;
         }
 
+        #endregion
+
         public int CheckProgress()
         {
             int scanCount = 0;
             try
             {
-                foreach (var item in currentUser.listScans)
+                if (currentUser.listScans is null)
                 {
-                    if (item.ScanStatus == "Pending")
+                    scanCount = 0;
+                }
+                else
+                {
+                    foreach (var item in currentUser.listScans)
                     {
-                        scanCount++;
+                        if (item.ScanStatus == "Pending")
+                        {
+                            scanCount++;
+                        }
                     }
                 }
+                
             }
             catch (NullReferenceException)
             {

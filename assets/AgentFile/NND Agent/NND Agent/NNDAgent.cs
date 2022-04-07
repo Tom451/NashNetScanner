@@ -21,7 +21,7 @@ namespace NND_Agent
 {
     public partial class NNDAgent : Form
     {
-        public static string WebpageAddress = "10.0.1.154";
+        public static string WebpageAddress = "10.0.1.205";
         public static NNDAgent NNDForm = null;
 
         public long userNONCE = 0;
@@ -68,7 +68,7 @@ namespace NND_Agent
                    
                     process.Start();
 
-
+                    //get the out put and the errors for running 2
                     output = process.StandardOutput.ReadLine();
                     errorOutput = process.StandardError.ReadToEnd();
 
@@ -85,6 +85,7 @@ namespace NND_Agent
 
                 if(output != null)
                 {
+
                     if (output.Contains("Nmap version 7.92"))
                     {
                         //read the current user from nonce
@@ -156,9 +157,11 @@ namespace NND_Agent
 
             Scan = new DataClass();
 
-
+            //set teh agent as on 
             ScanChecker();
             SetAgent(1);
+
+            lblCurrentIP.Text = WebpageAddress;
                      
             SystemEvents.PowerModeChanged += OnPowerChange;
 
@@ -206,7 +209,9 @@ namespace NND_Agent
                 await Task.Run(() => Scan.StartScan(userNONCE));
 
                 PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
+                //start the timer and reset it
                 timer1.Start();
+                timer1.Interval = 2000;
                 ScanStatus = false;
             }
             else
@@ -257,20 +262,26 @@ namespace NND_Agent
 
             if (ScanStatus)
             {
+                //if there is already a scan started then tell the user 
                 PopUp("Scan Already Started","No need to start", ToolTipIcon.Warning);
             }
             else
             {
+                //pause the auto scan timer and start the scan 
                 timer1.Stop();
                 if (!Scan.CheckForScan(userNONCE))
                 {
+                    // if there was an error getting scan details then no scan is available 
                     PopUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
                 }
                 else
                 {
+                    //else start the scan 
                     PopUp("Scan Found", "Starting your scan now", ToolTipIcon.Info);
                     await Task.Run(() => Scan.StartScan(userNONCE));
                     ScanStatus = true;
+
+                    //when the scan is finished then tell user 
                     PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
                     ScanStatus = false;
                     timer1.Start();
@@ -333,7 +344,7 @@ namespace NND_Agent
             }
             else if (e.Mode == PowerModes.Resume)
             {
-                //setAgent(1);
+                SetAgent(1);
             }
 
 
@@ -342,6 +353,7 @@ namespace NND_Agent
         private void btnSubmitChange_Click(object sender, EventArgs e)
         {
             WebpageAddress = txtIp.Text;
+            lblCurrentIP.Text = WebpageAddress;
         }
     }
 }

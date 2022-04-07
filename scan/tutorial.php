@@ -42,7 +42,7 @@ require '..\assets\php\sessionChecker.php';
                         <div class="row">
                             <div class="col-md-6">
                                 <p>Firstly, we are going to begin by downloading the simple little agent to you're computer, this will be a simple zip file which can be placed anywhere on your computer.&nbsp;</p>
-                                <p>Please do note however, due to windows limitations, this has to be on an internal hard drive, so for the time being no memory sticks please!</p><button class="btn btn-secondary" type="button">Download</button>
+                                <p>Feel free to place this on a memory stick as the files are portable they won't take up much room at all</p><button class="btn btn-secondary" type="button">Download</button>
                             </div>
                             <div class="col-md-6"><img alt="download" src="../assets/images/Help/download.png"></div>
                         </div>

@@ -39,7 +39,11 @@
             this.txtIp = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnSubmitChange = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblCurrentIP = new System.Windows.Forms.Label();
             this.NNDContext.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // NNDToolBarIcon
@@ -92,38 +96,73 @@
             // 
             // txtIp
             // 
-            this.txtIp.Location = new System.Drawing.Point(15, 38);
+            this.txtIp.Location = new System.Drawing.Point(18, 54);
+            this.txtIp.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtIp.Name = "txtIp";
-            this.txtIp.Size = new System.Drawing.Size(135, 22);
+            this.txtIp.Size = new System.Drawing.Size(102, 20);
             this.txtIp.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(15, 27);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(116, 16);
+            this.label1.Size = new System.Drawing.Size(109, 15);
             this.label1.TabIndex = 2;
             this.label1.Text = "Manual IP Change";
             // 
             // btnSubmitChange
             // 
-            this.btnSubmitChange.Location = new System.Drawing.Point(15, 67);
+            this.btnSubmitChange.Location = new System.Drawing.Point(139, 49);
+            this.btnSubmitChange.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnSubmitChange.Name = "btnSubmitChange";
-            this.btnSubmitChange.Size = new System.Drawing.Size(75, 23);
+            this.btnSubmitChange.Size = new System.Drawing.Size(56, 29);
             this.btnSubmitChange.TabIndex = 3;
             this.btnSubmitChange.Text = "Submit";
             this.btnSubmitChange.UseVisualStyleBackColor = true;
             this.btnSubmitChange.Click += new System.EventHandler(this.btnSubmitChange_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(13, 13);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(128, 33);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Settings";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.lblCurrentIP);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.txtIp);
+            this.groupBox1.Controls.Add(this.btnSubmitChange);
+            this.groupBox1.Location = new System.Drawing.Point(377, 13);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(200, 341);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Connection Settings";
+            // 
+            // lblCurrentIP
+            // 
+            this.lblCurrentIP.AutoSize = true;
+            this.lblCurrentIP.Location = new System.Drawing.Point(18, 96);
+            this.lblCurrentIP.Name = "lblCurrentIP";
+            this.lblCurrentIP.Size = new System.Drawing.Size(18, 15);
+            this.lblCurrentIP.TabIndex = 4;
+            this.lblCurrentIP.Text = "IP";
+            // 
             // NNDAgent
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.btnSubmitChange);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.txtIp);
+            this.ClientSize = new System.Drawing.Size(600, 366);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.label2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "NNDAgent";
             this.Text = "NND Agent";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NNDAgent_FormClosing);
@@ -131,6 +170,8 @@
             this.Shown += new System.EventHandler(this.NNDAgent_Shown);
             this.Resize += new System.EventHandler(this.NNDAgent_Resize);
             this.NNDContext.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,6 +188,9 @@
         private System.Windows.Forms.TextBox txtIp;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSubmitChange;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label lblCurrentIP;
     }
 }
 

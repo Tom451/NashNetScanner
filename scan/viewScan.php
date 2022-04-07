@@ -336,6 +336,7 @@ require '../assets/php/VulnHelp.php';
             width: 50%;
         }
     }
+
 </style>
 
 <head>
@@ -352,7 +353,6 @@ require '../assets/php/VulnHelp.php';
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/percentages.css">
     <link rel="stylesheet" href="../assets/css/Highlight-Blue.css">
-    <link rel="stylesheet" href="../assets/css/scanOverlayAndAccoridion.css">
 </head>
 
 <body>

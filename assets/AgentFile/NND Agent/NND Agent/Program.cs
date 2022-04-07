@@ -28,6 +28,7 @@ namespace NND_Agent
             }
             catch (System.Reflection.TargetInvocationException ex)
             {
+                //if the file is corrupted delete it and the restart the program 
                 File.Delete(@"C:\Users\Public\Documents\NMAPNetworkScan.xml");
                 File.Delete(@"C:\Users\Public\Documents\NMAPVulnScan.xml");
                 Application.Run(new NNDAgent());

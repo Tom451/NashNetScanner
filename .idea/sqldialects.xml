@@ -2,6 +2,9 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/index.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/scan/ViewVulnerbilityScan.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/scan/viewScan.php" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/user/registration.php" dialect="MySQL" />
+    <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>
