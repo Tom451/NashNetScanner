@@ -247,11 +247,13 @@ if(isset($_POST['GetNewestScanForVIS'])){
                 <div class="col-sm-6 col-md-5 col-lg-4 item">
                     <div class="box"><i class="fa fa-laptop icon"></i>
                         <h3 class="name">Full Scan</h3>
-                        <p class="description">Scan All the currently known devices on the network. Note this will not find new devices but
-                            rather scan the ones currently known</p>
+                        <p class="description">
+                            Scan All the currently known devices on the network. Note this will not find new devices but
+                            rather scan the ones currently known
+                        </p>
 
-                        <form action="/scan/Create/CreateScan.php" method="post">';
-                            <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="FULLSCAN" id="FULLSCAN">Start Scan</button>
+                        <form action="/scan/Create/CreateScan.php" method="post">
+                            <button class="btn btn-primary" name="createScan" value="FULLSCAN" id="FULLSCAN">Start Scan</button>
 
                         </form>
                     </div>
@@ -259,7 +261,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
                 <div class="col-sm-6 col-md-5 col-lg-4 item">
                     <div class="box"><i class="fa fa-history icon"></i>
                         <h3 class="name">Change View</h3>
-                        <p class="description">Change the current View of the page &nbsp;</p>
+                        <p class="description">Change the current View of the page. Currently the options are basic view and spider view</p>
 
                         <button class="btn btn-primary" name="switch" onclick="switchView()">Switch</button>
 
@@ -274,7 +276,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
 </div>
 
 
-<div id="visView" class="container" style="display: none">
+<div id="visView" class="container" style="display: none;">
 
     <div class="row">
         <div class="col-md-3">
@@ -283,9 +285,10 @@ if(isset($_POST['GetNewestScanForVIS'])){
 
             <dl style="font-size: large; list-style: none">
                 <dt style="padding-top: 20px;"><i class="fa fa-desktop" style="color: red;" size=""></i> Device is Vulnerable</dt>
-                <dt style="padding-top: 20px"><i class="fa fa-desktop" style="color: grey;" size=""></i> Device is Unscanned</dt>
+                <dt style="padding-top: 20px"><i class="fa fa-desktop" style="color: grey;" size=""></i> Device is Down</dt>
                 <dt style="padding-top: 20px"><i class="fa fa-desktop" style="color: green;" size=""></i> Device is Safe</dt>
                 <dt style="padding-top: 20px"><i class="fa fa-desktop" style="color: Orange;" size=""></i> Device is Being Scanned</dt>
+                <dt style="padding-top: 20px"><i class="fa fa-desktop" style="color: transparent; -webkit-text-stroke-color: red; -webkit-text-stroke-width: thin" size=""></i> Device is Unscanned</dt>
             </dl>
         </div>
         <div class="col-md-9">
@@ -433,7 +436,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
 
                     if ($item['deviceScanned'] != "No"){
                         echo '<div class="btn-group"><form action="/scan/View/viewScan.php" method="post">';
-                        echo '<button class="btn btn-primary bg-secondary" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="'.getNewestScan($item['deviceID'], $scannedDevices).'">View Scan</button> </td>';
+                        echo '<button class="btn btn-primary bg-secondary" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="'.getNewestScan($item['deviceID'], $scannedDevices).'">View Device</button> </td>';
                         echo'</form>';
 
                         echo '<form action="Devices.php" method="post">';
@@ -484,7 +487,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
 
                     if ($item['deviceScanned'] != "No") {
                         echo '<form action="/scan/View/viewScan.php" method="post">';
-                        echo '<button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="' . getNewestScan($item['deviceID'], $scannedDevices) . '">View Scan</button> </td>';
+                        echo '<button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="' . getNewestScan($item['deviceID'], $scannedDevices) . '">View Device</button> </td>';
                         echo '</form>';
                     } elseif ($item['deviceScanned'] != "Scanning") {
                         echo '';
@@ -494,9 +497,6 @@ if(isset($_POST['GetNewestScanForVIS'])){
                         echo '<td> <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="' . $item['deviceIP'] . '" id="' . $item['deviceIP'] . '">Start Scan</button> </td>';
                         echo '</form>';
                     }
-
-
-
                     echo '</ul>';
 
                     echo '</div>';
@@ -524,7 +524,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
 
                 if (str_contains($item['deviceScanned'], "Yes")){
                     echo '<form action="/scan/View/viewScan.php" method="post">';
-                    echo '<button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="'.getNewestScan($item['deviceID'], $scannedDevices).'">View Scan</button> </td>';
+                    echo '<button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="'.getNewestScan($item['deviceID'], $scannedDevices).'">View Device</button> </td>';
                     echo'</form>';
                 }
 

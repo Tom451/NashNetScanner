@@ -100,8 +100,7 @@ $devices = $query->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="row" style="padding-bottom: 10px">
-                <div class="col-md-6"><div id="mynetwork"></div></div>
-                <div class="col-md-6"><p class="text-center">Here you can see all your previous scans, this is where you can select what scan you would like to view&nbsp;</p></div>
+                <div class="col-md-12"><p class="text-center">Here you can see all your previous scans, this is where you can select what scan you would like to view&nbsp;</p></div>
             </div>
 
             <form action="/scan/View/viewScan.php" method="post">

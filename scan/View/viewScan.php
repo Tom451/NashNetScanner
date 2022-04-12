@@ -202,7 +202,6 @@ function getSecurity($device, $CVEList, $currentScan){
     }
 
     if(!is_null($CVEList)){
-
         if (count($CVEList) >= 5){
             //High ammount of issues found
             echo('<section class="highlight-section" style="background: red;"> <div class="container"> <div class="intro">
@@ -222,6 +221,15 @@ function getSecurity($device, $CVEList, $currentScan){
                                 feel free to scan another device </p>
                 </div></div></section>');
         }
+    }
+    //else if the device is down
+    else if ($device['deviceScanned'] == "Host Down"){
+        //No issues
+        echo('<section class="highlight-section" style="background: orange;"> <div class="container"> <div class="intro">
+                <h2 class="text-center"> <i class="fa fa-unlink" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">The device: ' . $device['deviceName'] . ',
+                                was not online during this scan, please visit the devices page to start a new scan</p>
+               </div></div></section>');
     }
     else{
         //No issues found
@@ -358,13 +366,31 @@ require '../../assets/php/VulnHelp.php';
             </div>
 
             <div class="col-md-12">
-                <h2>Vulnerbilities</h2><button name="showData"></button>
+                <h2>Vulnerbilities</h2>
 
-                <?php
+                <table class="table table-hover table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Weakness Name</th>
+                        <th>Type Of Vulnerbility</th>
+                        <th>Port Affected</th>
+                        <th>Serverty</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
 
-                require "VulnerbilitySection.php";
+                    require_once 'VulnerbilitySection.php';
+                    createTable($CVEList, $item);
 
-                ?>
+                    ?>
+
+                    </tbody>
+
+                </table>
+
+
+
             </div>
         </div>
 

@@ -28,28 +28,32 @@ function inputCWE($CWE): ?array
 
         $count = 0;
 
+        // if the CWE is the selected one
         if ($weakness['@attributes']['ID'] == $str2){
 
+            // if the name is there set the name
             if(isset($weakness['@attributes']['Name'])){
                 $Help['FriendlyName'][0] = $weakness['@attributes']['Name'];
             }
 
+            // if there is an alternate term set that
             if(isset($weakness['Alternate_Terms'][0]['Term'])){
                 $Help['Type'][0] = $weakness['Alternate_Terms'][0]['Term'];
             }
 
+            //list of help
             $mitigationList[] = null;
 
+            //if there is no help options
             if(!isset($weakness['Potential_Mitigations'])){
                 $Help['Description'][] = "No Solutions please refer to links";
                 return $Help;
             }
 
+            //else fill the array
             foreach ($weakness['Potential_Mitigations'] as $mitigation){
                 $mitigationList =  $mitigation;
             }
-
-
             foreach ($mitigationList as $description){
                 if (isset($description['Description'])){
 
@@ -62,8 +66,10 @@ function inputCWE($CWE): ?array
                     $Help['Description'][] = "No Solutions please refer to links";
                     return $Help;
                 }
-
             }
+
+
+
             $count++;
 
 

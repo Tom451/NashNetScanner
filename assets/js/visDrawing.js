@@ -19,23 +19,34 @@ function draw(items) {
         var colour;
         var image;
         var router;
+
+        //if the device is vulnerable then set the red desktop photo
         if (items[index].deviceScanned === "Yes: Vulnerable"){
             colour = "red";
             image = "/assets/images/DesktopRed.svg";
 
         }
+        //if the device is safe then set the green desktop photo
         else if (items[index].deviceScanned === "Yes: Safe"){
             colour = "green";
             image = "/assets/images/DesktopGreen.svg";
         }
+        //if the device is being scanned then set the orange desktop photo
         else if (items[index].deviceScanned === "Scanning"){
             colour = "orange";
             image = "/assets/images/DesktopOrange.svg";
         }
+        //if the device is not scanned yet then set the un-scanned desktop photo
+        else if (items[index].deviceScanned === "No"){
+            colour = "orange";
+            image = "/assets/images/DesktopUnscanned.svg";
+        }
+        //else set other
         else{
             colour = "blue"
             image = "/assets/images/DesktopGrey.svg";
         }
+
         if (items[index].deviceIP.endsWith(".1")){
             nodes.push(
                 {
@@ -43,8 +54,6 @@ function draw(items) {
                     shape: "image",
                     image: image,
                     label: items[index].deviceName,
-
-
 
                 })
             router = 1;
@@ -57,14 +66,10 @@ function draw(items) {
                     image: image,
                     label: items[index].deviceName,
 
-
-
                 })
-            if (items[index].deviceScanned.includes("Yes")){
-                edges.push({ from: 1, to: items[index].deviceID })
-            }
-            else{
 
+            if (items[index].deviceScanned.includes("Yes") || items[index].deviceScanned.includes("Host Down")){
+                edges.push({ from: 1, to: items[index].deviceID })
             }
 
         }
@@ -128,7 +133,9 @@ function draw(items) {
             type: 'post',
             data: { "GetNewestScanForVIS": params.nodes[0]},
             success: function(response) {
+
                 newestscan = response;
+
                 console.log(newestscan)
                 console.log(params.nodes[0]);
 
@@ -138,7 +145,6 @@ function draw(items) {
                 else{
                     try {
                         var pagebutton = document.getElementById(newestscan);
-
                         pagebutton.click();
                     } catch (error) {
                         console.error(error);

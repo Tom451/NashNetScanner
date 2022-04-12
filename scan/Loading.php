@@ -67,7 +67,10 @@
 
 </style>
 
+<?php require_once $_SERVER['DOCUMENT_ROOT']. "/assets/php/headerData.php" ?>
+
 <div id="loading" style="display: flex">
+
 
     <div class="middle">
         <div class="bar bar1"></div>
