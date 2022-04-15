@@ -92,12 +92,10 @@ foreach ($vulns as $item) {
                 $CVEItems = $JSONObject -> result ->CVE_Items;
 
                 foreach($CVEItems as $CVE){
-
                     $CVEList[] = $CVE;
-
                 }
-            }
 
+            }
 
         }
 
@@ -119,6 +117,7 @@ else{
 $High = 0;
 $Medium = 0;
 $Low = 0;
+$Critical = 0;
 $Unknown = 0;
 
 if (isset($JSONObject)){
@@ -131,9 +130,12 @@ if (isset($JSONObject)){
             if (!empty($CVEItem->impact->baseMetricV3->cvssV3)) {
 
                 $count = $CVEItem->impact->baseMetricV3->cvssV3->baseSeverity;
-                if ($count == "HIGH" || $count == "CRITICAL") {
+                if ($count == "HIGH" ) {
                     $High = $High + 1;
-                } elseif ($count == "MEDIUM") {
+                }elseif($count == "CRITICAL"){
+                    $Critical = $Critical + 1;
+                }
+                elseif ($count == "MEDIUM") {
                     $Medium = $Medium + 1;
                 } elseif ($count == "LOW") {
                     $Low = $Low + 1;
@@ -158,14 +160,13 @@ if (isset($JSONObject)){
 
             }
 
-
-
         }
 
         //get the percentages
         $HighPercentage = round($High / count($CVEList)* 100, 2);
         $MedPercentage = round($Medium / count($CVEList) * 100, 2);
         $LowPercentage = round($Low / count($CVEList) * 100, 2);
+        $CriticalPercentage = round($Critical / count($CVEList) * 100, 2);
         $UnknownPercentage = round($Unknown / count($CVEList) * 100, 2);
 
     }
@@ -233,7 +234,7 @@ function getSecurity($device, $CVEList, $currentScan){
     }
     else{
         //No issues found
-        echo('<section class="highlight-section" style="background: dodgerblue;"> <div class="container"> <div class="intro">
+        echo('<section class="highlight-section" style="background: green;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"><i class="fa fa-smile-o" style="transform: scale(2);"></i></h2>
                             <p class="text-center">No issues at all with ' . $device['deviceName'] . ',
                                 your device is currently safe so no
@@ -313,7 +314,9 @@ require '../../assets/php/VulnHelp.php';
 
         </div>
         <div class="row" style="padding-top: 10px;">
-            <div class="col-md-4"><img class="d-lg-flex justify-content-center m-auto" style="padding-bottom: 5px;" src="https://media.istockphoto.com/photos/iphone-11-pro-max-in-silver-color-template-front-view-with-blank-for-picture-id1202959585?k=20&amp;m=1202959585&amp;s=612x612&amp;w=0&amp;h=8DsZSdfyxdzg9OaFS3gOHITfJxjE2gQr6mCJP7ghPiA=" width="100pxpx" alt="iPhone">
+            <div class="col-md-4">
+
+                <img class="d-lg-flex justify-content-center m-auto" style="padding-bottom: 5px;" src="https://media.istockphoto.com/photos/iphone-11-pro-max-in-silver-color-template-front-view-with-blank-for-picture-id1202959585?k=20&amp;m=1202959585&amp;s=612x612&amp;w=0&amp;h=8DsZSdfyxdzg9OaFS3gOHITfJxjE2gQr6mCJP7ghPiA=" width="100px" alt="iPhone">
                 <ul class="list-group" style="padding-top: 5px;">
                     <li class="list-group-item"><span>Device Name: <?php echo $device['deviceName']?></span></li>
                     <li class="list-group-item"><span>Mac Address: <?php echo $device['deviceMacAddress']?></span></li>
@@ -323,9 +326,20 @@ require '../../assets/php/VulnHelp.php';
                             <label for="scans"><select name="scanSelected" id="scans" onchange="this.form.submit()">
                                     <?php
 
+                                    $count = count($devicesScans);
+                                    $scanNumber = 0;
+
                                     foreach ($devicesScans as $scans){
-                                        echo '<option name="scanSelected" value="'.$scans['ScanID'].'">'.$scans['ScanTime'].'</option>';
+                                        if ($scanNumber == $count - 1){
+                                            break;
+                                        }
+                                        else{
+                                            echo '<option name="scanSelected" value="'.$scans['ScanID'].'"><b>Previous: </b>'.$scans['ScanTime'].'</option>';
+                                            $scanNumber++;
+                                        }
+
                                     }
+                                    echo '<option name="scanSelected" value="'.$devicesScans[$count-1]['ScanID'].'"><b>Newest: </b>'.$devicesScans[$count-1]['ScanTime'].'</option>';
 
                                     ?>
                             </select></label>
@@ -338,50 +352,92 @@ require '../../assets/php/VulnHelp.php';
             <div class="col-md-8">
                 <h2>Overview:</h2>
                 <p>Over View of your current security posture.&nbsp;</p>
-                <p>Here is a break down of the vulnerbilties on the device.&nbsp;</p>
+                <p>Here is a break down of the vulnerbilties on the device.</p>
 
-                <figure><div class="graphic"><div class="row">
-                            <div class="chart" style="border-radius: 5px; border-color: grey">
-                                <span class="block" title="High" style="width: <?php echo $HighPercentage?>%; background-color: red">
+                <figure>
+                    <ul class="list-group" style="padding-top: 7px;">
+                        <li class="list-group-item">
+                            <h3>Current Outlook:</h3>
+                            <p>Hover to view percentages: </p>
+                            <div class="graphic" >
+                                <div class="row">
+                                    <div class="chart" style="border-radius: 5px; border-color: grey; max-height: 5%">
+
+                                        <span class="block" title="You have: <?php echo $CriticalPercentage?>% Critical Issues" style="width: <?php echo $CriticalPercentage?>%; background-color: darkred">
+                                    <span class="value"><?php echo $CriticalPercentage?>%</span>
+
+                                </span>
+                                <span class="block" title="You have: <?php echo $HighPercentage?>% High Issues" style="width: <?php echo $HighPercentage?>%; background-color: red">
                                     <span class="value"><?php echo $HighPercentage?>%</span>
-                                    <span class="value" style="top: 10px ">High/Critical Severity</span>
+
                                 </span>
-                                <span class="block" title="Medium" style="width: <?php echo $MedPercentage?>%; background-color: orange">
+                                        <span class="block" title="You have: <?php echo $MedPercentage?>% Medium Issues" style="width: <?php echo $MedPercentage?>%; background-color: orange">
                                     <span class="value"><?php echo $MedPercentage?>%</span>
-                                    <span class="value" style="top: 10px ">Medium Severity</span>
+
                                 </span>
-                                <span class="block" title="Low" style="width: <?php echo $LowPercentage?>%; background-color: green">
+                                        <span class="block" title="You have: <?php echo $LowPercentage?>% Low Issues" style="width: <?php echo $LowPercentage?>%; background-color: green;  overflow: hidden;">
                                     <span class="value"><?php echo $LowPercentage?>%</span>
-                                    <span class="value" style="top: 10px ">Low Severity</span>
+
                                 </span>
-                                <span class="block" title="Safe" style="width: <?php if($Low == 0 AND $Medium == 0 AND $High == 0){echo '100%';}else{echo'0%';}?>; background-color: dodgerblue">
+                                        <span class="block" title="Safe" style="width: <?php if($Low == 0 AND $Medium == 0 AND $High == 0){echo '100%';}else{echo'0%';}?>; background-color: green">
                                     <span class="value">No Vulnerabilities</span>
                                 </span>
 
+                                    </div>
+                                </div>
+                                <div class="x-axis">
+                                    <ul class="legend">
+                                        <li><i class="fa fa-square" style="padding-right: 3px; color: darkred"></i>Critical</li>
+                                        <li><i class="fa fa-square" style="padding-right: 3px; color: red"></i>High</li>
+                                        <li><i class="fa fa-square" style="padding-right: 3px; color: orange"></i>Medium</li>
+                                        <li><i class="fa fa-square" style="padding-right: 3px; color: green"></i>Low</li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                            <h3>At a glance:</h3>
+
+                            <p><?php
+                                if ($High + $Critical + $Medium + $Low === 0){
+                                echo 'No issues found on your device, please visit the devices tab to view your other devices';
+                                }
+                                else {
+                                    echo 'You currently have: ' . $High + $Critical . ' number of important issues and: ' . $Medium + $Low .
+                                        ' lesser issues, it is advised you look at these important ones first, these are labeled in the red colours 
+                                        for ease of viewing';
+                                }
+                                ?>
+                            </p>
+
+
+                        </li>
+                    </ul>
+
 
                 </figure>
             </div>
 
             <div class="col-md-12">
-                <h2>Vulnerbilities</h2>
+                <h2 style="padding-top: 2%">Vulnerbilities</h2>
 
-                <table class="table table-hover table table-striped table-bordered">
+                <table class="table table-hover table table-striped table-bordered" id="vulnTable">
                     <thead>
                     <tr>
                         <th>Weakness Name</th>
                         <th>Type Of Vulnerbility</th>
                         <th>Port Affected</th>
-                        <th>Serverty</th>
+                        <th aria-sort="ascending">Serverty</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
 
                     require_once 'VulnerbilitySection.php';
-                    createTable($CVEList, $item);
+                    if (empty($item)){
+                        $item = false;
+                    }
+
+                    createTableArea($CVEList, $item);
+
 
                     ?>
 
@@ -389,7 +445,8 @@ require '../../assets/php/VulnHelp.php';
 
                 </table>
 
-
+                <script src="../../assets/js/tableSort.js"></script>
+                <script>sortTable()</script>
 
             </div>
         </div>
@@ -456,6 +513,7 @@ require '../../assets/php/VulnHelp.php';
     <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+
 
 
 </body>

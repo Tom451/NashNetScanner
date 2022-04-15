@@ -9,5 +9,6 @@
     <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="Swiper" level="application" />
     <orderEntry type="library" name="jquery.dataTables" level="application" />
+    <orderEntry type="library" name="sorttable" level="application" />
   </component>
 </module>

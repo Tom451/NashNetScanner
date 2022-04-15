@@ -11,7 +11,7 @@ if(isset($_POST['previousScans'])){
 if (isset($_POST['createScan'])) {
 
     //get the dbconfig file
-    require_once '..\assets\php\DBConfig.php';
+    require_once '..\..\assets\php\DBConfig.php';
 
     //get the user ID from the session
     $USERID = $_SESSION['user_id'];

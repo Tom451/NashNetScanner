@@ -329,6 +329,7 @@ namespace NND_Agent
             SetAgent(0);
         }
 
+
         private void CloseApplicationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetAgent(0);
@@ -354,6 +355,11 @@ namespace NND_Agent
         {
             WebpageAddress = txtIp.Text;
             lblCurrentIP.Text = WebpageAddress;
+        }
+
+        private void NNDAgent_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            SetAgent(0);
         }
     }
 }

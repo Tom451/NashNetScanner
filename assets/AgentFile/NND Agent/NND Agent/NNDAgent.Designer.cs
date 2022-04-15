@@ -97,7 +97,7 @@
             // txtIp
             // 
             this.txtIp.Location = new System.Drawing.Point(18, 54);
-            this.txtIp.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtIp.Margin = new System.Windows.Forms.Padding(2);
             this.txtIp.Name = "txtIp";
             this.txtIp.Size = new System.Drawing.Size(102, 20);
             this.txtIp.TabIndex = 1;
@@ -115,7 +115,7 @@
             // btnSubmitChange
             // 
             this.btnSubmitChange.Location = new System.Drawing.Point(139, 49);
-            this.btnSubmitChange.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSubmitChange.Margin = new System.Windows.Forms.Padding(2);
             this.btnSubmitChange.Name = "btnSubmitChange";
             this.btnSubmitChange.Size = new System.Drawing.Size(56, 29);
             this.btnSubmitChange.TabIndex = 3;
@@ -162,10 +162,11 @@
             this.ClientSize = new System.Drawing.Size(600, 366);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "NNDAgent";
             this.Text = "NND Agent";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NNDAgent_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NNDAgent_FormClosed);
             this.Load += new System.EventHandler(this.NNDAgent_Load);
             this.Shown += new System.EventHandler(this.NNDAgent_Shown);
             this.Resize += new System.EventHandler(this.NNDAgent_Resize);
