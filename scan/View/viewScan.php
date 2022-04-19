@@ -38,6 +38,7 @@ $query->execute();
 
 //get the result
 $devices = $query->fetchAll(PDO::FETCH_ASSOC);
+$device = 0;
 
 //if there is only one device set the device variable else the device(s) varible will be used
 if (count($devices) == 1 ){
@@ -177,21 +178,36 @@ if (isset($JSONObject)){
 
 }
 
-$devicesScans = getOtherScans($device['deviceID']);
-$countOfScans = count($devicesScans);
-
-$value = max($devicesScans);
-$key = array_search($value, $devicesScans);
-
+$devicesScans = 0;
+$countOfScans = 0;
 $currentScan = true;
+$scanning = false;
 
-if($devicesScans[$key]['ScanID'] != $scanID){
-    $currentScan = false;
+if (count($devices) > 1 ){
+    $device = $devices[0];
 }
+else{
+    $devicesScans = getOtherScans($device['deviceID']);
+    $countOfScans = count($devicesScans);
+
+    $value = max($devicesScans);
+    $key = array_search($value, $devicesScans);
+
+    $currentScan = true;
+
+    if($devicesScans[$key]['ScanID'] != $scanID){
+        $currentScan = false;
+    }
+    if($devicesScans[$key]['ScanStatus'] == "Pending"){
+        $scanning= true;
+    }
+
+}
+
 
 //this fucntion is called bt the page to show the banner at the top to give the user a quick overview on their currrent
 // Security status
-function getSecurity($device, $CVEList, $currentScan){
+function getSecurity($device, $CVEList, $currentScan, $scanning){
     //As long and the CVE list is not null then it will calculate
     if (!$currentScan){
         //High ammount of issues found
@@ -199,6 +215,14 @@ function getSecurity($device, $CVEList, $currentScan){
                 <h2 class="text-center"> <i class="fa fa-warning" style="transform: scale(2);"></i></h2>
                             <p class="text-center">You are viewing an historical record of ' . $device['deviceName'] . ',
                                 to view more up to date information please visit the "Devices" Page </p>
+               </div></div></section>');
+    }
+    else if ($scanning){
+        //High ammount of issues found
+        echo('<section class="highlight-section" style="background: grey;"> <div class="container"> <div class="intro">
+                <h2 class="text-center"> <i class="fa fa-warning" style="transform: scale(2);"></i></h2>
+                            <p class="text-center">There is currently a scan pending for ' . $device['deviceName'] . ',
+                                please view the scan progress from the devices page or view historical records </p>
                </div></div></section>');
     }
 
@@ -297,8 +321,6 @@ require '../../assets/php/VulnHelp.php';
     <!-- Get the nav bar for a logged in page -->
     <?php require '../../assets/php/navBarLoggedIn.php' ?>
 
-
-
     <div class="container"<?php
     //If the scan type is vulnerability then:
     if($scan['ScanType'] != "VulnScan")
@@ -308,7 +330,7 @@ require '../../assets/php/VulnHelp.php';
         <div class="row">
             <div class="col" style="padding-top: 10px;">
                 <h1>Vulnerability Scan for Device:&nbsp;</h1>
-                <?php getSecurity($device, $CVEList, $currentScan); ?>
+                <?php getSecurity($device, $CVEList, $currentScan, $scanning); ?>
 
             </div>
 
@@ -325,22 +347,24 @@ require '../../assets/php/VulnHelp.php';
                         <form name="scanSelected" action="viewScan.php" method="post">
                             <label for="scans"><select name="scanSelected" id="scans" onchange="this.form.submit()">
                                     <?php
+                                    if ($scan['ScanType'] == "VulnScan"){
 
-                                    $count = count($devicesScans);
-                                    $scanNumber = 0;
+                                        $count = count($devicesScans);
+                                        $scanNumber = 0;
 
-                                    foreach ($devicesScans as $scans){
-                                        if ($scanNumber == $count - 1){
-                                            break;
+                                        foreach ($devicesScans as $scans){
+                                            if ($scanNumber == $count - 1){
+                                                break;
+                                            }
+                                            else{
+                                                echo '<option name="scanSelected" value="'.$scans['ScanID'].'"><b>Previous: </b>'.$scans['ScanTime'].'</option>';
+                                                $scanNumber++;
+                                            }
+
                                         }
-                                        else{
-                                            echo '<option name="scanSelected" value="'.$scans['ScanID'].'"><b>Previous: </b>'.$scans['ScanTime'].'</option>';
-                                            $scanNumber++;
-                                        }
+                                        echo '<option name="scanSelected" value="'.$devicesScans[$count-1]['ScanID'].'"><b>Newest: </b>'.$devicesScans[$count-1]['ScanTime'].'</option>';
 
                                     }
-                                    echo '<option name="scanSelected" value="'.$devicesScans[$count-1]['ScanID'].'"><b>Newest: </b>'.$devicesScans[$count-1]['ScanTime'].'</option>';
-
                                     ?>
                             </select></label>
                             <button class="btn btn-primary" type="submit" onclick="this.form.submit()">Submit</button>
@@ -496,7 +520,7 @@ require '../../assets/php/VulnHelp.php';
                         echo '<td>' . $item['deviceIP'] . '</td>';
                         echo '<td>' . $item['deviceMacAddress'] . '</td>';
                         echo '<form action="/scan/Create/CreateScan.php" method="post">';
-                        echo '<td> <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="' . $item['deviceIP'] . '" id="'.$item['deviceIP'].'">View Scan</button> </td>';
+                        echo '<td> <button class="btn btn-primary bg-secondary d-lg-flex" name="createScan" value="' . $item['deviceIP'] . '" id="'.$item['deviceIP'].'">Create Scan</button> </td>';
                         echo '</form>';
                         echo '<tr>';
                     }

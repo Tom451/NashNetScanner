@@ -92,21 +92,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\DataUpload.cs" />
-    <Compile Include="Data\DataClass.cs" />
-    <Compile Include="Items\ComputerModel.cs" />
-    <Compile Include="Items\ScanModel.cs" />
-    <Compile Include="Items\userModel.cs" />
-    <Compile Include="Items\VulnModel.cs" />
-    <Compile Include="NNDAgent.cs">
+    <Compile Include="Controllers\DataUpload.cs" />
+    <Compile Include="Controllers\DataProcessing.cs" />
+    <Compile Include="Models\ComputerModel.cs" />
+    <Compile Include="Models\ScanModel.cs" />
+    <Compile Include="Models\userModel.cs" />
+    <Compile Include="Models\VulnModel.cs" />
+    <Compile Include="Views\NNDAgent.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NNDAgent.Designer.cs">
+    <Compile Include="Views\NNDAgent.Designer.cs">
       <DependentUpon>NNDAgent.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="Controllers\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="NNDAgent.resx">
+    <EmbeddedResource Include="Views\NNDAgent.resx">
       <DependentUpon>NNDAgent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -162,5 +162,6 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

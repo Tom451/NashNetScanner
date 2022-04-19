@@ -29,7 +29,7 @@ if(count($devices) == 0){
 //else if they have discovered devices then continue:
 
 //get all the devices that have been vulnerability assessed.
-$query = $connection->prepare("SELECT device.deviceID, scan.ScanID, scan.ScanTime FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
+$query = $connection->prepare("SELECT device.deviceID, scan.ScanID, scan.ScanTime, scan.ScanStatus FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
 JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE scan.ScanType = 'VulnScan' AND scan.userID = :userid");
 
 $query->bindParam("userid", $USERID, PDO::PARAM_STR);
@@ -364,14 +364,13 @@ if(isset($_POST['GetNewestScanForVIS'])){
         </div>
 
             <?php
-
             //set the variables
             $i = 1;
             $NeedsAttention = null;
             $Secure = null;
             $Other = null;
             $Scanning = null;
-
+            $toScan = null;
 
             //for each of the devices if it is vulnerable, safe or other add it to the arrays
             foreach ($devices as $item){
@@ -431,7 +430,10 @@ if(isset($_POST['GetNewestScanForVIS'])){
                     echo '<h3 class="name">Device: '. $item['deviceName'] .'</h3>';
                     echo '<li><strong>Mac:</strong>'.$item['deviceMacAddress'].'</li>';
                     echo '<li><strong>IP:</strong>'.$item['deviceIP'].'</li>';
-                    echo '<li><strong>Scanned:</strong>'.$item['deviceScanned'].'</li></ul> ';
+                    echo '<li><strong>Scanned:</strong>'.$item['deviceScanned'].'</li> ';
+                    echo '<li><form action="/scan/Create/CreateScan.php" method="post">';
+                    echo'<b>Rescan? </b><button style="background: none; border: none; color: green;" name = "createScan" id="'.$item['deviceIP'].'" value="'.$item['deviceIP'].'"><u>Confirm</u></button>';
+                    echo'</form></li></ul>';
 
 
                     if ($item['deviceScanned'] != "No"){
@@ -484,6 +486,9 @@ if(isset($_POST['GetNewestScanForVIS'])){
                     echo '<li><strong>Mac:</strong>' . $item['deviceMacAddress'] . '</li>';
                     echo '<li><strong>IP:</strong>' . $item['deviceIP'] . '</li>';
                     echo '<li><strong>Scanned:</strong>' . $item['deviceScanned'] . '</li>';
+                    echo '<li><form action="/scan/Create/CreateScan.php" method="post">';
+                    echo'<b>Rescan? </b><button style="background: none; border: none; color: green;" name = "createScan" id="'.$item['deviceIP'].'" value="'.$item['deviceIP'].'"><u>Confirm</u></button>';
+                    echo'</form></li></ul>';
 
                     if ($item['deviceScanned'] != "No") {
                         echo '<form action="/scan/View/viewScan.php" method="post">';
@@ -534,8 +539,13 @@ if(isset($_POST['GetNewestScanForVIS'])){
                     $newestScan = getNewestScan($item['deviceID'], $scannedDevices);
 
                     if ($newestScan != 0){
+                        echo '<form action="/scan/Create/CreateScan.php" method="post">';
+                        echo'<b>Rescan? </b><button style="background: none; border: none; color: green;" name = "createScan" id="'.$item['deviceIP'].'" value="'.$item['deviceIP'].'"><u>Confirm</u></button>';
+                        echo'</form>';
+
                         echo '<form action="/scan/View/viewScan.php" method="post">';
                         echo '<td> <button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . $newestScan . '" id="'.$newestScan.'">View Device</button> </td>';
+
                     }
                     else{
                         echo '<form action="/scan/Create/CreateScan.php" method="post">';
@@ -574,7 +584,6 @@ if(isset($_POST['GetNewestScanForVIS'])){
 <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.1/js/swiper.jquery.min.js"></script>
 <script>
     function openNav() {
         document.getElementById("myNav").style.width = "100%";

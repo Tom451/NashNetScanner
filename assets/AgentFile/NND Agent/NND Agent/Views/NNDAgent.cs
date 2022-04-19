@@ -28,7 +28,7 @@ namespace NND_Agent
 
         //create a timer
         private Timer timer1;
-        DataClass Scan;
+        DataProcessing Scan;
         bool ScanStatus;
 
         //tell the user scan has started
@@ -155,7 +155,7 @@ namespace NND_Agent
 
             }
 
-            Scan = new DataClass();
+            Scan = new DataProcessing();
 
             //set teh agent as on 
             ScanChecker();
@@ -303,13 +303,14 @@ namespace NND_Agent
            
             
         }
-
+        //cancel scan method
         private void CancelScanToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //show user scan canceled 
             PopUp("Scan Cancled", "Ended", ToolTipIcon.Error);
             // WinForms app
-            SetAgent(0);
             System.Windows.Forms.Application.Exit();
+            Application.Run(new NNDAgent());
 
         }
 

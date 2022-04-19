@@ -1,14 +1,6 @@
 <?php
 
-function getHelp($type, $cwe): ?array
-{
-
-
-    return inputCWE($cwe);
-
-}
-
-function inputCWE($CWE): ?array
+function getHelp($CWE): ?array
 {
 
     $Help[] = null;

@@ -7,11 +7,27 @@ include('../assets/php/DBConfig.php');
 
 $connection = getConnection();
 
-//if password is incorrect
-function previousPasswordCheck(){
-    if(isset($_GET['password'])){
-        echo "Please make your password is: Over 8 characters, lowercase, uppercase and a special character";
+//if password and/or email is incorrect
+function errorCheck(){
+    if(isset($_GET['incorrect'])){
+        if ($_GET['incorrect'] == "password"){
+            echo "Please make your password is: Over 8 characters, lowercase, uppercase and a special character";
+        }
+        else if ($_GET['incorrect'] == "email"){
+            echo "Please make sure your email is correct";
+        }
+        else if ($_GET['incorrect'] == "firstname"){
+            echo "Please make sure your first name is not too long";
+        }
+        else if ($_GET['incorrect'] == "secondname"){
+            echo "Please make sure your second name is not too long";
+        }
+        else if ($_GET['incorrect'] == "username"){
+            echo "Please make sure your username is not too long";
+        }
+
     }
+
 }
 
 
@@ -30,9 +46,22 @@ if (isset($_POST['register'])) {
     $specialChars = preg_match('@[^\w]@', $_POST['password']);
 
 
-    //check password
+
+    //check all inputs
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        header("Location:/user/registration.php?incorrect=email");
+    }
     if (strlen($_POST['password']) < 8 || !$number || !$uppercase || !$lowercase || !$specialChars){
-        header("Location:/user/registration.php?password=incorrect");
+        header("Location:/user/registration.php?incorrect=password");
+    }
+    if (strlen($firstName) > 49){
+        header("Location:/user/registration.php?incorrect=firstname");
+    }
+    if (strlen($lastName) > 49){
+        header("Location:/user/registration.php?incorrect=secondname");
+    }
+    if (strlen($username) > 44){
+        header("Location:/user/registration.php?incorrect=username");
     }
     else{
         //start by cheching password length
@@ -114,7 +143,7 @@ if (isset($_POST['register'])) {
     <form  method="post">
         <h2 class="sr-only">Registration Form</h2>
         <div class="illustration"><img src="../assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>
-        <p class="text-center" style="display: flex; color: red" id="errorMessage" ><?php previousPasswordCheck(); ?></p>
+        <p class="text-center" style="display: flex; color: red" id="errorMessage" ><?php errorCheck(); ?></p>
         <div class="form-group"><input class="form-control" type="text" name="firstName" placeholder="First Name"></div>
         <div class="form-group"><input class="form-control" type="text" name="lastName" placeholder="Last Name"></div>
         <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>

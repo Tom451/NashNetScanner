@@ -68,7 +68,7 @@ function draw(items) {
 
                 })
 
-            if (items[index].deviceScanned.includes("Yes") || items[index].deviceScanned.includes("Host Down")){
+            if (items[index].deviceScanned.includes("Yes") || items[index].deviceScanned.includes("Host Down") || items[index].deviceScanned.includes("Scanning")){
                 edges.push({ from: 1, to: items[index].deviceID })
             }
 

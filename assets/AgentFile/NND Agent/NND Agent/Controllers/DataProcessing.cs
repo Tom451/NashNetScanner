@@ -15,7 +15,7 @@ using System.Net;
 
 namespace NND_Agent.Data
 {
-    internal class DataClass
+    internal class DataProcessing
     {
         //current user 
         readonly userModel currentUser = new userModel();
