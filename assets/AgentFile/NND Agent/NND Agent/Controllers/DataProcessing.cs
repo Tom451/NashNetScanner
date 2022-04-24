@@ -19,40 +19,28 @@ namespace NND_Agent.Data
     {
         //current user 
         readonly userModel currentUser = new userModel();
-        
+
         //current form
-        NNDAgent form = NNDAgent.NNDForm;
+        readonly NNDAgent form = NNDAgent.NNDForm;
 
         //data connection 
-        DataUpload Connection = new DataUpload();
+        readonly DataUpload Connection = new DataUpload();
 
-
-        public bool CheckForScan(long userNONCE)
-        {
-            if (Connection.SendGet("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php?USERID=" + userNONCE) == null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            };
-        }
-
-
+        //public methods accessable from outside this class
+        //start scan method 
         public async Task StartScan(long userNONCE)
         {
 
             //initalise the classes
             currentUser.userName = userNONCE.ToString();
-            
- 
+
+
 
             //get the scan
-            currentUser.listScans = Connection.SendGet("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php?USERID=" + userNONCE);
+            currentUser.listScans = Connection.SendGet("http://" + NNDAgent.WebpageAddress + "/assets/php/database/DBUploadConn.php?USERID=" + userNONCE);
 
-            
-            
+
+
 
             if (currentUser.listScans == null)
             {
@@ -103,9 +91,9 @@ namespace NND_Agent.Data
                             form.PopUp("NMAP is using the file. Attempting to close NMAP Failed.", "System will wait for 30 seconds, please try close NMAP from Task Manager ", System.Windows.Forms.ToolTipIcon.Error);
                             Thread.Sleep(30000);
                         }
-                        
 
-                        
+
+
                     }
                 }
 
@@ -127,7 +115,7 @@ namespace NND_Agent.Data
                 //upload the devices
                 try
                 {
-                    Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
+                    Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/database/DBUploadConn.php", String.Format("UploadWithVerification={0}", uploadJSON));
 
                 }
                 catch
@@ -135,13 +123,25 @@ namespace NND_Agent.Data
                     form.PopUp("No returned value", "Website may be down try again later", System.Windows.Forms.ToolTipIcon.Error);
                 }
             }
-            
-            
-            
 
-           
+
+
+
+
         }
 
+        //check for scan method
+        public bool CheckForScan(long userNONCE)
+        {
+            if (Connection.SendGet("http://" + NNDAgent.WebpageAddress + "/assets/php/database/DBUploadConn.php?USERID=" + userNONCE) == null )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            };
+        }
 
         //returns true on success and false on error 
         public bool NMapScan(ScanModel scan, long userNonce)
@@ -187,19 +187,19 @@ namespace NND_Agent.Data
                     currentScan.scanType = "Return";
                     currentScan.scanInfo = currentUser.currentScan.scanInfo;
                     
-                    Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
+                    Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/database/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
                     return false;
                 }
                 else
                 {
                     currentScan.scanInfo = currentUser.scannedDevices[0].macAddress;
                     currentScan.ScanStatus = "Scanning";
-                    Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
+                    Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/database/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
 
                     if(!RunVulnScan(scan, process, startInfo))
                     {
                         currentScan.ScanStatus = "Error";
-                        Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
+                        Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/database/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
                         //wait 10 seconds for the next scan, this gives the program chnace to finish (NMAP)
                         Thread.Sleep(10000);
                         return false;
@@ -209,21 +209,6 @@ namespace NND_Agent.Data
                         return true;
                     }
                 }
-                
-
-                //upload the current device being scanned
-                if (currentUser.scannedVulns == null || currentUser.scannedVulns.Count > 0)
-                {
-                    currentScan.ScanStatus = "Analysing";
-                }
-                else
-                {
-                    currentScan.ScanStatus = "Yes: Safe";
-                }
-                
-                Connection.SendPost("http://" + NNDAgent.WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("UploadWithVerification={0}", Connection.ToJSON(currentScan)));
-
-                return true;
 
             }
 
@@ -232,10 +217,47 @@ namespace NND_Agent.Data
 
         }
 
+        //progress check method 
+        public int CheckProgress()
+        {
+            // set the scan count initial value of 0 
+            int scanCount = 0;
+            try
+            {
+                // if the current user doesnt have a lsit of scans then that means no scans 
+                if (currentUser.listScans is null)
+                {
+                    scanCount = 0;
+                }
+                else
+                {
+                    // go through the items and if it is set as pending then incremet the count
+                    foreach (var item in currentUser.listScans)
+                    {
+                        if (item.ScanStatus == "Pending")
+                        {
+                            scanCount++;
+                        }
+                    }
+                }
+
+            }
+            catch (NullReferenceException)
+            {
+                // if the null refernece is thrown then there will be 0 scans 
+                scanCount = 0;
+            }
+
+            // return the count 
+            return scanCount;
+        }
+
+
+        //private methods 
         #region Parse Data Area
         private Boolean ParseVulnerbilityData(ScanModel scan)
         {
-
+            //create a new list for the currently scanned vulnerbilities
             currentUser.scannedVulns = new List<VulnModel>();
 
             //read in data from the created XML File
@@ -247,9 +269,13 @@ namespace NND_Agent.Data
             //check if all the hosts are down
             XmlNode hosts = NMapXMLScan.SelectSingleNode("nmaprun/runstats/hosts");
 
+            //get the number of down devices 
             var numberDown = hosts.Attributes.GetNamedItem("down").InnerText;
+
+            //get the number of total devices 
             var numberTotal = hosts.Attributes.GetNamedItem("total").InnerText;
 
+            //the the number of devices down is the same as number of devices total e.g 1 down 1 total then the device is down.
             if (numberDown == numberTotal)
             {
                 form.PopUp("Host Down", "The host is currently down", System.Windows.Forms.ToolTipIcon.Warning);
@@ -263,8 +289,10 @@ namespace NND_Agent.Data
 
             for (int i = 0; i < ports.Count - 1; i++)
             { 
+                // start by creating a new vulnerbility model 
                 VulnModel tempModel = new VulnModel();
 
+                //port that is effected 
                 var port = ports.Item(i);
                 var service = port.SelectSingleNode("service");
 
@@ -280,7 +308,7 @@ namespace NND_Agent.Data
                     tempModel.VulnName = null;
                 }
 
-                //same as number 1 
+                //same as number 1 but for verison e.g 4.5
                 if (service.Attributes.GetNamedItem("version") != null)
                 {
                     tempModel.VulnVersion = service.Attributes.GetNamedItem("version").InnerText;
@@ -290,7 +318,7 @@ namespace NND_Agent.Data
                     tempModel.VulnVersion = "No Value Found";
                 }
 
-                //same as number 1 
+                //same as number 1 but for the product e.g MySQL 
                 if (service.Attributes.GetNamedItem("product") != null)
                 {
                     tempModel.VulnProduct = service.Attributes.GetNamedItem("product").InnerText;
@@ -300,7 +328,7 @@ namespace NND_Agent.Data
                     tempModel.VulnProduct = "No Value Found";
                 }
 
-                //same as number 1 
+                //same as number 1 but for extra info, this can contain extra info e.g patch 4
                 if (service.Attributes.GetNamedItem("extrainfo") != null)
                 {
                     tempModel.VulnProduct = service.Attributes.GetNamedItem("extrainfo").InnerText;
@@ -309,12 +337,13 @@ namespace NND_Agent.Data
                 {
                     tempModel.VulnExtraData = "No Value Found";
                 }
+                //same as number 1 but for cpe 
                 if (service.Attributes.GetNamedItem("cpe") != null)
                 {
                     tempModel.VulnCPE = service.Attributes.GetNamedItem("cpe").InnerText;
                 }
 
-                //if cpe is nested 
+                //if cpe is nested inside a cpe section 
                 else
                 {
                     if(service.ChildNodes.Count == 0)
@@ -339,20 +368,21 @@ namespace NND_Agent.Data
                     
                 }
 
+                //get the port ID from the port specified at the start
                 tempModel.VulnPortNumber = port.Attributes.GetNamedItem("portid").InnerText;
-
+                //get the current scanID
                 tempModel.scanID = scan.scanID;
-
+                //add this vulnerbility to the list of vulnerbilites 
                 currentUser.scannedVulns.Add(tempModel);
 
-
-                
-
             }
+            //one device is done at a time due to then the ability to update on the fly is possible 
             if (currentUser.scannedDevices == null)
             {
                 //create the list
                 currentUser.scannedDevices = new List<ComputerModel>();
+
+                //create a temp devices
                 ComputerModel scannedDevice = new ComputerModel();
 
                 //select all the hosts in the document with addresses
@@ -386,15 +416,13 @@ namespace NND_Agent.Data
 
                 currentUser.scannedDevices.Add(scannedDevice);
             }
-            
-            
 
             return true;
 
 
 
         }
-        public void ParseNetworkDiscoveryData(ScanModel scan)
+        private Boolean ParseNetworkDiscoveryData(ScanModel scan)
         {
             currentUser.scannedDevices = new List<ComputerModel>();
 
@@ -495,8 +523,11 @@ namespace NND_Agent.Data
 
                 currentUser.scannedDevices.Add(tempDevice);
 
+                
+
             }
 
+            return true;
 
 
         }
@@ -505,12 +536,13 @@ namespace NND_Agent.Data
 
         #region Run Scan Area
 
-        public Boolean RunNetworkScan(ScanModel scan, Process process, ProcessStartInfo startInfo)
+        private Boolean RunNetworkScan(ScanModel scan, Process process, ProcessStartInfo startInfo)
         {
             //get gateway IP and Mac Address for scan 
             string gateway = GetNetworkGateway();
             string[] gatewayArray = gateway.Split('.');
 
+            //if scan info is set as N/A then network scan is needed 
             if (scan.scanInfo == "N/A")
             {
                 startInfo.Arguments = String.Format("/C nmap -sn -oX C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml {0}.{1}.{2}.*/24 --no-stylesheet ", gatewayArray[0], gatewayArray[1], gatewayArray[2]);
@@ -519,6 +551,7 @@ namespace NND_Agent.Data
 
                 process.Start();
             }
+            // else if an ip is provided then scan that specific ip 
             else if (IPAddress.TryParse(scan.scanInfo, out IPAddress ip))
             {
                 startInfo.Arguments = String.Format("/C nmap -sn -oX C:\\Users\\Public\\Documents\\NMAPNetworkScan.xml {0} --no-stylesheet ", ip.ToString());
@@ -528,7 +561,7 @@ namespace NND_Agent.Data
                 process.Start();
             }
 
-
+            //start the proccess and wait for the output
             //Read the output stream first and then wait.
             if (process.WaitForExit(180000))
             {
@@ -544,7 +577,7 @@ namespace NND_Agent.Data
             }
         }
 
-        public Boolean RunVulnScan(ScanModel scan, Process process, ProcessStartInfo startInfo)
+        private Boolean RunVulnScan(ScanModel scan, Process process, ProcessStartInfo startInfo)
         {
             
 
@@ -594,40 +627,7 @@ namespace NND_Agent.Data
 
         #endregion
 
-        //progress check method 
-        public int CheckProgress()
-        {
-            // set the scan count initial value of 0 
-            int scanCount = 0;
-            try
-            {
-                // if the current user doesnt have a lsit of scans then that means no scans 
-                if (currentUser.listScans is null)
-                {
-                    scanCount = 0;
-                }
-                else
-                {
-                    // go through the items and if it is set as pending then incremet the count
-                    foreach (var item in currentUser.listScans)
-                    {
-                        if (item.ScanStatus == "Pending")
-                        {
-                            scanCount++;
-                        }
-                    }
-                }
-                
-            }
-            catch (NullReferenceException)
-            {
-                // if the null refernece is thrown then there will be 0 scans 
-                scanCount = 0;
-            }
-
-            // return the count 
-            return scanCount;
-        }
+        
 
 
     }

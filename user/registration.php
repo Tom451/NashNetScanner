@@ -111,9 +111,9 @@ if (isset($_POST['register'])) {
             $result = $query->execute();
 
             if ($result) {
-                header('Location: /index.php');
+                header('Location: /index.php?UserAccount=Created');
             } else {
-                echo '<script>ErrorWithForm()</script>';
+                header('Location: /index.php?UserAccount=Error');
             }
         }
 
@@ -129,7 +129,7 @@ if (isset($_POST['register'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Register</title>
-    <?php require "../assets/php/headerData.php"?>
+    <?php require "../assets/php/headerData.php" ?>
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="../assets/css/styles.css">

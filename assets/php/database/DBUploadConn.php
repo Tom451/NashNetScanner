@@ -1,31 +1,19 @@
 <?php
 require_once 'DBConfig.php';
+require_once 'DBFunctions.php';
 
 //Get PDO connection string
 $connection = getConnection();
 
-//If the post Value is JSON for the upload start the upload of the devices
+// Show Scans user has
 if (isset($_GET['USERID'])) {
 
     //get the inputted username and the password
     $USERNONCE = $_GET['USERID'];
 
-    //select all the users with the given username
-    $query = $connection->prepare("SELECT UserID FROM usercredentials WHERE userNonce=:userNonce");
-    $query->bindParam("userNonce", $USERNONCE, PDO::PARAM_STR);
-    $query->execute();
+    $result = getAllUsersByUserNonce($connection, $USERNONCE);
 
-    //get the userID result
-    $result = $query->fetch(PDO::FETCH_ASSOC);
-
-    //select all the users with the given username
-    $query = $connection->prepare("SELECT * FROM scan WHERE userID=:userid AND ScanStatus='Pending'");
-    $query->bindParam("userid", $result['UserID'], PDO::PARAM_STR);
-    $query->execute();
-
-    //get the result
-    $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
+    $result = getAllUserPendingScans($connection, $result['UserID']);
 
     //if there is no results then show incorrect credentials
     if (!$result) {
@@ -54,6 +42,7 @@ if (isset($_GET['USERID'])) {
     }
 }
 
+// Upload Scans and Vulnerability
 elseif (isset($_POST['UploadWithVerification'])) {
 
     $JSONObject = json_decode($_POST['UploadWithVerification']);
@@ -66,28 +55,26 @@ elseif (isset($_POST['UploadWithVerification'])) {
         // if a mac address is provided in the scan info section then it is a Scan update
         if (!empty($JSONObject->scanInfo)) {
 
-            $storedProcedure = 'CALL setDeviceStatus(:inMacAddress, :inIPAddress, :inDeviceScanned)';
 
-            $statement = $connection->prepare($storedProcedure);
 
-            $statement->bindParam(':inDeviceScanned', $JSONObject->ScanStatus, PDO::PARAM_STR);
+            $inDeviceScanned = $JSONObject->ScanStatus;
+            $inIPAddress = "Null";
+            $inMacAddress = "Null";
 
             if (filter_var($JSONObject->scanInfo, FILTER_VALIDATE_MAC)) {
 
-                $IP = "Null";
-                $statement->bindParam(':inMacAddress', $JSONObject->scanInfo, PDO::PARAM_STR);
-                $statement->bindParam(':inIPAddress', $IP, PDO::PARAM_STR);
+                $inMacAddress = $JSONObject->scanInfo;
+
 
             }
             else if (filter_var($JSONObject->scanInfo, FILTER_VALIDATE_IP)){
-                $MAC = "Null";
-                $statement->bindParam(':inMacAddress', $MAC, PDO::PARAM_STR);
-                $statement->bindParam(':inIPAddress', $JSONObject->scanInfo, PDO::PARAM_STR);
+
+                $inIPAddress = $JSONObject->scanInfo;
 
 
             }
 
-            if ($statement->execute()) {
+            if (setDeviceStatus($connection, $inMacAddress, $inMacAddress, $inDeviceScanned)) {
                 echo "Updated Scan";
             } else {
                 echo "Error";
@@ -98,11 +85,7 @@ elseif (isset($_POST['UploadWithVerification'])) {
 
         $USERNONCE = $JSONObject->userName;
 
-        //select all the users with the given username
-        $query = $connection->prepare("SELECT UserID FROM usercredentials WHERE userNonce=:userNonce");
-        $query->bindParam("userNonce", $USERNONCE, PDO::PARAM_STR);
-
-        if (!$query->execute()) {
+        if (!getAllUsersByUserNonce($connection, $USERNONCE)) {
             echo "Not verified";
         }
 
@@ -274,6 +257,7 @@ elseif (isset($_POST['UploadWithVerification'])) {
     }
 }
 
+//Set the agent status
 elseif(isset($_POST['AgentStatus'])){
     $JSONObject = json_decode($_POST['AgentStatus']);
 

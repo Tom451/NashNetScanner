@@ -1,6 +1,3 @@
-<script src="assets/js/loginAndRegistrationJS.js"></script>
-<link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon"/>
-
 <?php
 //start the session
 session_start();
@@ -9,19 +6,27 @@ if(isset($_SESSION['user_id'])){
     exit;
 }
 
-function checkTimeout(){
+function checkError(){
     if(isset($_GET['timeout'])){
-        if($_GET['timeout']== true){
+        if($_GET['timeout'] == true){
             echo 'You have been logged out in accordance with OWASP guidelines to prevent session fixation';
         }
         else{
-            echo '';
+            echo 'Timed Out';
+        }
+    }
+    else if(isset($_GET['UserAccount'])){
+        if($_GET['UserAccount'] == "Created"){
+            echo 'Account created Successfully!';
+        }
+        else if($_GET['UserAccount'] == "Error"){
+            echo 'Account creation error please try again!';
         }
     }
 }
 
 
-require 'assets\php\DBConfig.php';
+require 'assets\php\database\DBConfig.php';
 
 //if the login is complete then log the user in
 if (isset($_POST['login'])) {
@@ -89,13 +94,13 @@ if (isset($_POST['login'])) {
 
 <body>
 
-    <?php require 'assets/php/navBarLoggedOut.php' ?>
+    <?php require 'assets/php/navBar/navBarLoggedOut.php' ?>
 
     <section class="login-clean">
         <form method="post">
             <h2 class="sr-only">Login Form</h2>
             <div class="illustration"><img src="assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="170" alt="Logo"></div>
-            <p style="display: flex; color: red" ><?php checkTimeout();?></p>
+            <p style="display: flex; color: black" ><b><?php checkError();?></b></p>
             <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
             <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
             <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background: var(--blue);" value="login" name="login">Login</button></div><a class="forgot" href="#"></a>

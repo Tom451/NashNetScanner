@@ -20,6 +20,7 @@ function getConnection(): PDO
 }
 
 function agentChecker(){
+
     $connection = getConnection();
     //select all the users with the given username
     $query = $connection->prepare("SELECT agentOnline FROM user WHERE userID=:UserID");
@@ -32,6 +33,7 @@ function agentChecker(){
     $_SESSION['agentStatus'] = $result['agentOnline'];
 
     header("index.php");
+
 }
 
 if (isset($_POST['checkAgentStatus'])){

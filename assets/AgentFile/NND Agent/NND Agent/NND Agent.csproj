@@ -96,7 +96,7 @@
     <Compile Include="Controllers\DataProcessing.cs" />
     <Compile Include="Models\ComputerModel.cs" />
     <Compile Include="Models\ScanModel.cs" />
-    <Compile Include="Models\userModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\VulnModel.cs" />
     <Compile Include="Views\NNDAgent.cs">
       <SubType>Form</SubType>

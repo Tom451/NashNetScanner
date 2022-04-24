@@ -42,8 +42,17 @@
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblCurrentIP = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.lblDiscription = new System.Windows.Forms.Label();
+            this.lblDescriptionExt = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lstErrors = new System.Windows.Forms.ListBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.NNDContext.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // NNDToolBarIcon
@@ -127,7 +136,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(13, 13);
+            this.label2.Location = new System.Drawing.Point(12, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(128, 33);
             this.label2.TabIndex = 4;
@@ -155,13 +164,76 @@
             this.lblCurrentIP.TabIndex = 4;
             this.lblCurrentIP.Text = "IP";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(18, 62);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(131, 111);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
+            // 
+            // lblDiscription
+            // 
+            this.lblDiscription.AutoSize = true;
+            this.lblDiscription.Location = new System.Drawing.Point(7, 26);
+            this.lblDiscription.Name = "lblDiscription";
+            this.lblDiscription.Size = new System.Drawing.Size(289, 45);
+            this.lblDiscription.TabIndex = 7;
+            this.lblDiscription.Text = "This is the settings page for the NashNetworkAgent, \r\nthe settings on this page a" +
+    "re only meant to be \r\nchanged if you know what you are doing.";
+            // 
+            // lblDescriptionExt
+            // 
+            this.lblDescriptionExt.AutoSize = true;
+            this.lblDescriptionExt.Location = new System.Drawing.Point(6, 87);
+            this.lblDescriptionExt.Name = "lblDescriptionExt";
+            this.lblDescriptionExt.Size = new System.Drawing.Size(286, 60);
+            this.lblDescriptionExt.TabIndex = 8;
+            this.lblDescriptionExt.Text = "This is my final year project and is to\r\nbe used in conjunction with the web appl" +
+    "ication\r\nwhich can be accessed at the given address on the \r\nright";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.lstErrors);
+            this.groupBox2.Location = new System.Drawing.Point(163, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(208, 189);
+            this.groupBox2.TabIndex = 9;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "ErrorLog";
+            // 
+            // lstErrors
+            // 
+            this.lstErrors.FormattingEnabled = true;
+            this.lstErrors.Location = new System.Drawing.Point(17, 28);
+            this.lstErrors.Name = "lstErrors";
+            this.lstErrors.Size = new System.Drawing.Size(172, 147);
+            this.lstErrors.TabIndex = 0;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.lblDescriptionExt);
+            this.groupBox3.Controls.Add(this.lblDiscription);
+            this.groupBox3.Location = new System.Drawing.Point(18, 207);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(353, 150);
+            this.groupBox3.TabIndex = 10;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Description";
+            // 
             // NNDAgent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 366);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "NNDAgent";
             this.Text = "NND Agent";
@@ -173,6 +245,10 @@
             this.NNDContext.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -192,6 +268,12 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lblCurrentIP;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label lblDiscription;
+        private System.Windows.Forms.Label lblDescriptionExt;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ListBox lstErrors;
+        private System.Windows.Forms.GroupBox groupBox3;
     }
 }
 

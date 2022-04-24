@@ -2,6 +2,7 @@
 
 //require the session check to ensure user is logged in
 require '..\..\assets\php\sessionChecker.php';
+require '..\..\assets\php\database\DBFunctions.php';
 
 //get their user ID
 $USERID = $_SESSION['user_id'];
@@ -9,43 +10,22 @@ $USERID = $_SESSION['user_id'];
 //get the connection variables to the database
 $connection = getConnection();
 
-//select all the devices that have been discovered by the logged-in user
-// This is all the networked scanned devices, and due to the grouping will mean that the devices only appear once
-//even if they have been found multiple times
-$query = $connection->prepare("SELECT * FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
-JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE scan.UserID=:userid AND scan.ScanType = 'NetDisc' GROUP by device.deviceIP");
-//bind the variables
-$query->bindParam("userid", $USERID, PDO::PARAM_STR);
-
-//get the result
-$query->execute();
-$devices = $query->fetchAll(PDO::FETCH_ASSOC);
+//get all the devices
+$devices = getDiscoveredDevicesFromDB($connection, $USERID);
 
 //if there is no devices then the user has never done a scan so show them the tutorial to get them started
 if(count($devices) == 0){
     //forward to tutorial page
     header('Location: ../Create/tutorial.php');
 }
+
 //else if they have discovered devices then continue:
 
 //get all the devices that have been vulnerability assessed.
-$query = $connection->prepare("SELECT device.deviceID, scan.ScanID, scan.ScanTime, scan.ScanStatus FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
-JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE scan.ScanType = 'VulnScan' AND scan.userID = :userid");
+$scannedDevices = getScannedDevicesFromDB($connection, $USERID);
 
-$query->bindParam("userid", $USERID, PDO::PARAM_STR);
-
-$query->execute();
-
-//get the result
-$scannedDevices = $query->fetchAll(PDO::FETCH_ASSOC);
-
-//get all the devices that are currently pending a scan
-$query = $connection->prepare("SELECT * FROM scan WHERE scan.userID = :userid AND ScanStatus = 'Pending'" );
-$query->bindParam("userid", $USERID, PDO::PARAM_STR);
-$query->execute();
-
-//get the result
-$devicesToScan = $query->fetchAll(PDO::FETCH_ASSOC);
+//get pending scans
+$devicesToScan = getAllPendingScansFromDB($connection, $USERID);
 
 //count the number of devices currently waiting for a scan
 $countDevicesToScan = count($devicesToScan);
@@ -122,7 +102,10 @@ function getVulns($NeedsAttention, $Secure, $Other, $Scanning, $countDevicesToSc
         echo('<section class="highlight-section" style="background: dodgerblue;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"> <i class="fa fa-birthday-cake" style="transform: scale(2);"></i></h2>
                             <p class="text-center">Congratulations on your network Scan! Now you currently have scanned no
-                             devices for vulnerabilities, please start a full scan from the menu section to begin!</p>
+                             devices for vulnerabilities, please press the button below to begin a full Vulnerability Scan</p>
+                             <form action="/scan/Create/CreateScan.php" method="post">
+                                <div style="padding-left: 40%"><button class="btn btn-secondary" name="createScan" value="FULLSCAN" id="FULLSCAN">Start Scan</button></div>
+                                </form>
                </div></div></section>');
     }
     //else of there are needs attention then show the needs attention banner
@@ -151,7 +134,7 @@ function getVulns($NeedsAttention, $Secure, $Other, $Scanning, $countDevicesToSc
         echo('<section class="highlight-section" style="background: dodgerblue;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"><i class="fa fa-smile-o" style="transform: scale(2);"></i></h2>
                             <p class="text-center">No issues at all with,
-                                your ' .count($Other).' devices are currently safe, or you have informed us to ignore them so no
+                                your ' .count($Other)+count($Secure).' devices are currently safe, or you have informed us to ignore them so no
                                 extra action will need to be taken, enjoy your day! </p>
                 </div></div></section>');
 
@@ -207,7 +190,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Devices</title>
-    <?php require "../../assets/php/headerData.php" ?>
+    <?php require "../../assets/php/navBar/headerData.php" ?>
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="../../assets/css/Features-Clean.css">
@@ -222,7 +205,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
 <body>
 
 <!-- Get the header -->
-<?php require '../../assets/php/navBarLoggedIn.php' ?>
+<?php require '../../assets/php/navBar/navBarLoggedIn.php' ?>
 
 <!-- The overlay -->
 <div id="myNav" class="overlay">
@@ -355,6 +338,12 @@ if(isset($_POST['GetNewestScanForVIS'])){
     <div class="container">
         <div class="intro">
             <h2 class="text-center">Devices</h2>
+            <?php
+                if (isset($_GET["Scan"])){
+                    echo '<p class="text-center" style="color: red">There is currently a scan pending, please run this scan from the user agent first and view its progress from this page</p>';
+                }
+                ?>
+
         </div>
 
 
@@ -421,9 +410,10 @@ if(isset($_POST['GetNewestScanForVIS'])){
 
 
             //needs attention area
-            echo'<div id="needsattention"><button class="accordion" data-toggle="collapse" data-target="#needsattentiondata">Needs Attention:</button>';
-            echo '<div id = "needsattentiondata" class="collapse show"><div class="row features" style="padding-top: 10px;">';
+
             if (!empty($NeedsAttention) ){
+                echo'<div id="needsattention"><button class="accordion" data-toggle="collapse" data-target="#needsattentiondata">Needs Attention:</button>';
+                echo '<div id = "needsattentiondata" class="collapse show"><div class="row features" style="padding-top: 10px;">';
                 foreach ($NeedsAttention as $item){
                     echo'<div class="col-sm-6 col-lg-4 item"><i class="fa fa-desktop icon" style="color: red"></i>';
                     echo'<ul class="list-unstyled">';
@@ -470,15 +460,17 @@ if(isset($_POST['GetNewestScanForVIS'])){
                 echo '</div></div></div>';
             }
             else{
-                echo '<span style="padding-left: 45%"><b>Nothing to show</b></span></div></div></div>';
+                //echo '<span style="padding-left: 45%"><b>Nothing to show</b></span></div></div></div>';
             }
 
 
 
 
+
+            if (!empty($Secure) ) {
                 echo '<div id="safe"><button class="accordion collapsed" data-toggle="collapse" data-target="#safedata">Safe:</button>';
                 echo '<div id="safedata" class="collapse"><div  class="row features">';
-            if (!empty($Secure) ) {
+
                 foreach ($Secure as $item) {
                     echo '<div class="col-sm-6 col-lg-4 item"><i class="fa fa-desktop icon" style="color: Green"></i>';
                     echo '<ul class="list-unstyled">';
@@ -509,7 +501,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
                 echo '</div></div></div>';
             }
             else{
-                echo '<span style="padding-left: 45%"><b>Nothing to show</b></span></div></div></div>';
+                //echo '<span style="padding-left: 45%"><b>Nothing to show</b></span></div></div></div>';
             }
 
 
@@ -517,10 +509,10 @@ if(isset($_POST['GetNewestScanForVIS'])){
             echo '<div id="otherdata" class="collapse"><div  class="row features">';
             if (!empty($Other) ){
 
+
             foreach ($Other as $item){
 
                 echo'<div class="col-sm-6 col-lg-4 item"><i class="fa fa-desktop icon" style="color: grey"></i>';
-
                 echo'<ul class="list-unstyled">';
                 echo '<h3 class="name">Device: '. $item['deviceName'] .'</h3>';
                 echo '<li><strong>Mac:</strong>'.$item['deviceMacAddress'].'</li>';
@@ -528,16 +520,22 @@ if(isset($_POST['GetNewestScanForVIS'])){
                 echo '<li><strong>Scanned:</strong>'.$item['deviceScanned'].'</li>';
 
                 if (str_contains($item['deviceScanned'], "Yes")){
+                    echo '<form action="/scan/Create/CreateScan.php" method="post">';
+                    echo'<b>Rescan? </b><button style="background: none; border: none; color: green;" name = "createScan" id="'.$item['deviceIP'].'" value="'.$item['deviceIP'].'"><u>Confirm</u></button>';
+                    echo'</form>';
                     echo '<form action="/scan/View/viewScan.php" method="post">';
                     echo '<button class="btn btn-primary bg-secondary d-lg-flex" name="scanSelected" value="' . getNewestScan($item['deviceID'], $scannedDevices) . '" id="'.getNewestScan($item['deviceID'], $scannedDevices).'">View Device</button> </td>';
                     echo'</form>';
+
                 }
 
 
-                else if($item['deviceScanned'] == "Host Down" ){
+                else if($item['deviceScanned'] == "Host Down"){
 
+                    //get the newest scan
                     $newestScan = getNewestScan($item['deviceID'], $scannedDevices);
 
+                    // if there is scans then shwo rescan button
                     if ($newestScan != 0){
                         echo '<form action="/scan/Create/CreateScan.php" method="post">';
                         echo'<b>Rescan? </b><button style="background: none; border: none; color: green;" name = "createScan" id="'.$item['deviceIP'].'" value="'.$item['deviceIP'].'"><u>Confirm</u></button>';
@@ -571,7 +569,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
 
                 echo'</div>';
             }
-                echo '<span style="padding-left: 45%"><b>Nothing to show</b></span></div></div></div>';
+                //echo '<span style="padding-left: 45%"><b>Nothing to show</b></span></div></div></div>';
             }
 
             echo'</div>';

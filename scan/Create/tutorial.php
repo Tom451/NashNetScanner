@@ -1,5 +1,18 @@
 <?php
 require '..\..\assets\php\sessionChecker.php';
+require_once '..\..\assets\php\database\DBFunctions.php';
+require_once '..\..\assets\php\database\DBConfig.php';
+
+if(isset($_POST['checkScan'])){
+    if (count(getDiscoveredDevicesFromDB(getConnection(),  $_SESSION['user_id'])) === 0){
+        echo 'false';
+        return;
+    }
+    else{
+        echo 'true';
+        return;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,7 +21,7 @@ require '..\..\assets\php\sessionChecker.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Get Started</title>
-    <?php require "../../assets/php/headerData.php" ?>
+    <?php require "../../assets/php/navBar/headerData.php" ?>
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="../../assets/css/Features-Boxed.css">
@@ -23,7 +36,7 @@ require '..\..\assets\php\sessionChecker.php';
 </head>
 
 <body>
-<?php require '../../assets/php/navBarLoggedIn.php' ?>
+<?php require '../../assets/php/navBar/navBarLoggedIn.php' ?>
 
 <section class="features-clean">
     <div class="container">
@@ -67,7 +80,7 @@ require '..\..\assets\php\sessionChecker.php';
                                     <li>Run NNDEasyStart from desktop</li>
                                     <li>Run a discovery using the button bellow</li>
                                 </ul>
-                                <form action="/scan/Create/CreateScan.php" method="post"><button class="btn btn-primary" type="submit" name="createScan" value="NetDisc" id="discovery">Run Discovery</button></form>
+                                <button class="btn btn-primary" type="submit" name="createScan" value="NetDisc" id="discovery">Run Discovery</button>
                             </div>
                             <div class="col-md-6">
                                 <video width="720" height="480" controls>
@@ -93,10 +106,12 @@ require '..\..\assets\php\sessionChecker.php';
                             <div class="col-md-6">
                                 <p>Congratulations you are now one step closer to being safer! The program will keep you updated in the scan section so you can see how long you scan has currently got. Once the scan is complete the program will give you instructions on how to move forward depending on what it finds.&nbsp;</p>
                                 <ul>
-                                    <li>Visit the <a href="../View/Devices.php">Devices Page</a> to view all devices</li>
+                                    <li>Visit the <a href="../View/Devices.php">Devices Page</a> soon to view all devices</li>
                                     <li>Follow the help guides on any devices necessary</li>
                                     <li>Sit back and enjoy a more secure network</li>
                                 </ul>
+                                <div style="display: flex" id="ScanSent"><p id="ScanSentText" style="color: red; padding-right: 5px">Scan Not Started </p> <i id="ScanSentIcon" class="fa fa-circle text-center" style="color: red"></i></div>
+                                <p><i>This page will refresh once the scan is completed</i></p>
                             </div>
                             <div class="col-md-6">
                                 <img src="https://media1.giphy.com/media/BPJmthQ3YRwD6QqcVD/giphy.gif?cid=790b7611d1b7c51dd32b38ff15158d44dd15cfc2905e94c0&rid=giphy.gif&ct=g" alt="this slowpoke moves"  width="720" />
@@ -115,11 +130,52 @@ require '..\..\assets\php\sessionChecker.php';
         document.getElementById(2).className = "collapse show item-2"
 
     };
-    document.getElementById("discovery").onclick = function () {
-        document.getElementById(2).className = "collapse item-2";
-        document.getElementById(3).className = "collapse show item-3"
 
-    };
+    // Button DOM
+    let btn = document.getElementById("discovery");
+
+    // Adding event listener to button
+    btn.addEventListener("click", () => {
+        // Fetching Button value
+        let btnValue = btn.value;
+        // jQuery Ajax Post Request
+        $.post('/scan/Create/CreateScan.php', {
+            createScan : btnValue
+        }, (response) => {
+
+            // response from PHP back-end
+            document.getElementById(2).className = "collapse item-2";
+            document.getElementById(3).className = "collapse show item-3";
+
+            //inform the user the scan has been sent
+            document.getElementById("ScanSentText").innerText = "Scan Underway";
+            document.getElementById("ScanSentText").style.color = "forestGreen"
+            document.getElementById("ScanSentIcon").style.color = "forestGreen"
+            document.getElementById("ScanSentIcon").className = "fa fa-circle blink_me text-center"
+
+            setTimeout(checkReload, 1000);
+        });
+    });
+
+    function checkReload() {
+
+        $.post('/scan/Create/tutorial.php', {
+            checkScan : true
+        }, (response) => {
+
+            console.log(response)
+
+            if (response === "true"){
+                location.href = "/scan/View/Devices.php"
+            }
+            else{
+                setTimeout(checkReload, 5000);
+            }
+
+        });
+    }
+
+
 </script>
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/bootstrap/js/bootstrap.min.js"></script>

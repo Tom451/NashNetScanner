@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -22,6 +23,7 @@ namespace NND_Agent
     public partial class NNDAgent : Form
     {
         public static string WebpageAddress = "10.0.1.205";
+
         public static NNDAgent NNDForm = null;
 
         public long userNONCE = 0;
@@ -195,7 +197,7 @@ namespace NND_Agent
             //Tranform it to Json object
             string jsonData = JsonConvert.SerializeObject(agent);
 
-            setAgentOnline.SendPost("http://"+ WebpageAddress + "/assets/php/DBUploadConn.php", String.Format("AgentStatus={0}", jsonData));
+            setAgentOnline.SendPost("http://"+ WebpageAddress + "/assets/php/database/DBUploadConn.php", String.Format("AgentStatus={0}", jsonData));
         }
 
         private async void ScanCheck_Tick(object sender, EventArgs e)
@@ -206,7 +208,15 @@ namespace NND_Agent
                 timer1.Stop();
                 ScanStatus = true;
 
-                await Task.Run(() => Scan.StartScan(userNONCE));
+                try
+                {
+                    await Task.Run(() => Scan.StartScan(userNONCE));
+                }
+                catch (Exception ex)
+                {
+                    lstErrors.Items.Add("Error: " + ex.Message);
+                }
+                
 
                 PopUp("Scan Finished", "Finished", ToolTipIcon.Info);
                 //start the timer and reset it
@@ -227,7 +237,6 @@ namespace NND_Agent
                 }
             }
         }
-
 
 
         private void NNDAgent_Resize(object sender, EventArgs e)
@@ -278,7 +287,16 @@ namespace NND_Agent
                 {
                     //else start the scan 
                     PopUp("Scan Found", "Starting your scan now", ToolTipIcon.Info);
-                    await Task.Run(() => Scan.StartScan(userNONCE));
+
+                    try
+                    {
+                        await Task.Run(() => Scan.StartScan(userNONCE));
+                    }
+                    catch (Exception ex)
+                    {
+                        lstErrors.Items.Add("Error: " + ex.Message);
+                    }
+
                     ScanStatus = true;
 
                     //when the scan is finished then tell user 
@@ -333,12 +351,14 @@ namespace NND_Agent
 
         private void CloseApplicationToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            PopUp("Goodbye!", "Thank you for choosing NashNetworkScanner", ToolTipIcon.None);
             SetAgent(0);
+            Thread.Sleep(10000);
             System.Windows.Forms.Application.Exit();
 
         }
 
-        void OnPowerChange(Object sender, PowerModeChangedEventArgs e)
+        private void OnPowerChange(Object sender, PowerModeChangedEventArgs e)
         {
             if (e.Mode == PowerModes.Suspend)
             {
@@ -354,8 +374,19 @@ namespace NND_Agent
 
         private void btnSubmitChange_Click(object sender, EventArgs e)
         {
-            WebpageAddress = txtIp.Text;
-            lblCurrentIP.Text = WebpageAddress;
+            IPAddress IP;
+            bool flag = IPAddress.TryParse(txtIp.Text, out IP);
+            if (flag)
+            {
+                WebpageAddress = txtIp.Text;
+                lblCurrentIP.Text = WebpageAddress;
+            }
+            else {
+                lstErrors.Items.Add(DateTime.Now.ToShortTimeString() + ": Invalid IP entered: " + txtIp.Text);
+            }
+
+            
+            
         }
 
         private void NNDAgent_FormClosed(object sender, FormClosedEventArgs e)

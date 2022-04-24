@@ -129,7 +129,9 @@ namespace NND_Agent
 
                 //create a model 
                 
-            }catch (Exception) { 
+            }catch (Exception) {
+                
+                return null;
             }
             
 

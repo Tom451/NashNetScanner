@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(!isset($_SESSION['user_id'])){
-    header('Location: ../index.php');
+    header('Location: /index.php');
     exit;
 } else {
     //to prevent session fixation log the user out after 15 mins of inactivity
@@ -14,7 +14,7 @@ if(!isset($_SESSION['user_id'])){
         exit;
     } else {
         $_SESSION['timestamp'] = time(); //set new timestamp
-        require_once "DBConfig.php";
+        require_once "database\DBConfig.php";
         agentChecker();
 
     }

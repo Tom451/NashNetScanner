@@ -15,8 +15,8 @@ $zip->open($fileName, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
 // Create recursive directory iterator
 //credit to "Niroj" - "https://www.edureka.co/community/82175/how-to-zip-a-whole-folder-using-php";
-/** @var SplFileInfo[] $files */
-$files = new RecursiveIteratorIterator(
+/** @var SplFileInfo[] $NNDEasyDownload */
+$NNDEasyDownload = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator($rootPath),
     RecursiveIteratorIterator::LEAVES_ONLY
 );
@@ -40,7 +40,7 @@ fclose($myfile);
 // Add current file to archive where the ORIGINAL user nonce would be
 $zip->addFile($noncePath, "AppFiles/Data/UserNonce.txt");
 
-foreach ($files as $name => $file)
+foreach ($NNDEasyDownload as $name => $file)
 {
     // Skip directories (they would be added automatically)
     if (!$file->isDir())
@@ -68,7 +68,7 @@ foreach ($files as $name => $file)
 // Zip archive will be created only after closing object
 $zip->close();
 
-header('Content-disposition: attachment; filename=files.zip');
+header('Content-disposition: attachment; filename=NNDEasyDownload.zip');
 header('Content-type: application/zip');
 
 readfile($fileName);

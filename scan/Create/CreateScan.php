@@ -11,7 +11,7 @@ if(isset($_POST['previousScans'])){
 if (isset($_POST['createScan'])) {
 
     //get the dbconfig file
-    require_once '..\..\assets\php\DBConfig.php';
+    require_once '..\..\assets\php\database\DBConfig.php';
 
     //get the user ID from the session
     $USERID = $_SESSION['user_id'];
@@ -114,6 +114,7 @@ if (isset($_POST['createScan'])) {
 
         $query = $connection->prepare("INSERT INTO scan(userID,SessionID,ScanInfo,scanType,scanStatus,scanTime)
         VALUES (:userID,:SessionID,:scanInfo,:scanType,:scanStatus,:scanTime)");
+
         $query->bindParam("userID", $username, PDO::PARAM_STR);
         $query->bindParam("SessionID", $SessionID, PDO::PARAM_STR);
         $query->bindParam("scanInfo", $scanInfo, PDO::PARAM_STR);
@@ -126,8 +127,7 @@ if (isset($_POST['createScan'])) {
         header('Location: scanCreated.php');
 
     } else {
-
-        echo '<script>errorMessagePopUp("Scan waiting please run current scan")</script>';
+        header('Location: /scan/View/Devices.php?Scan=Pending');
     }
 
 }
@@ -140,7 +140,7 @@ if (isset($_POST['createScan'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <?php require "../../assets/php/headerData.php" ?>
+    <?php require "../../assets/php/navBar/headerData.php" ?>
     <title>Create Scan</title>
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../assets/fonts/font-awesome.min.css">
@@ -152,7 +152,7 @@ if (isset($_POST['createScan'])) {
 </head>
 
 <body>
-    <?php require '../../assets/php/navBarLoggedIn.php' ?>
+    <?php require '../../assets/php/navBar/navBarLoggedIn.php' ?>
 
     <section class="features-clean">
         <div class="container">

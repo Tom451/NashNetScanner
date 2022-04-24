@@ -9,7 +9,7 @@ require '..\..\assets\php\sessionChecker.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Created</title>
-    <?php require "../../assets/php/headerData.php" ?>
+    <?php require "../../assets/php/navBar/headerData.php" ?>
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="../../assets/css/Features-Clean.css">
@@ -19,13 +19,14 @@ require '..\..\assets\php\sessionChecker.php';
 </head>
 
 <body>
-    <?php require '../../assets/php/navBarLoggedIn.php' ?>
+    <?php require '../../assets/php/navBar/navBarLoggedIn.php' ?>
 
     <section class="features-clean">
         <div class="container">
             <div class="intro">
                 <h2 class="text-center">Scan Created!</h2>
-                <p class="text-center">Your scan has been created, please run this from the NND Agent.</p>
+                <p class="text-center">Your scan has been created, the NND Agent will automatically run this scan in at most 2 minutes, so sit back and grab a brew </p>
+                <p class="text-center"> <i>Cant Wait? Run the scan manually from the NND Agent menu </i></p>
             </div>
             <div class="row features">
                 <div class="col-sm-6 col-lg-4 item"><i class="fa fa-download icon"></i>

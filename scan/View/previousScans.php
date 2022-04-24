@@ -3,7 +3,7 @@ require '..\..\assets\php\sessionChecker.php';
 
 
 
-require_once '..\..\assets\php\DBConfig.php';
+require_once '..\..\assets\php\database\DBConfig.php';
 
 $USERID = $_SESSION['user_id'];
 $connection = getConnection();
@@ -40,7 +40,7 @@ $devices = $query->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Previous Scans</title>
-    <?php require "../../assets/php/headerData.php" ?>
+    <?php require "../../assets/php/navBar/headerData.php" ?>
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="../../assets/css/Features-Boxed.css">
@@ -53,7 +53,7 @@ $devices = $query->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
 
-    <?php require '../../assets/php/navBarLoggedIn.php' ?>
+    <?php require '../../assets/php/navBar/navBarLoggedIn.php' ?>
 
     <script src="../../assets/js/visDrawing.js"></script>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>

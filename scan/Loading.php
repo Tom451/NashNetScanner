@@ -67,7 +67,7 @@
 
 </style>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT']. "/assets/php/headerData.php" ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/assets/php/navBar/headerData.php" ?>
 
 <div id="loading" style="display: flex">
 

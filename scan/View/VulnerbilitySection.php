@@ -89,11 +89,13 @@ function addToTable($CVEs, $item, $CommonClassification, $type){
 
         echo '<tr data-toggle="collapse" data-target="#'.$ID.'" >';
 
-        if (isset($Help['FriendlyName'])){
-            echo '<td style="max-width: 2vw; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" >' . $Help['FriendlyName'][0] . '</td>';
-        }else{
-            echo '<td style="max-width: 2vw; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">Name N/A: ' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
-        }
+        echo '<td style="max-width: 2vw; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"> '. $CVE -> cve -> CVE_data_meta -> ID.'</td>';
+
+        //if (isset($Help['FriendlyName'])){
+        //    echo '<td style="max-width: 2vw; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" >' . $Help['FriendlyName'][0] . '</td>';
+        //}else{
+        //    echo '<td style="max-width: 2vw; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">Name N/A: ' . $CVE -> cve -> CVE_data_meta -> ID . '</td>';
+        //}
 
         echo '<td>' . $Type . '</td>';
         echo '<td>' . $item['VulnPortNumber'] . '</td>';
@@ -132,6 +134,9 @@ function addToTable($CVEs, $item, $CommonClassification, $type){
         echo '<tr><td id="'.$ID.'" class="collapse" colspan="4"><div ">';
         echo '<h3>Description</h3>';
         echo $Description . '<br>';
+        echo '<br>';
+        echo'<a class="learn-more" href="'. "https://nvd.nist.gov/vuln/detail/". $ID .'">Learn More »</a>';
+        echo '<br>';
 
         if (isset($Help['Description'])){
             echo '<h3>You have '. count($Help['Description']).
@@ -159,8 +164,8 @@ function addToTable($CVEs, $item, $CommonClassification, $type){
             echo'<div class="col-sm-3 col-md-3 col-lg-3 item">';
             echo'<div class="box" >';
             echo'<h3 class="name">Option '.$i.'</h3>';
-            echo'<p class="description">'.$HelpSolution.'</p><a class="learn-more" href="'. "https://nvd.nist.gov/vuln/detail/". $ID .'">Learn More »</a>';
-            echo'<p class="description"> Please Note all links to external sites have not all been checked and are visited at users risk</p>';
+            echo'<p class="description">'.$HelpSolution.'</p>';
+
 
             echo'</div>';
             echo'</div>';
@@ -173,6 +178,7 @@ function addToTable($CVEs, $item, $CommonClassification, $type){
 
 
         echo '<h3>Relevant Links</h3>';
+        echo'<p class="description"><b> Please Note all links to external sites have not all been checked and are visited at users risk</p></b>';
         foreach ($Links as $link){
             echo'<a style="overflow-wrap: break-word; max-width:50%"  href="'.$link.'">'. $link .'</a><br>';
 

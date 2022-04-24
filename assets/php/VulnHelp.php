@@ -1,27 +1,37 @@
 <?php
 
-function getHelp($CWE): ?array
+function getHelp($type, $cwe): ?array
 {
+    return inputCWE($cwe);
 
+}
+
+function inputCWE($CWE): ?array
+{
+    //initialise the array
     $Help[] = null;
-    $descriptionList[] = null;
 
-    $str2 = substr($CWE, 4);
+    //this gets just the CWE number as all CWEs are witten as CWE-NUMBER
+    $CWENumber = substr($CWE, 4);
 
-    $xml = file_get_contents("../Lookup/MitreLookup.xml");
+    //get the file
+    $MITRELookupFile = file_get_contents("../Lookup/MitreLookup.xml");
 
-    $xmlObject = simplexml_load_string($xml);
+    //load the file to xml parser
+    $MITRELookupFileXMLObject = simplexml_load_string($MITRELookupFile);
 
-    $finishedJson = json_decode(json_encode($xmlObject), true);
+    //pass the xml object to json decoder/encoder to convert
+    $MITRELookupJsonOBJECT = json_decode(json_encode($MITRELookupFileXMLObject), true);
 
-    $weaknessesList = $finishedJson['Weaknesses']['Weakness'];
+    //get the list of weaknesses
+    $weaknessesList = $MITRELookupJsonOBJECT['Weaknesses']['Weakness'];
 
     foreach ($weaknessesList as $weakness){
 
         $count = 0;
 
         // if the CWE is the selected one
-        if ($weakness['@attributes']['ID'] == $str2){
+        if ($weakness['@attributes']['ID'] == $CWENumber){
 
             // if the name is there set the name
             if(isset($weakness['@attributes']['Name'])){

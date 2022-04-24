@@ -1,10 +1,10 @@
 <?php
 
 //start the session
-require '..\..\assets\php\sessionChecker.php';
-require_once '..\..\assets\php\DBConfig.php';
-
-require "..\Loading.php";
+require_once '..\..\assets\php\sessionChecker.php';
+require_once '..\..\assets\php\database\DBConfig.php';
+require_once "..\Loading.php";
+require_once "..\..\assets\php\database\DBFunctions.php";
 
 $connection = getConnection();
 $scanID = null;
@@ -17,12 +17,7 @@ if (isset($_POST['refresh'])) {
 if (isset($_POST['scanSelected'])) {
 
     $scanID = $_POST['scanSelected'];
-    $query = $connection->prepare("SELECT * FROM scan WHERE ScanID=:scanID");
-    $query->bindParam("scanID", $scanID, PDO::PARAM_STR);
-    $query->execute();
-
-    //get the result
-    $scan = $query->fetch(PDO::FETCH_ASSOC);
+    $scan = getScan($connection, $scanID);
 
 }
 else {
@@ -30,14 +25,9 @@ else {
     header('Location: previousScans.php');
 }
 
-//
-$query = $connection->prepare("SELECT * FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
-JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
-$query->bindParam("scanID", $scanID, PDO::PARAM_STR);
-$query->execute();
+//get all the devices on given scan
+$devices = getAllDevicesOnScan($connection, $scanID);
 
-//get the result
-$devices = $query->fetchAll(PDO::FETCH_ASSOC);
 $device = 0;
 
 //if there is only one device set the device variable else the device(s) varible will be used
@@ -45,16 +35,8 @@ if (count($devices) == 1 ){
     $device = $devices[0];
 }
 
-
-
-//select all the vulnerbilities
-$query = $connection->prepare("SELECT * FROM vulnerabilities JOIN vulnscan ON vulnerabilities.VulnID = vulnscan.VulnID JOIN scan ON vulnscan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
-$query->bindParam("scanID", $scanID, PDO::PARAM_STR);
-$query->execute();
-
-//get the result of the vulnerbilities
-$vulns = $query->fetchAll(PDO::FETCH_ASSOC);
-
+//get all the vulnerabilities
+$vulns = getAllVulnerabilities($connection, $scanID);
 
 //API ACCESS
 //Create a new variable for the CVE list which will be created
@@ -71,13 +53,10 @@ foreach ($vulns as $item) {
 
         //check if the cpe is for the application or if it is for the operating system
 
-        if(str_starts_with($item['VulnCPE'], "cpe:/o")){
-            //if the CPE is an Opering system one due to the large number of errors and vulnerabilities
-            // Leave it out and move onto the application vulnerabilities
-            print("Ignore === ". $item['VulnCPE']);
-            print("\n");
-        }
-        else{
+        //if the CPE is an Opening system one due to the large number of errors and vulnerabilities
+        // Leave it out and move onto the application vulnerabilities
+        if(!str_starts_with($item['VulnCPE'], "cpe:/o")){
+
             //make the JSON object global to allow it to be accessed from the HTML
             global $JSONObject;
 
@@ -97,7 +76,6 @@ foreach ($vulns as $item) {
                 }
 
             }
-
         }
 
     }
@@ -187,7 +165,7 @@ if (count($devices) > 1 ){
     $device = $devices[0];
 }
 else{
-    $devicesScans = getOtherScans($device['deviceID']);
+    $devicesScans = getOtherScansForDevice($device['deviceID']);
     $countOfScans = count($devicesScans);
 
     $value = max($devicesScans);
@@ -209,81 +187,68 @@ else{
 // Security status
 function getSecurity($device, $CVEList, $currentScan, $scanning){
     //As long and the CVE list is not null then it will calculate
+
     if (!$currentScan){
         //High ammount of issues found
         echo('<section class="highlight-section" style="background: grey;"> <div class="container"> <div class="intro">
-                <h2 class="text-center"> <i class="fa fa-warning" style="transform: scale(2);"></i></h2>
-                            <p class="text-center">You are viewing an historical record of ' . $device['deviceName'] . ',
-                                to view more up to date information please visit the "Devices" Page </p>
-               </div></div></section>');
+                    <h2 class="text-center"> <i class="fa fa-warning" style="transform: scale(2);"></i></h2>
+                                <p class="text-center">You are viewing an historical record of ' . $device['deviceName'] . ',
+                                    to view more up to date information please visit the "Devices" Page </p>
+                   </div></div></section>');
     }
-    else if ($scanning){
+    if ($scanning){
         //High ammount of issues found
-        echo('<section class="highlight-section" style="background: grey;"> <div class="container"> <div class="intro">
+        echo('<section class="highlight-section" style="background: darkorange;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"> <i class="fa fa-warning" style="transform: scale(2);"></i></h2>
                             <p class="text-center">There is currently a scan pending for ' . $device['deviceName'] . ',
+                                this means this information is not up-to-date, 
                                 please view the scan progress from the devices page or view historical records </p>
                </div></div></section>');
     }
-
-    if(!is_null($CVEList)){
-        if (count($CVEList) >= 5){
-            //High ammount of issues found
-            echo('<section class="highlight-section" style="background: red;"> <div class="container"> <div class="intro">
-                <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
-                            <p class="text-center">Multiple issues with ' . $device['deviceName'] . ',
-                                have been found, vulnerabilities will be listed bellow for your information, action will need to be taken and 
-                                appropriate mesures will also be listed below</p>
-               </div></div></section>');
-        }
-        else {
-            //Low amount of issues
-            echo('<section class="highlight-section" style="background: forestgreen;"> <div class="container"> <div class="intro">
-                <h2 class="text-center"><i class="fa fa-check-circle" style="transform: scale(2);"></i></h2>
-                            <p class="text-center">No concerning issues with' . $device['deviceName'] . ',
-                                the found vulnerabilities will be listed bellow for your information, however your device is currently safe so no
-                                extra action will need to be taken,
-                                feel free to scan another device </p>
-                </div></div></section>');
-        }
-    }
-    //else if the device is down
-    else if ($device['deviceScanned'] == "Host Down"){
-        //No issues
-        echo('<section class="highlight-section" style="background: orange;"> <div class="container"> <div class="intro">
-                <h2 class="text-center"> <i class="fa fa-unlink" style="transform: scale(2);"></i></h2>
-                            <p class="text-center">The device: ' . $device['deviceName'] . ',
-                                was not online during this scan, please visit the devices page to start a new scan</p>
-               </div></div></section>');
-    }
     else{
-        //No issues found
-        echo('<section class="highlight-section" style="background: green;"> <div class="container"> <div class="intro">
-                <h2 class="text-center"><i class="fa fa-smile-o" style="transform: scale(2);"></i></h2>
-                            <p class="text-center">No issues at all with ' . $device['deviceName'] . ',
-                                your device is currently safe so no
-                                extra action will need to be taken,
-                                enjoy your day! </p>
-                </div></div></section>');
+        if(!is_null($CVEList)){
+            if (count($CVEList) >= 5){
+                //High ammount of issues found
+                echo('<section class="highlight-section" style="background: red;"> <div class="container"> <div class="intro">
+                    <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
+                                <p class="text-center">Multiple issues with ' . $device['deviceName'] . ',
+                                    have been found, vulnerabilities will be listed bellow for your information, action will need to be taken and 
+                                    appropriate mesures will also be listed below</p>
+                   </div></div></section>');
+            }
+            else {
+                //Low amount of issues
+                echo('<section class="highlight-section" style="background: forestgreen;"> <div class="container"> <div class="intro">
+                    <h2 class="text-center"><i class="fa fa-check-circle" style="transform: scale(2);"></i></h2>
+                                <p class="text-center">No concerning issues with' . $device['deviceName'] . ',
+                                    the found vulnerabilities will be listed bellow for your information, however your device is currently safe so no
+                                    extra action will need to be taken,
+                                    feel free to scan another device </p>
+                    </div></div></section>');
+            }
+        }
+        //else if the device is down
+        else if ($device['deviceScanned'] == "Host Down"){
+            //No issues
+            echo('<section class="highlight-section" style="background: orange;"> <div class="container"> <div class="intro">
+                    <h2 class="text-center"> <i class="fa fa-unlink" style="transform: scale(2);"></i></h2>
+                                <p class="text-center">The device: ' . $device['deviceName'] . ',
+                                    was not online during this scan, please visit the devices page to start a new scan</p>
+                   </div></div></section>');
+        }
+        else{
+            //No issues found
+            echo('<section class="highlight-section" style="background: green;"> <div class="container"> <div class="intro">
+                    <h2 class="text-center"><i class="fa fa-smile-o" style="transform: scale(2);"></i></h2>
+                                <p class="text-center">No issues at all with ' . $device['deviceName'] . ',
+                                    your device is currently safe so no
+                                    extra action will need to be taken,
+                                    enjoy your day! </p>
+                    </div></div></section>');
 
+        }
     }
 
-}
-
-function getOtherScans($deviceID): bool|array
-{
-
-
-    $connection = getConnection();
-
-    $query = $connection->prepare("SELECT * FROM device JOIN deviceScan ON device.deviceID = deviceScan.DeviceID
-    JOIN scan ON deviceScan.ScanID = scan.ScanID WHERE device.deviceID = :deviceID AND scan.ScanType = 'VulnScan'");
-    $query->bindParam("deviceID", $deviceID, PDO::PARAM_STR);
-
-    $query->execute();
-
-    //return the result get the result
-    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
 require '../../assets/php/VulnHelp.php';
@@ -305,7 +270,7 @@ require '../../assets/php/VulnHelp.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>View Scan</title>
-    <?php require "../../assets/php/headerData.php" ?>
+    <?php require "../../assets/php/navBar/headerData.php" ?>
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="../../assets/css/Features-Boxed.css">
@@ -319,7 +284,7 @@ require '../../assets/php/VulnHelp.php';
 <body>
 
     <!-- Get the nav bar for a logged in page -->
-    <?php require '../../assets/php/navBarLoggedIn.php' ?>
+    <?php require '../../assets/php/navBar/navBarLoggedIn.php' ?>
 
     <div class="container"<?php
     //If the scan type is vulnerability then:
@@ -376,7 +341,7 @@ require '../../assets/php/VulnHelp.php';
             <div class="col-md-8">
                 <h2>Overview:</h2>
                 <p>Over View of your current security posture.&nbsp;</p>
-                <p>Here is a break down of the vulnerbilties on the device.</p>
+                <p>Here is a break down of the vulnerabilities on the device.</p>
 
                 <figure>
                     <ul class="list-group" style="padding-top: 7px;">
@@ -441,9 +406,9 @@ require '../../assets/php/VulnHelp.php';
             </div>
 
             <div class="col-md-12">
-                <h2 style="padding-top: 2%">Vulnerbilities</h2>
+                <h2 style="padding-top: 2%">Vulnerabilities</h2>
 
-                <table class="table table-hover table table-striped table-bordered" id="vulnTable">
+                <table class="table table-hover table table-striped table-bordered" style="border-color: white; " id="vulnTable">
                     <thead>
                     <tr>
                         <th>Weakness Name</th>
