@@ -2,6 +2,10 @@
 ![alt text](https://github.com/Tom451/COMP3000-Repo/blob/main/assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png)
 
 
+# About me 
+I am Tom Nash, I am a third year Plymouth University student currently studying 
+Cyber Security. I have a keen intrest in all things networking and security related and this is my final year project.  
+
 ## Planner Link: 
 https://tasks.office.com/live.plymouth.ac.uk/Home/PlanViews/0nEF1BdjDEyxpqztD3wAf5YAGSwS?Type=PlanLink&Channel=Link&CreatedTime=637686069835470000
 
@@ -9,13 +13,7 @@ https://tasks.office.com/live.plymouth.ac.uk/Home/PlanViews/0nEF1BdjDEyxpqztD3wA
 Nathan Clarke 
 
 ## Idea Behind this project 
-Home users are the most vulnerable cohort regarding cyber-attacks. There are many reasons as to why this is ranging from inexperience with computers to simply not having the time to keep on top of every changing cyberspace. Lay users are also most targeted not just for the ease of attack but also the monetary gain, as many home users will pay off an attacker if that is required to be left alone.
-
-Identifying potential weaknesses within an individual's security posture can be extremely tricky and time-consuming due to many different variables. With current solutions needing an above-average level of knowledge to use, it is an issue that needs to be confronted.
-
-# About me 
-I am Tom Nash, I am a third year Plymouth University student currently studying 
-Cyber Security. I have a keen intrest in all things networking and security related 
+The idea would be that I am able to create a system that will overall make the users life more secure. This will be done by using an intuative interface. This will be in comparison to the current systems which on average show the user an abnormal amount of information requireing a higher level of knowledge to understand it. 
 
 # About this project 
 My project will be aimed at helping the home user enhance their security within their 
