@@ -97,10 +97,6 @@ if (isset($_POST['createScan'])) {
                 $statement->execute();
 
 
-
-
-
-
             }
             header('Location: scanCreated.php');
 
@@ -112,6 +108,8 @@ if (isset($_POST['createScan'])) {
         $SessionID = date('d-m-y h:i:s:u');
         $date = date('Y-m-d H:i:s');
 
+
+        //insert into for scan.
         $query = $connection->prepare("INSERT INTO scan(userID,SessionID,ScanInfo,scanType,scanStatus,scanTime)
         VALUES (:userID,:SessionID,:scanInfo,:scanType,:scanStatus,:scanTime)");
 

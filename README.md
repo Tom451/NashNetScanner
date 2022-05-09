@@ -8,6 +8,11 @@ https://tasks.office.com/live.plymouth.ac.uk/Home/PlanViews/0nEF1BdjDEyxpqztD3wA
 ## Supervisor 
 Nathan Clarke 
 
+## Idea Behind this project 
+Home users are the most vulnerable cohort regarding cyber-attacks. There are many reasons as to why this is ranging from inexperience with computers to simply not having the time to keep on top of every changing cyberspace. Lay users are also most targeted not just for the ease of attack but also the monetary gain, as many home users will pay off an attacker if that is required to be left alone.
+
+Identifying potential weaknesses within an individual's security posture can be extremely tricky and time-consuming due to many different variables. With current solutions needing an above-average level of knowledge to use, it is an issue that needs to be confronted.
+
 # About me 
 I am Tom Nash, I am a third year Plymouth University student currently studying 
 Cyber Security. I have a keen intrest in all things networking and security related 
@@ -19,7 +24,7 @@ home network and everyday life.
 The passion from this project comes about as being the family member in charge of looking after all things technical
 I feel that currently all security related applications make it too complicated for end users to understand: 
 
-a) Where they are going wrong. 
+a) Where they are going wrong.
 b) What they need to do to improve it. 
 
 # Technology used for this project. 
@@ -33,7 +38,7 @@ and any other tasks I feel appropriate.
 
 
 ## How to run the program? 
-Their is two parts, one is the web interface which is accessed by a browser hosted externally, the second is a windows based agent that allows for scanning.
+There is two parts, one is the web interface which is accessed by a browser hosted externally, the second is a windows based agent that allows for scanning.
 
 
 # References 
