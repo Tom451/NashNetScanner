@@ -3,7 +3,8 @@
 <?php
 
 session_start();
-include('../assets/php/DBConfig.php');
+include('../assets/php/database/DBConfig.php');
+require_once '../assets/php/database/DBFunctions.php';
 
 $connection = getConnection();
 
@@ -23,7 +24,7 @@ function errorCheck(){
             echo "Please make sure your second name is not too long";
         }
         else if ($_GET['incorrect'] == "username"){
-            echo "Please make sure your username is not too long";
+            echo "Please make sure your username is not too long or taken";
         }
 
     }
@@ -75,40 +76,12 @@ if (isset($_POST['register'])) {
         //get the password hash
         $password_hash = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
-        //check if username already exsits
-        $query = $connection->prepare("SELECT * FROM usercredentials WHERE userName=:username");
-        $query->bindParam("username", $username, PDO::PARAM_STR);
-        $query->execute();
-
-        if ($query->rowCount() > 0) {
-            echo '<script>usernameInUse()</script>';
+        if (getUserByUserName($connection, $username)) {
+            header("Location:/user/registration.php?incorrect=username");
         }
-        if ($query->rowCount() == 0) {
+        else {
 
-
-            //start with adding the user
-            $query = $connection->prepare("INSERT INTO user(firstName,lastName,email) VALUES (:firstName,:lastName,:email)");
-            $query->bindParam("firstName", $firstName, PDO::PARAM_STR);
-            $query->bindParam("lastName", $lastName, PDO::PARAM_STR);
-            $query->bindParam("email", $email, PDO::PARAM_STR);
-            $result = $query->execute();
-
-            //get the userID of new user to be added.
-            $query = $connection->prepare("SELECT userID FROM user WHERE email=:email");
-            $query->bindParam("email", $email, PDO::PARAM_STR);
-            $query->execute();
-            $userIDResult = $query->fetchColumn();
-
-            //then add the credentials
-            $query = $connection->prepare("INSERT INTO usercredentials(userName,password,UserID,lastSeen,userNonce) VALUES (:username,:password_hash,:userID,:lastSeen,:LoginNonce)");
-            $query->bindParam("username", $username, PDO::PARAM_STR);
-            $query->bindParam("password_hash", $password_hash, PDO::PARAM_STR);
-            $query->bindParam("userID", $userIDResult, PDO::PARAM_STR);
-            $query->bindParam("lastSeen", $lastSeen, PDO::PARAM_STR);
-            $query->bindParam("LoginNonce", $LoginNONCE, PDO::PARAM_STR);
-
-
-            $result = $query->execute();
+            $result = addUser($connection, $firstName, $lastName, $email, $username, $password_hash, $lastSeen, $LoginNONCE);
 
             if ($result) {
                 header('Location: /index.php?UserAccount=Created');
@@ -129,7 +102,7 @@ if (isset($_POST['register'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Register</title>
-    <?php require "../assets/php/headerData.php" ?>
+    <?php require "../assets/php/navBar/headerData.php" ?>
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
@@ -137,9 +110,9 @@ if (isset($_POST['register'])) {
 </head>
 
 <body>
-<?php require '../assets/php/navBarLoggedOut.php' ?>
+<?php require '../assets/php/navBar/navBarLoggedOut.php' ?>
 
-<section class="login-clean" style="width: auto;height: auto;">
+<section class="login-clean" style="width: auto;height: 100vh;">
     <form  method="post">
         <h2 class="sr-only">Registration Form</h2>
         <div class="illustration"><img src="../assets/images/31431a2b-b9f3-4e62-8545-c5ce5a898951_200x200.png" width="170" height="150" alt="Logo"></div>

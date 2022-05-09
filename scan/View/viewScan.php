@@ -165,6 +165,7 @@ if (count($devices) > 1 ){
     $device = $devices[0];
 }
 else{
+
     $devicesScans = getOtherScansForDevice($device['deviceID']);
     $countOfScans = count($devicesScans);
 
@@ -193,7 +194,9 @@ function getSecurity($device, $CVEList, $currentScan, $scanning){
         echo('<section class="highlight-section" style="background: grey;"> <div class="container"> <div class="intro">
                     <h2 class="text-center"> <i class="fa fa-warning" style="transform: scale(2);"></i></h2>
                                 <p class="text-center">You are viewing an historical record of ' . $device['deviceName'] . ',
-                                    to view more up to date information please visit the "Devices" Page </p>
+                                    to view more up to date information please visit the "Devices" Page by pressing below </p>
+                                    <div class="my-2" style="padding-left: 42%">
+                                    <a role="button" href="/scan/View/Devices.php" style="color: white"><i class="fa fa-undo" style="transform: scale(1.5); color: white"></i>&nbsp;  Devices</a></div>
                    </div></div></section>');
     }
     if ($scanning){
@@ -212,7 +215,7 @@ function getSecurity($device, $CVEList, $currentScan, $scanning){
                 echo('<section class="highlight-section" style="background: red;"> <div class="container"> <div class="intro">
                     <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
                                 <p class="text-center">Multiple issues with ' . $device['deviceName'] . ',
-                                    have been found, vulnerabilities will be listed bellow for your information, action will need to be taken and 
+                                    have been found, vulnerabilities will be listed below for your information, action will need to be taken and 
                                     appropriate mesures will also be listed below</p>
                    </div></div></section>');
             }
@@ -221,7 +224,7 @@ function getSecurity($device, $CVEList, $currentScan, $scanning){
                 echo('<section class="highlight-section" style="background: forestgreen;"> <div class="container"> <div class="intro">
                     <h2 class="text-center"><i class="fa fa-check-circle" style="transform: scale(2);"></i></h2>
                                 <p class="text-center">No concerning issues with' . $device['deviceName'] . ',
-                                    the found vulnerabilities will be listed bellow for your information, however your device is currently safe so no
+                                    the found vulnerabilities will be listed below for your information, however your device is currently safe so no
                                     extra action will need to be taken,
                                     feel free to scan another device </p>
                     </div></div></section>');
@@ -412,9 +415,9 @@ require '../../assets/php/VulnHelp.php';
                     <thead>
                     <tr>
                         <th>Weakness Name</th>
-                        <th>Type Of Vulnerbility</th>
+                        <th>Type Of Vulnerability</th>
                         <th>Port Affected</th>
-                        <th aria-sort="ascending">Serverty</th>
+                        <th aria-sort="ascending">Severity</th>
                     </tr>
                     </thead>
                     <tbody>

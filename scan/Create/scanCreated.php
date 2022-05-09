@@ -26,6 +26,8 @@ require '..\..\assets\php\sessionChecker.php';
             <div class="intro">
                 <h2 class="text-center">Scan Created!</h2>
                 <p class="text-center">Your scan has been created, the NND Agent will automatically run this scan in at most 2 minutes, so sit back and grab a brew </p>
+                <p class="text-center">Press Below to go back to the devices page: </p>
+                <div style="padding-left: 40%; padding-right: 40%; padding-bottom: 5%"><a class="btn btn-primary btn-lg mr-2 py-2 px-4" role="button" href="/scan/View/Devices.php">Devices</a></div>
                 <p class="text-center"> <i>Cant Wait? Run the scan manually from the NND Agent menu </i></p>
             </div>
             <div class="row features">

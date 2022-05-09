@@ -6,7 +6,6 @@ let network = null;
 function draw(items) {
     // create people.
     // value corresponds with the age of the person
-    var DIR = "../img/indonesia/";
 
 
     //create the network
@@ -121,8 +120,17 @@ function draw(items) {
                 nodeDistance: 400 // Put more distance between the nodes.
             }
         },
+        interaction: {
+            navigationButtons: true,
+            keyboard: true,
+            colour: "blue"
+        }
     };
+
     network = new vis.Network(container, data, options);
+
+
+
 
     network.on("click", function (params) {
 
@@ -140,6 +148,7 @@ function draw(items) {
                 console.log(params.nodes[0]);
 
                 if (params.nodes[0]===1){
+                    console.error(error);
 
                 }
                 else{

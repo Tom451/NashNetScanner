@@ -22,7 +22,7 @@ namespace NND_Agent
 {
     public partial class NNDAgent : Form
     {
-        public static string WebpageAddress = "10.0.1.205";
+        public static string WebpageAddress = "10.0.1.10";
 
         public static NNDAgent NNDForm = null;
 

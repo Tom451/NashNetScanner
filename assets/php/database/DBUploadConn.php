@@ -11,7 +11,7 @@ if (isset($_GET['USERID'])) {
     //get the inputted username and the password
     $USERNONCE = $_GET['USERID'];
 
-    $result = getAllUsersByUserNonce($connection, $USERNONCE);
+    $result = getUserByUserNonce($connection, $USERNONCE);
 
     $result = getAllUserPendingScans($connection, $result['UserID']);
 
@@ -85,7 +85,7 @@ elseif (isset($_POST['UploadWithVerification'])) {
 
         $USERNONCE = $JSONObject->userName;
 
-        if (!getAllUsersByUserNonce($connection, $USERNONCE)) {
+        if (!getUserByUserNonce($connection, $USERNONCE)) {
             echo "Not verified";
         }
 
@@ -246,7 +246,7 @@ elseif (isset($_POST['UploadWithVerification'])) {
         $statement->bindParam(':NewStatus', $ScanStatus, PDO::PARAM_STR);
         $statement->bindParam(':ScanID', $ScanID);
 
-        // execute the UPDATE statment
+        // execute the UPDATE statement
         if ($statement->execute()) {
             echo 'Successful';
         }

@@ -5,6 +5,9 @@ if(isset($_SESSION['user_id'])){
     header('Location: homepage.php');
     exit;
 }
+if(isset($_GET['login'])){
+
+}
 
 function checkError(){
     if(isset($_GET['timeout'])){
@@ -23,10 +26,18 @@ function checkError(){
             echo 'Account creation error please try again!';
         }
     }
+    if (isset($_GET['login'])){
+        if ($_GET['login']=="incorrect"){
+            echo 'Login Incorrect Please try again';
+        }
+
+    }
+
 }
 
 
-require 'assets\php\database\DBConfig.php';
+require_once 'assets\php\database\DBConfig.php';
+require_once 'assets\php\database\DBFunctions.php';
 
 //if the login is complete then log the user in
 if (isset($_POST['login'])) {
@@ -38,21 +49,17 @@ if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    //select all the users with the given username
-    $query = $connection->prepare("SELECT * FROM usercredentials WHERE userName=:username");
-    $query->bindParam("username", $username, PDO::PARAM_STR);
-    $query->execute();
+
 
     //get the result
-    $result = $query->fetch(PDO::FETCH_ASSOC);
-
-
+    $result = getUserByUserName($connection, $username);
 
     //if there is no results then show incorrect credentials
     if (!$result) {
-        echo '<script>IncorrectCredentials()</script>';
+        header('Location: \user\registration.php');
+
     } else {
-        //comapare the password inputted to the password hash
+        //compare the password inputted to the password hash
         if (password_verify($password, $result['password'])) {
 
             //if the given password is correct then, get the derived key from the
@@ -70,7 +77,7 @@ if (isset($_POST['login'])) {
             header('Location: homepage.php');
         } else {
             // if the password was not correct then don't let the user sign in
-            echo '<script>IncorrectCredentials()</script>';
+            header('Location: index.php?login=incorrect');
         }
     }
 }
@@ -88,6 +95,7 @@ if (isset($_POST['login'])) {
     <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+    <link rel="icon" href="faviconIcon.ico" type='image/x-icon'/>
 </head>
 
 

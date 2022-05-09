@@ -87,7 +87,7 @@ function getVulns($NeedsAttention, $Secure, $Other, $Scanning, $countDevicesToSc
         if (count($Scanning) != 0) { //if there is devices to with "scanning set" then show the scanning banner
             echo('<section class="highlight-section" style="background: darkorange;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"><i class="fa fa-hourglass-2" style="transform: scale(2);"></i></h2>
-                            <p class="text-center">There is a scan currently under way, please press this button bellow to see how many devices are left to scan
+                            <p class="text-center">There is a scan currently under way, please press this button below to see how many devices are left to scan
                              <br><b><span id="scanProg">' . $countDevicesToScan . '</span> devices left to scan </b>
                              </p>
                              <div style="padding-left: 40%"><button style="padding: 10px;  " class="btn btn-secondary " onclick="window.location.reload();">Refresh <i class="fa fa-refresh" style="transform: scale(1);"></i></button></div>
@@ -111,11 +111,11 @@ function getVulns($NeedsAttention, $Secure, $Other, $Scanning, $countDevicesToSc
     //else of there are needs attention then show the needs attention banner
     else if(!is_null($NeedsAttention)){
         if (count($NeedsAttention) >= 0){
-            //High ammount of issues found
+            //High amount of issues found
             echo('<section class="highlight-section" style="background: red;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"> <i class="fa fa-times-circle" style="transform: scale(2);"></i></h2>
                             <p class="text-center">Your Network contains ' .count($NeedsAttention).' devices that will need attention they will 
-                             be listed bellow for your information, please start by reviewing them</p>
+                             be listed below for your information, please start by reviewing them</p>
                </div></div></section>');
         }
         else {
@@ -123,7 +123,7 @@ function getVulns($NeedsAttention, $Secure, $Other, $Scanning, $countDevicesToSc
             echo('<section class="highlight-section" style="background: forestgreen;"> <div class="container"> <div class="intro">
                 <h2 class="text-center"><i class="fa fa-check-circle" style="transform: scale(2);"></i></h2>
                             <p class="text-center">No concerning issues with,
-                                the found vulnerabilities will be listed bellow for your information, however your device is currently safe so no
+                                the found vulnerabilities will be listed below for your information, however your device is currently safe so no
                                 extra action will need to be taken,
                                 feel free to scan another device </p>
                 </div></div></section>');
@@ -273,6 +273,13 @@ if(isset($_POST['GetNewestScanForVIS'])){
                 <dt style="padding-top: 20px"><i class="fa fa-desktop" style="color: Orange;" size=""></i> Device is Being Scanned</dt>
                 <dt style="padding-top: 20px"><i class="fa fa-desktop" style="color: transparent; -webkit-text-stroke-color: red; -webkit-text-stroke-width: thin" size=""></i> Device is Unscanned</dt>
             </dl>
+            <dl style="font-size: medium; list-style: none; font-weight: lighter; font-style: italic" >
+                <dt style="padding-top: 30%;"> Network Map Tip </dt>
+                <dt style="padding-top: 20px;"> Press the button in the bottom right of the map to resize. </dt>
+                <dt style="padding-top: 20px;"> <img src="../../assets/images/Help/click.png"></dt>
+
+
+            </dl>
         </div>
         <div class="col-md-9">
 
@@ -305,10 +312,7 @@ if(isset($_POST['GetNewestScanForVIS'])){
                     "load", () =>
                     {
                         let items = convert();
-
                         draw(items);
-
-
                     }
 
 
@@ -317,10 +321,11 @@ if(isset($_POST['GetNewestScanForVIS'])){
 
             </script>
 
-            <div style="height: 100vh" id="mynetwork"></div>
+            <div style="height: 70vh;" id="mynetwork" ></div>
 
             <div id="menuBox">
                 <a onclick="openNav()">Menu</a>
+
             </div>
 
 

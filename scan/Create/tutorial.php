@@ -41,7 +41,7 @@ if(isset($_POST['checkScan'])){
 <section class="features-clean">
     <div class="container">
         <div class="intro">
-            <h2 class="text-center">You have no Scans!</h2>
+            <h2 class="text-center">You have no Devices!</h2>
             <p class="text-center">Not a problem, we are here to help. Follow this simple easy to read guide to get you started!&nbsp;&nbsp;</p>
         </div>
     </div>
@@ -78,7 +78,7 @@ if(isset($_POST['checkScan'])){
                                     <li>Open Download</li>
                                     <li>Extract Zip</li>
                                     <li>Run NNDEasyStart from desktop</li>
-                                    <li>Run a discovery using the button bellow</li>
+                                    <li>Run a discovery using the button below</li>
                                 </ul>
                                 <button class="btn btn-primary" type="submit" name="createScan" value="NetDisc" id="discovery">Run Discovery</button>
                             </div>

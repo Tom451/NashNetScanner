@@ -61,12 +61,12 @@ function getAllDevicesOnScan($connection, $scanID) : mixed {
 }
 
 function getAllVulnerabilities($connection, $scanID) : mixed {
-    //select all the vulnerbilities
+    //select all the vulnerabilities
     $query = $connection->prepare("SELECT * FROM vulnerabilities JOIN vulnscan ON vulnerabilities.VulnID = vulnscan.VulnID JOIN scan ON vulnscan.ScanID = scan.ScanID WHERE scan.ScanID = :scanID");
     $query->bindParam("scanID", $scanID, PDO::PARAM_STR);
     $query->execute();
 
-    //get the result of the vulnerbilities
+    //get the result of the vulnerabilities
     return $query->fetchAll(PDO::FETCH_ASSOC);
 
 }
@@ -87,7 +87,7 @@ function getOtherScansForDevice($deviceID): bool|array
     return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getAllUsersByUserNonce($connection, $USERNONCE): array {
+function getUserByUserNonce($connection, $USERNONCE): array {
 
     //select all the users with the given username
     $query = $connection->prepare("SELECT UserID FROM usercredentials WHERE userNonce=:userNonce");
@@ -96,6 +96,25 @@ function getAllUsersByUserNonce($connection, $USERNONCE): array {
 
     //get the userID result
     return $query->fetch(PDO::FETCH_ASSOC);
+
+}
+
+function getUserByUserName($connection, $USERNAME): mixed{
+    //select all the users with the given username
+    $query = $connection->prepare("SELECT * FROM usercredentials WHERE userName=:username ");
+    $query->bindParam("username", $USERNAME, PDO::PARAM_STR);
+    $query->execute();
+    return $query->fetch(PDO::FETCH_ASSOC);
+
+}
+
+function getAllUsersByEmail($connection, $EMAIL): mixed{
+    //select all the users with the given username
+    $query = $connection->prepare("SELECT * FROM usercredentials WHERE email=:email ");
+    $query->bindParam("email", $EMAIL, PDO::PARAM_STR);
+    $query->execute();
+
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 
 }
 
@@ -119,4 +138,30 @@ function setDeviceStatus($connection, $inMacAddress, $inIPaddress, $inDeviceScan
     $statement->bindParam(':inIPAddress', $inIPaddress, PDO::PARAM_STR);
 
     return $statement->execute();
+}
+
+function addUser($connection, $firstName, $lastName, $email, $username, $password_hash, $lastSeen, $LoginNONCE):mixed{
+    //start with adding the user
+    $query = $connection->prepare("INSERT INTO user(firstName,lastName,email) VALUES (:firstName,:lastName,:email)");
+    $query->bindParam("firstName", $firstName, PDO::PARAM_STR);
+    $query->bindParam("lastName", $lastName, PDO::PARAM_STR);
+    $query->bindParam("email", $email, PDO::PARAM_STR);
+    $query->execute();
+
+    //get the userID of new user to be added.
+    $query = $connection->prepare("SELECT userID FROM user WHERE email=:email");
+    $query->bindParam("email", $email, PDO::PARAM_STR);
+    $query->execute();
+    $userIDResult = $query->fetchColumn();
+
+    //then add the credentials
+    $query = $connection->prepare("INSERT INTO usercredentials(userName,password,UserID,lastSeen,userNonce) VALUES (:username,:password_hash,:userID,:lastSeen,:LoginNonce)");
+    $query->bindParam("username", $username, PDO::PARAM_STR);
+    $query->bindParam("password_hash", $password_hash, PDO::PARAM_STR);
+    $query->bindParam("userID", $userIDResult, PDO::PARAM_STR);
+    $query->bindParam("lastSeen", $lastSeen, PDO::PARAM_STR);
+    $query->bindParam("LoginNonce", $LoginNONCE, PDO::PARAM_STR);
+
+
+    return $query->execute();
 }

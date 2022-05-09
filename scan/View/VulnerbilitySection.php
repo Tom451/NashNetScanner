@@ -135,7 +135,7 @@ function addToTable($CVEs, $item, $CommonClassification, $type){
         echo '<h3>Description</h3>';
         echo $Description . '<br>';
         echo '<br>';
-        echo'<a class="learn-more" href="'. "https://nvd.nist.gov/vuln/detail/". $ID .'">Learn More »</a>';
+        echo'<a class="learn-more" href="'. "https://nvd.nist.gov/vuln/detail/". $ID .'" target="_blank">Learn More »</a>';
         echo '<br>';
 
         if (isset($Help['Description'])){
@@ -180,7 +180,7 @@ function addToTable($CVEs, $item, $CommonClassification, $type){
         echo '<h3>Relevant Links</h3>';
         echo'<p class="description"><b> Please Note all links to external sites have not all been checked and are visited at users risk</p></b>';
         foreach ($Links as $link){
-            echo'<a style="overflow-wrap: break-word; max-width:50%"  href="'.$link.'">'. $link .'</a><br>';
+            echo'<a style="overflow-wrap: break-word; max-width:50%"  href="'.$link.'" target="_blank">'. $link .'</a><br>';
 
         }
 

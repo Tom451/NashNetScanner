@@ -26,7 +26,7 @@
                 <li class="nav-item"><a class="nav-link" href="/homePage.php">Home Page</a></li>
 
                 <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Devices</a>
-                    <div class="dropdown-menu"><a class="dropdown-item" href="/scan/View/Devices.php">View</a><a class="dropdown-item" href="/scan/Create/CreateScan.php">Create Scan</a><a class="dropdown-item" href="/scan/View/previousScans.php">Previous Scans</a></div>
+                    <div class="dropdown-menu"><a class="dropdown-item" href="/scan/View/Devices.php">View</a><a class="dropdown-item" href="/scan/View/previousScans.php">Previous Scans</a></div>
                 </li>
 
                 <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">Agent:

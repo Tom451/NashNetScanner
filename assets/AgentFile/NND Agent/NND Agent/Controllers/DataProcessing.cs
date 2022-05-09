@@ -26,12 +26,12 @@ namespace NND_Agent.Data
         //data connection 
         readonly DataUpload Connection = new DataUpload();
 
-        //public methods accessable from outside this class
+        //public methods accessible from outside this class
         //start scan method 
         public async Task StartScan(long userNONCE)
         {
 
-            //initalise the classes
+            //initialise the classes
             currentUser.userName = userNONCE.ToString();
 
 
@@ -44,7 +44,7 @@ namespace NND_Agent.Data
 
             if (currentUser.listScans == null)
             {
-                form.PopUp("Error with fetching scan", "No scan avalable please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
+                form.PopUp("Error with fetching scan", "No scan available please start a scan from the web interface", System.Windows.Forms.ToolTipIcon.Warning);
                 return;
 
             }
